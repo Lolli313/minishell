@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/02/28 11:30:01 by fmick            ###   ########.fr       */
+/*   Updated: 2025/02/28 17:54:46 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <unisdt.h>
+# include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -25,11 +25,3 @@
 # define B "\033[1;34m"
 # define RESET "\033[0m"
 
-
-//utils
-int	strcmp(const char *s1, const char *s2);
-
-//builtin/external commands
-int	ft_handle_builtin(char **av);
-int	ft_handle_external(char **av);
-void	ft_execute_command(char **av);
