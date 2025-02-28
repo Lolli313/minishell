@@ -1,28 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_init_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/02/28 13:46:42 by fmick            ###   ########.fr       */
+/*   Created: 2025/02/28 13:39:58 by fmick             #+#    #+#             */
+/*   Updated: 2025/02/28 13:40:15 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include <unisdt.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <dirent.h>
-# include <sys/ioctl.h>
 
-// colours
-# define R "\033[1;31m"
-# define G "\033[1;32m"
-# define Y "\033[1;33m"
-# define B "\033[1;34m"
-# define RESET "\033[0m"
