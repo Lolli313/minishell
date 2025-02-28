@@ -6,11 +6,16 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/02/28 18:20:12 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/02/28 20:13:58 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
+#include <stdio.h>
+
 int	main(void)
 {
+	char *env = getenv("PATH");
+	printf("%s", env);
 	return (1);
 }
