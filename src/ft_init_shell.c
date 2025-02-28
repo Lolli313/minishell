@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_init_shell.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/02/28 11:16:19 by fmick            ###   ########.fr       */
+/*   Created: 2025/02/28 11:08:56 by fmick             #+#    #+#             */
+/*   Updated: 2025/02/28 11:18:09 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <unisdt.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <dirent.h>
-# include <sys/ioctl.h>
+#include "minishell.h"
 
+static void	ft_signal_handler(int sig, siginfo_t *info)
+{
+	// minitalk magic
+}
 
-// colours
-# define R "\033[1;31m"
-# define G "\033[1;32m"
-# define Y "\033[1;33m"
-# define B "\033[1;34m"
-# define RESET "\033[0m"
+void	ft_shell(int ac, char **av)
+{
+	if (ac != 1 || strcmp(av[0]), "./minishell" != 0)
+	{
+		printf(R "Wrong input: ./minishell\n" RESET);
+		return ;
+	}
+	else
+	{
+		// ?????????????;
+		// signal (smth, &ft_signal_handler);
+	}
+}
