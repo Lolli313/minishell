@@ -1,27 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/02/28 17:54:46 by aakerblo         ###   ########.fr       */
+/*   Created: 2024/10/28 20:28:07 by aakerblo          #+#    #+#             */
+/*   Updated: 2025/01/16 17:48:17 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <signal.h>
-# include <dirent.h>
-# include <sys/ioctl.h>
+#include "libft.h"
 
-
-// colours
-# define R "\033[1;31m"
-# define G "\033[1;32m"
-# define Y "\033[1;33m"
-# define B "\033[1;34m"
-# define RESET "\033[0m"
-
+void	ft_putendl_fd(char *s, int fd)
+{
+	if (s == 0)
+		return ;
+	while (*s)
+	{
+		write(fd, &*s, 1);
+		s++;
+	}
+	write(fd, "\n", 1);
+}

@@ -6,7 +6,7 @@
 #    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/02/28 17:54:16 by aakerblo         ###   ########.fr        #
+#    Updated: 2025/02/28 18:22:31 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,8 @@ CFLAGS = -g -Wall -Wextra -Werror
 DEPS = -Iinclude
 SRCDIR = ./src/
 SRC = $(SRCDIR)main.c
+LIBFTDIR = ./libft/
+LIBFT = $(LIBFTDIR)libft.a
 OBJDIR = obj/
 OBJ = $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
@@ -26,16 +28,23 @@ $(OBJDIR)%.o: $(SRCDIR)%.c | $(OBJDIR)
 	cc $(CFLAGS) -c $< -o $@ $(DEPS)
 
 $(NAME): $(OBJ)
-	cc $(CFLAGS) -o $(NAME) $(OBJ)
+	make -C $(LIBFTDIR)
+	cp $(LIBFT) $(NAME)
+	cc $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
 
 clean:
 	rm -f $(OBJ)
 	rm -rf $(OBJDIR)
+	make -C $(LIBFTDIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C $(LIBFTDIR) fclean
 
 re: fclean all
+
+$(LIBFT):
+	make -C $(LIBFTDIR) all
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
