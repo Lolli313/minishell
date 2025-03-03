@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/03 14:02:10 by aakerblo         ###   ########.fr       */
+/*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
+/*   Updated: 2025/03/03 17:07:59 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-int	main(void)
+t_token	tokenizer(char *str, int type, t_token *token)
 {
-	char	*line = readline("Prompt > ");
-	parse_string(line);
-//	ft_printf("%s\n", line);
-	return (1);
+	t_token	*last;
+
+	token = add_node_token(str, token, type);
+	if (!token->index)
+		
 }

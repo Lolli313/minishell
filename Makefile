@@ -6,7 +6,7 @@
 #    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/02/28 18:22:31 by aakerblo         ###   ########.fr        #
+#    Updated: 2025/03/03 14:00:48 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = minishell
 CFLAGS = -g -Wall -Wextra -Werror
 DEPS = -Iinclude
 SRCDIR = ./src/
-SRC = $(SRCDIR)main.c
+SRC = $(SRCDIR)main.c $(SRCDIR)parse.c
+LIBS = -lreadline -lhistory
 LIBFTDIR = ./libft/
 LIBFT = $(LIBFTDIR)libft.a
 OBJDIR = obj/
@@ -30,7 +31,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.c | $(OBJDIR)
 $(NAME): $(OBJ)
 	make -C $(LIBFTDIR)
 	cp $(LIBFT) $(NAME)
-	cc $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT)
+	cc $(CFLAGS) -o $(NAME) $(OBJ) $(LIBFT) $(LIBS)
 
 clean:
 	rm -f $(OBJ)
