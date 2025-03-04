@@ -6,28 +6,31 @@
 #    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/04 09:34:30 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/04 14:45:01 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME 		=	minishell
 CFLAGS 		=	-g -Wall -Wextra -Werror
-DEPS 		=	-Iinclude
-SRCDIR 		=	./src/
-SRC 		=	$(SRCDIR)main.c $(SRCDIR)parse.c
+SRC 		=	$(addprefix src/env/, ft_env.c) \
+				$(addprefix src/builtins/, ft_cd.c) \
+				$(addprefix src/, main.c)
 LIBS 		=	-lreadline -lhistory
 LIBFTDIR 	=	./libft/
 LIBFT 		=	$(LIBFTDIR)libft.a
 OBJDIR 		=	obj/
 OBJ 		=	$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
+INCLUDES	=	-I includes -I libft
+
 default: all
 
 all: $(NAME)
 
-$(OBJDIR)%.o: $(SRCDIR)%.c | $(OBJDIR)
-	cc $(CFLAGS) -c $< -o $@ $(DEPS)
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	@mkdir -p $(dir $@)
+	cc $(CFLAGS) -c $< -o $@ $(INCLUDES)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFTDIR)

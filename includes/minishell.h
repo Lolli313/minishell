@@ -6,13 +6,14 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 13:33:02 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/04 14:46:17 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "libft.h"
 # include <dirent.h>
 # include <limits.h>
 # include <signal.h>
@@ -43,7 +44,7 @@ typedef struct s_env
 typedef struct s_mini
 {
 	// t_token	*token;
-	char	*env_lst;
+	t_env	*env_lst;
 	t_env	*env;
 }			t_mini;
 
@@ -57,3 +58,11 @@ int			ft_is_builtin(char **av);
 int			ft_pwd(void);
 int			ft_echo(char **av);
 void		ft_handle_builtin(char **av);
+
+// events
+size_t	ft_env_lst_size(t_env *lst);
+size_t	ft_env_value_size(t_env *lst);
+char	*ft_env_display(t_env *lst);
+int	ft_init_env(t_mini *mini, char **envp);
+
+#endif

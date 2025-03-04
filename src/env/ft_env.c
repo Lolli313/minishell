@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 13:34:32 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/04 14:44:01 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static int	ft_envlen(char *str)
 	int		count;
 
 	i = 0;
+	count = 0;
 	while (str[i])
 	{
 		i++;
@@ -103,7 +104,7 @@ char	*ft_env_display(t_env *lst)
 	return (env);
 }
 
-int	ft_init_env(t_mini *mini, char *array)
+int	ft_init_env(t_mini *mini, char **envp)
 {
 	t_env	*env;
     t_env   *cur;
@@ -112,15 +113,15 @@ int	ft_init_env(t_mini *mini, char *array)
 
     i = 0;
     mini->env_lst = NULL;
-    while (array[i])
+    while (envp[i])
     {
         env = malloc(sizeof(t_env));
         if (!env)
             {
-                return NULL;
                 printf(R "DB: Malloc failed (init_env)" RESET);
+				return -1;
             }
-        key_value = ft_split(array[i], '=');
+        key_value = ft_split(envp[i], '=');
         if (!key_value)
         {
             printf(R "DB: Split failed (init_env)" RESET);
@@ -140,8 +141,13 @@ int	ft_init_env(t_mini *mini, char *array)
             {
                 cur = cur->next;
             }
+			cur->next = env;
         }
         free(key_value);
         i++;
     }
+	return 0;
 }
+// char **envp
+// getenv("USER")
+// USER=NAME
