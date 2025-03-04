@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/03 16:23:14 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:55:25 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,13 @@ typedef struct s_token
 	struct s_token	*previous;
 }	t_token;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}		t_env;
+
 void	parse_string(char *line);
 
 t_token	tokenizer(char *str, int type, t_token *token);
@@ -58,5 +65,7 @@ t_token	tokenizer(char *str, int type, t_token *token);
 void	initialize(t_token *token);
 
 t_token	*add_node_token(char *str, t_token *token, int type);
+
+t_env	*init_env(char **envp);
 
 #endif
