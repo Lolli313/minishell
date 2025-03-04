@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 09:18:34 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/04 13:33:02 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,18 @@
 # define arrow_up "\033[A"
 # define arrow_down "\033[B"
 
+// USER=fmick ---> (USER = key) & (fmick = value)
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}   t_env;
+
 typedef struct s_mini
 {
-	t_token	*token;
+	// t_token	*token;
+	char	*env_lst;
 	t_env	*env;
 }			t_mini;
 
