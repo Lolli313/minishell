@@ -1,24 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_minishell.c                                     :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 13:13:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/03 13:04:16 by fmick            ###   ########.fr       */
+/*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
+/*   Updated: 2025/03/04 09:25:27 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-int        main(int ac, char **av)
+void	ft_cd(char **av)
 {
-    (void)ac;
-    (void)av;
-    while (1)
-    {
-        // smth smth
-    }
-    return (0);
+	t_mini	*mini;
+
+	if (av[1] == NULL || ft_strcmp(av[1], "~") == 0)
+	{
+      // TODO NEED TO WORK WITH T_ENV //
+	}
+	else if (ft_strcmp(av[1], "..") == 0)
+	{
+		//	chdir(???) //
+		// up one level until max
+	}
+	else if (ft_strcmp(av[1], "-") == 0)
+	{
+
+	}
+		
+	// cd /nonexistant: No such file or directory
+	// cd /file: Not a directory
 }

@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_minishell.c                                     :+:      :+:    :+:   */
+/*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 13:13:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/03 13:04:16 by fmick            ###   ########.fr       */
+/*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
+/*   Updated: 2025/03/04 09:25:23 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-int        main(int ac, char **av)
+void	ft_unset()
 {
-    (void)ac;
-    (void)av;
-    while (1)
-    {
-        // smth smth
-    }
-    return (0);
+	// env variables
+	// handles "_" notcate the variable specified and then deletes it
+	// from the linked list of  being able to unset
 }

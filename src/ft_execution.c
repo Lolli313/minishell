@@ -3,81 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execution.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:01:23 by fmick             #+#    #+#             */
-/*   Updated: 2025/02/28 10:25:15 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/04 09:25:49 by fmick            ###   ########.fr       */
 /*                                                                            */
-/* ****************************************************************************/
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-// handle builtin commands (cd, exit, ...)
-// return 0 if not returns 1 if built in
-int	ft_handle_builtin(char **av)
+// handle builtin commands (boolean expression, return true1 or false0)
+int	ft_is_builtin(char **av)
 {
-	// for exit
-	if (strcmp(av[0]), "exit" == 0)
-	{
-		printf("exit\n");
-		exit(EXIT_SUCCES);
-	}
-
-	// for pwd
-	if (strcmp(av[0]), "pwd" == 0)
-	{
-		// print working directory
-	}
-
-	// cd
-	if (strcmp(av[0]), "cd" == 0)
-	{
-		// change directory
-		// different cd
-		// cd 
-		// cd .. (move up one lvl)
-		// cd - (return to previous directory)
-		// cd ~ (goes to home directory)
-	}
-
-	// export
-	if (strcmp(av[0]), "export" == 0)
-	{
-		// export (variable=value)
-		// ex : export PATH=$PATH:/new/directory
-	}
-
-	// unset
-	if (strcmp(av[0]), "unset" == 0)
-	{
-		// unset variable
-		// removes shell variables or functions
-		// ex: unset MY_VAR
-	}
-
-	// env
-	if (strcmp(av[0]), "env" == 0)
-	{
-		// display or set environment variables
-		// ex: env (variable=value) or env
-	}
-
-	// echo
-	if (strcmp(av[0]), "echo" == 0)
-	{
-		// print text to terminal
-		// ex: echo (string)
-	}
+	if (ft_strcmp(av[0], "pwd") == 0)
+		return (1);
+	if (ft_strcmp(av[0], "cd") == 0)
+		return (1);
+	if (ft_strcmp(av[0], "export") == 0)
+		return (1);
+	if (ft_strcmp(av[0], "unset") == 0)
+		return (1);
+	if (ft_strcmp(av[0], "env") == 0)
+		return (1);
+	if (ft_strcmp(av[0], "echo") == 0)
+		return (1);
 	return 0;
 }
 
-// handle external commands (ls, grep, ...) return 0 or 1 if false or true
-int	ft_handle_external(char **av)
+void	ft_handle_builtin(char **av);
 {
-	return 0;
+	/*
+		if (ft_strcmp(av[0], "pwd") == 0)
+			ft_pwd(); ??? Maybe smth like this
+		if (ft_strcmp(av[0], "cd") == 0)
+			ft_cd(); ???
+		if (ft_strcmp(av[0], "export") == 0)
+			ft_export(); ???
+		if (ft_strcmp(av[0], "unset") == 0)
+			ft_unset(); ???
+		if (ft_strcmp(av[0], "env") == 0)
+			ft_env(); ???
+		if (ft_strcmp(av[0], "echo") == 0)
+			ft_echo(); ???
+	*/
 }
+
+
 
 // function to execute (...) commands
+// EXECUTABLES != builtins
 void	ft_execute_command(char **av)
 {
 	if(ft_handle_builtin(av)) // if no matching command found

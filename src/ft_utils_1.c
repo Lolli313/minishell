@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/02/28 13:38:35 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/03 15:18:34 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,15 @@ char	*ft_strdup(const char *s1)
 	}
 	dest[i] = 0;
 	return (dest);
+}
+void	ft_putstr_fd(char *str, int fd)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		write(fd, &i, 1);
+		i++;
+	}
 }

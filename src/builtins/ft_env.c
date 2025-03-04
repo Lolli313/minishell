@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_minishell.c                                     :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 13:13:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/03 13:04:16 by fmick            ###   ########.fr       */
+/*   Created: 2025/03/04 09:25:14 by fmick             #+#    #+#             */
+/*   Updated: 2025/03/04 09:25:25 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-int        main(int ac, char **av)
+void	ft_env()
 {
-    (void)ac;
-    (void)av;
-    while (1)
-    {
-        // smth smth
-    }
-    return (0);
+	// prints the linked list of env variables
 }
