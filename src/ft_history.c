@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:37:49 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/03 11:37:03 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 13:22:43 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,6 @@
 6. rl_redisplay() → Refresh and show the updated command
 */
 
-void    ft_history(void)
-{
-    char    *input;
-    int     i;
-
-    i = 0;
-    input = readline("");
-    if (input[i] != '\0')
-        {
-            add_history(input);
-        }
     /*    
     if (condition for arrow_up)
     {
@@ -57,5 +46,5 @@ void    ft_history(void)
         }
     }
     free (input);
-    */
-}
+
+}*/

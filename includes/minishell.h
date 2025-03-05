@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 09:47:13 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 14:59:39 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <sys/ioctl.h>
 # include <unistd.h>
+# include <readline/history.h>
 #include <readline/readline.h>
 
 // colours
@@ -39,7 +40,7 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
-	char			*key_value;
+	// char			*key_value;
 	struct s_env	*next;
 }   t_env;
 
@@ -67,5 +68,11 @@ void		ft_handle_builtin(char **av);
 void	ft_env_display(t_env *env);
 t_env	*ft_add_env_node(char **array);
 t_env	*ft_init_env(char **envp);
+char	*ft_get_env(const char *key, t_env *env);
+int		ft_setenv(t_env *env, const char *key, const char *new_value, int overwrite);
+
+// signal
+void	ft_handle_sigint(int signal);
+
 
 #endif

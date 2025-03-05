@@ -6,19 +6,22 @@
 #    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/05 09:41:18 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/05 14:59:53 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME 		=	minishell
 CFLAGS 		=	-g -Wall -Wextra -Werror
-SRC 		=	$(addprefix src/env/, ft_env.c) \
+SRC 		=	$(addprefix src/env/, ft_env.c \
+				ft_get_env.c) \
 				$(addprefix src/builtins/, ft_cd.c \
-				ft_echo.c) \
+				ft_echo.c \
+				ft_pwd.c) \
 				$(addprefix src/, main.c \
 				ft_execution.c \
-				ft_utils_1.c)
+				ft_utils_1.c \
+				ft_signals.c)
 LIBS 		=	-lreadline -lhistory
 LIBFTDIR 	=	libft/
 LIBFT 		=	$(LIBFTDIR)libft.a

@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/04 09:25:14 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 13:23:30 by fmick            ###   ########.fr       */
+/*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
+/*   Updated: 2025/03/05 15:39:36 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_env(t_env *env)
+int	g_global;
+
+void	ft_handle_sigint(int signal)
 {
-	while (env && env->next != NULL)
+	g_global = 0;
+	if (signal == SIGINT)
 		{
-			print("%s=%s\n", env->key, env->value);
-			env = env->next;
+			printf("\n");
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+			g_global++;
 		}
-	return (0);
 }
