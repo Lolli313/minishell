@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:01:23 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 09:25:49 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 09:51:19 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,31 @@ int	ft_is_builtin(char **av)
 	return 0;
 }
 
-void	ft_handle_builtin(char **av);
+void	ft_handle_builtin(char **av)
 {
-	/*
+	
+	if (ft_strcmp(av[0], "echo") == 0)
+		ft_echo(av);
+//	if (ft_strcmp(av[0], "exit") == 0)
+//		mini->exit_flag = 0;
+/*
 		if (ft_strcmp(av[0], "pwd") == 0)
-			ft_pwd(); ??? Maybe smth like this
+			ft_pwd();
 		if (ft_strcmp(av[0], "cd") == 0)
-			ft_cd(); ???
+			ft_cd();
 		if (ft_strcmp(av[0], "export") == 0)
-			ft_export(); ???
+			ft_export(); 
 		if (ft_strcmp(av[0], "unset") == 0)
-			ft_unset(); ???
+			ft_unset();
 		if (ft_strcmp(av[0], "env") == 0)
-			ft_env(); ???
+			ft_env();
 		if (ft_strcmp(av[0], "echo") == 0)
-			ft_echo(); ???
-	*/
+			ft_echo();
+*/
 }
 
 
-
+/*
 // function to execute (...) commands
 // EXECUTABLES != builtins
 void	ft_execute_command(char **av)
@@ -75,6 +80,5 @@ void	ft_execute_command(char **av)
 		else
 			// waitpid(pid, NULL, 0??)
 	}
-
-
 }
+*/

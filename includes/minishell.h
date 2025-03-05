@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 14:46:17 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 09:47:13 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <sys/ioctl.h>
 # include <unistd.h>
+#include <readline/readline.h>
 
 // colours
 # define R "\033[1;31m"
@@ -38,11 +39,13 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	char			*key_value;
 	struct s_env	*next;
 }   t_env;
 
 typedef struct s_mini
 {
+	int		exit_flag;
 	// t_token	*token;
 	t_env	*env_lst;
 	t_env	*env;
@@ -57,12 +60,12 @@ char		*ft_strdup(const char *s1);
 int			ft_is_builtin(char **av);
 int			ft_pwd(void);
 int			ft_echo(char **av);
+int			ft_env(t_env *env);
 void		ft_handle_builtin(char **av);
 
 // events
-size_t	ft_env_lst_size(t_env *lst);
-size_t	ft_env_value_size(t_env *lst);
-char	*ft_env_display(t_env *lst);
-int	ft_init_env(t_mini *mini, char **envp);
+void	ft_env_display(t_env *env);
+t_env	*ft_add_env_node(char **array);
+t_env	*ft_init_env(char **envp);
 
 #endif

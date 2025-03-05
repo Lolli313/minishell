@@ -6,11 +6,11 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/03 15:18:34 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 09:41:50 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.c"
+# include "minishell.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -42,7 +42,7 @@ char	*ft_strdup(const char *s1)
 	i = 0;
 	while (s1[i])
 	{
-		dest[i] == s1[i];
+		dest[i] = s1[i];
 		i++;
 	}
 	dest[i] = 0;

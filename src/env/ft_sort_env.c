@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_env.c                                           :+:      :+:    :+:   */
+/*   ft_sort_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/04 09:25:14 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 09:30:32 by fmick            ###   ########.fr       */
+/*   Created: 2025/03/05 09:07:28 by fmick             #+#    #+#             */
+/*   Updated: 2025/03/05 09:20:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_env(t_env *env)
+int ft_value_len(t_env *env)
 {
-	while (env && env->next != NULL)
-		{
-			print("%s", env->key_value);
-			env = env->next;
-		}
-	return (0);
+    int count;
+    int i;
+
+    while (env->value[i])
+    {
+        count++;
+        i++;
+    }
+    return (count);
+}
+
+char    *ft_get_env_value(t_env *env, char *args)
+{
+    
 }

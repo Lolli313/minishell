@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:39:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 14:48:32 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 09:51:39 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ int main(int ac, char **av, char **envp)
 {
     (void)ac;
     (void)av;
-    (void)envp;
+    ft_init_env(envp);
+    while (1)
+    {
+        readline("😭 minishell$ ");
+        ft_handle_builtin(av);
+        
+    }
     return 0;
 }

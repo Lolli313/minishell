@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 14:44:01 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/05 09:00:43 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 // 3. ft_init_env
 
 // added + 1 ---> see keylen & valuelen
-static int	ft_envlen(char *str)
+/*static int	ft_envlen(char *str)
 {
 	size_t	i;
 	int		count;
@@ -32,33 +32,6 @@ static int	ft_envlen(char *str)
 	return (count + 1);
 }
 
-static char	*ft_strcat(char *dest, const char *src)
-{
-	size_t	i;
-
-	i = 0;
-	if (!src)
-		return (NULL);
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	return (dest);
-}
-
-size_t	ft_env_lst_size(t_env *lst)
-{
-	size_t	lst_size;
-
-	lst_size = 0;
-	while (lst && lst->next != NULL)
-	{
-		lst = lst->next;
-		lst_size++;
-	}
-	return (lst_size);
-}
 // keylen + valuelen + 2 (= and \n)
 size_t	ft_env_value_size(t_env *lst)
 {
@@ -77,76 +50,65 @@ size_t	ft_env_value_size(t_env *lst)
 		lst = lst->next;
 	}
 	return (key_len + value_len); // ex NAME=fmick = 4 + 1 + 5 + 1 = 11;
-}
+}*/
 
 // convert a linked list of environments into a single string
-char	*ft_env_display(t_env *lst)
+void	ft_env_display(t_env *env)
 {
-	char	*env;
-
-	env = malloc(sizeof(char) * (ft_env_value_size(lst) + 1));
-	if (!env)
+	t_env	*temp;
+	char	*tmp;
+	
+	temp = env;
+	while (temp)
 	{
-		return (NULL);
-		printf(R "DB: Malloc failed (env_display)" RESET);
-	}
-	while (lst)
-	{
-		if (lst->key && lst->value)
+		if (temp->key && temp->value)
 		{
-			ft_strcat(env, lst->key);
-			ft_strcat(env, "=");
-			ft_strcat(env, lst->value);
-			ft_strcat(env, "\n");
+			//ft_strjoin(temp->key, temp->key);
+			tmp = ft_strjoin(temp->key, "=");
+			tmp = ft_strjoin(tmp, temp->value);
+			tmp = ft_strjoin(tmp, "\n");
 		}
-		lst = lst->next;
+		printf("%s", tmp);
+		temp = temp->next;
 	}
+}
+
+t_env	*ft_add_env_node(char **array)
+{
+	t_env	*env;
+
+	env = malloc(sizeof(t_env));
+	env->key = array[0];
+	env->value = array[1];
+	env->next = NULL;
 	return (env);
 }
 
-int	ft_init_env(t_mini *mini, char **envp)
+t_env	*ft_init_env(char **envp)
 {
+	char	**temp;
 	t_env	*env;
-    t_env   *cur;
-    char    **key_value;
-	size_t	i;
+	int		i;
+	t_env	*last;
 
-    i = 0;
-    mini->env_lst = NULL;
-    while (envp[i])
-    {
-        env = malloc(sizeof(t_env));
-        if (!env)
-            {
-                printf(R "DB: Malloc failed (init_env)" RESET);
-				return -1;
-            }
-        key_value = ft_split(envp[i], '=');
-        if (!key_value)
-        {
-            printf(R "DB: Split failed (init_env)" RESET);
-            return -1;
-        }
-        env->key = key_value[0];
-        env->value = key_value[1];
-        env->next = NULL;
-        if (mini->env_lst == NULL)
-        {
-            mini->env_lst = env;
-        }
-        else
-        {
-            cur = mini->env_lst;
-            while (cur->next)
-            {
-                cur = cur->next;
-            }
-			cur->next = env;
-        }
-        free(key_value);
-        i++;
-    }
-	return 0;
+	i = 0;
+	env = NULL;
+	while (envp[i])
+	{
+		temp = ft_split(envp[i], '=');
+		if (env == NULL)
+			env = ft_add_env_node(temp);
+		else
+		{
+			last = env;
+			while (last->next)
+				last = last->next;
+			last->next = ft_add_env_node(temp);
+		}
+		i++;
+	}
+	ft_env_display(env);
+	return (env);
 }
 // char **envp
 // getenv("USER")
