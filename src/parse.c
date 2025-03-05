@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/04 16:30:30 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:08:15 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,34 +49,69 @@ bool	check_external(char *command)
 		if (access(str1, X_OK) == 0)
 			return (free(str1), true);
 		free(str1);
-		all_paths++;		
+		all_paths++;
 	}
 	return (false);
 }
 
-char	*handle_command(char *command)
+bool	handle_command(char *command)
 {
-//	t_token	token;
-
-//	initialize(&token);
 	if (check_builtin(command) == true || check_external(command) == true)
-	{
-		ft_printf("SUCCESS");
-		/*token.str = command;
-		token.type = COMMAND;
-		token.index = 0;
-		token.previous = NULL;*/
-	//	token = tokenizer(command, COMMAND, &token);
-	}
+		return (ft_printf("SUCCESS\n"), true);
 	else
-		ft_printf("THIS IS NOT A VALID COMMAND YOU KNOBHEAD");
-	return (NULL);
+		return (ft_printf("THIS IS NOT A VALID COMMAND YOU KNOBHEAD\n"), false);
+}
+
+void	print_tokens(t_token *token)
+{
+	t_token	*current;
+
+	current = token;
+	while (current)
+	{
+		ft_printf("%s is of type %d on the index %d\n", current->str, current->type, current->index);
+		current = current->next;
+	}
+}
+
+int	token_type(char *strings)
+{
+	if (!ft_strncmp(strings, "<", 2))
+		return (RE_INPUT);
+	else if (!ft_strncmp(strings, ">", 2))
+		return (RE_OUTPUT);
+	else if (!ft_strncmp(strings, ">>", 3))
+		return (APPEND);
+	else if (!ft_strncmp(strings, "|", 2))
+		return (PIPE);
+	else if (!ft_strncmp(strings, "<<", 3))
+		return (HERE_DOC);
+	else
+		return (COMMAND);
+	}
+
+t_token	*handle_input(t_token *token, char **strings)
+{
+	int	i;
+
+	i = 0;
+	while (strings[i])
+	{
+		token = tokenizer(strings[i], token_type(strings[i]), token);
+		i++;
+	}
+	if (token->type == 0 && handle_command(strings[0]) == false)
+		return (NULL);
+	return (token);
 }
 
 void	parse_string(char *line)
 {
 	char	**strings;
+	t_token	*token;
 
+	token = NULL;
 	strings = ft_split(line, ' ');
-	handle_command(strings[0]);
+	token = handle_input(token, strings);
+	print_tokens(token);
 }

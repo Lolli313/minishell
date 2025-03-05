@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 15:51:38 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:01:21 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,22 +31,23 @@
 # define B "\033[1;34m"
 # define RESET "\033[0m"
 
-enum e_type
+typedef enum e_type
 {
 	COMMAND = 0,
-	ARGUMENTS = 1,
+	ARGUMENT = 1,
 	RE_INPUT = 2,
 	RE_OUTPUT = 3,
 	APPEND = 4,
 	PIPE = 5,
 	HERE_DOC = 6,
-};
+	LIMITER = 7
+}	t_type;
 
 typedef struct s_token
 {
 	char			*str;
 	int				index;
-	enum e_type		type;
+	t_type			type;
 	struct s_token	*next;
 	struct s_token	*previous;
 }	t_token;
@@ -65,11 +66,9 @@ typedef struct s_shell
 
 void	parse_string(char *line);
 
-t_token	tokenizer(char *str, int type, t_token *token);
+t_token	*tokenizer(char *str, t_type type, t_token *token);
 
 void	initialize(t_token *token);
-
-t_token	*add_node_token(char *str, t_token *token, int type);
 
 t_env	*init_env(char **envp);
 

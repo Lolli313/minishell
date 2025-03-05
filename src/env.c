@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:16:50 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/04 15:22:40 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/05 11:18:50 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	print_env(t_env *env)
 	{
 		if (temp->key && temp->value)
 		{
-			//ft_strjoin(temp->key, temp->key);
 			tmp = ft_strjoin(temp->key, "=");
 			tmp = ft_strjoin(tmp, temp->value);
 			tmp = ft_strjoin(tmp, "\n");
@@ -41,6 +40,16 @@ void	print_env(t_env *env)
 		ft_printf("%s", tmp);
 		temp = temp->next;
 	}
+}
+
+void	free_matrix(char **matrix)
+{
+	int	i;
+
+	i = 0;
+	while (matrix[i])
+		free(matrix[i++]);
+	free(matrix);
 }
 
 t_env	*init_env(char **envp)
@@ -51,7 +60,6 @@ t_env	*init_env(char **envp)
 	t_env	*last;
 
 	i = 0;
-//	ft_printf("%s", envp[i]);
 	env = NULL;
 	while (envp[i])
 	{
@@ -66,6 +74,7 @@ t_env	*init_env(char **envp)
 			last->next = add_env_node(temp);
 		}
 		i++;
+		free_matrix(temp);
 	}
 	print_env(env);
 	return (env);
