@@ -29,7 +29,7 @@ OBJS		=	${SRCS:%.c=%.o}
 BONUS_OBJS	=	${BONUS_SRCS:%.c=%.o}
 
 %.o: %.c
-	${CC} ${CFLAGS} -I${HEADER} -c $< -o $@
+	${CC} ${CFLAGS} -I. -c $< -o $@
 
 all: ${NAME}
 

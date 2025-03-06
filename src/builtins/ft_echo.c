@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:12 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 14:37:25 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/06 13:45:47 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,23 @@ int	ft_echo(char **av)
 
 	if (ft_nbr_of_av(av) > 1)
 	{
-		while (av[i + 1] && ft_strcmp(av[i], "-n") == 0)
+		while (av[i] && ft_strcmp(av[i], "-n") == 0)
 		{
 			nflag = 1;
 			i++;
 		}
 		while (av[i])
 		{
+			printf ("entering loop\n");
 			ft_putstr_fd(av[i], 1);
-			if (av[i + 1] && av[i][0] != '\0')
+			printf ("%s\n", av[i]);
+			if (av[i + 1])
 				write(1, " ", 1);
-		i++;
+			i++;
 		}
-		if (nflag == 0)
-			write (1, "\n", 1);
-		return (0);
 	}
+	printf("nflag = %d\n", nflag);
+	if (nflag == 0)
+		write (1, "\n", 1);
 	return (0);
 }

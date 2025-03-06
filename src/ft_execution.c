@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execution.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:01:23 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 13:18:20 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/06 08:19:07 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,21 @@ int	ft_is_builtin(char **av)
 	return 0;
 }
 
-void	ft_handle_builtin(char **av)
+void	ft_handle_builtin(char **av, t_mini *mini)
 {
 	
 	if (ft_strcmp(av[0], "echo") == 0)
 		ft_echo(av);
+	if (ft_strcmp(av[0], "export") == 0)
+		ft_export(mini->env, mini->env->key, mini->env->value); 
+	if (ft_strcmp(av[0], "env") == 0)
+		ft_env(mini->env);
 /*	if (ft_strcmp(av[0], "pwd") == 0)
 		ft_pwd();
 	if (ft_strcmp(av[0], "cd") == 0)
 		ft_cd();
-	if (ft_strcmp(av[0], "export") == 0)
-		ft_export(); 
 	if (ft_strcmp(av[0], "unset") == 0)
 		ft_unset();
-	if (ft_strcmp(av[0], "env") == 0)
-		ft_env();
 	if (ft_strcmp(av[0], "echo") == 0)
 		ft_echo();*/
 }

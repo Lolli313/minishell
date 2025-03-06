@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 14:59:39 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/06 12:07:08 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,12 @@ int			ft_is_builtin(char **av);
 int			ft_pwd(void);
 int			ft_echo(char **av);
 int			ft_env(t_env *env);
-void		ft_handle_builtin(char **av);
+int	ft_export(t_env *env, char *key, char *value);
+int	ft_env_exists(t_env *env, char *key, char *value);
+void		ft_handle_builtin(char **av, t_mini *mini);
+char	*ft_find_key(t_env	*env, char *key);
+int		ft_update_value(t_env *env, char *key, char *value);
+void	ft_cd(char **av, t_env *env);
 
 // events
 void	ft_env_display(t_env *env);
@@ -73,6 +78,7 @@ int		ft_setenv(t_env *env, const char *key, const char *new_value, int overwrite
 
 // signal
 void	ft_handle_sigint(int signal);
+int	ft_get_g_global(void);
 
 
 #endif

@@ -51,13 +51,11 @@ static void	ft_convert_tostring(char *str, int n, int len)
 char	*ft_itoa(int n)
 {
 	int		count;
-	int		i;
 	char	*str;
 
 	if (n == -2147483648)
 		return (ft_strdup("-2147483648"));
 	count = ft_digitlen(n);
-	i = count - 1;
 	str = ft_calloc(count + 1, sizeof(char));
 	if (!str)
 		return (NULL);

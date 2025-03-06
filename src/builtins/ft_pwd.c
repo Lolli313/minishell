@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:19 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/04 09:25:24 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/06 09:11:38 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,12 @@ int	ft_pwd(void)
 	cwd = getcwd(NULL, 0); // NULL allows getcwd to allocate the buffer
 	if (cwd)
 	{
+		printf("%s\n", cwd);
 		free(cwd);
 		return (0); // success
 	}
 	else
 	{
-		// error
-		return (-1); // error
+		return (-1);
 	}
-	
-	return (0);
 }
