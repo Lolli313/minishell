@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/06 19:12:59 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/07 17:32:24 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	arguments_before_pipe(t_token *token)
 void	check_infile(t_token *token)
 {
 	(void)token;
+	
 }
 
 void	check_outfile(t_token *token)
