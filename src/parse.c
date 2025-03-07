@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/05 17:08:15 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:18:57 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ bool	check_builtin(char *command)
 	else if (!ft_strncmp(command, "env", 4))
 		return (true);
 	else if (!ft_strncmp(command, "exit", 5))
+		return (true);
+	else if (!ft_strncmp(command, "$?", 3))
 		return (true);
 	else
 		return (false);
@@ -60,6 +62,20 @@ bool	handle_command(char *command)
 		return (ft_printf("SUCCESS\n"), true);
 	else
 		return (ft_printf("THIS IS NOT A VALID COMMAND YOU KNOBHEAD\n"), false);
+}
+
+void	free_token_list(t_token *token)
+{
+	t_token	*current;
+	t_token	*next;
+
+	current = token;
+	while (current)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
 }
 
 void	print_tokens(t_token *token)
@@ -114,4 +130,6 @@ void	parse_string(char *line)
 	strings = ft_split(line, ' ');
 	token = handle_input(token, strings);
 	print_tokens(token);
+	free_matrix(strings);
+	free_token_list(token);
 }

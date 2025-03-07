@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_free_matrix.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/06 15:15:32 by aakerblo         ###   ########.fr       */
+/*   Created: 2025/03/06 11:23:06 by aakerblo          #+#    #+#             */
+/*   Updated: 2025/03/06 11:24:55 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "libft.h"
 
-int	main(int ac, char **av, char **envp)
+void	free_matrix(char **matrix)
 {
-	(void)ac;
-	(void)av;
-//	(void)envp;
-//	ft_printf("%s", *envp);
-	char	*line = readline("bash-5.1$ ");
-	parse_string(line);
-//	ft_printf("%s\n", line);
-	init_env(envp);
-//	free(line);
-	return (1);
+	int	i;
+
+	i = 0;
+	while (matrix[i])
+		free(matrix[i++]);
+	free(matrix);
 }

@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/05 17:03:16 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/06 19:12:59 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,53 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 	return (token);
 }
 
+void	arguments_before_pipe(t_token *token)
+{
+	t_token	*current;
+
+	current = token->next;
+	while (current)
+	{
+		//if (current->previous->type == PIPE && current->type == COMMAND)
+		//	current = current->next;
+		if (current->type == COMMAND)
+		{
+			if (current->previous->type != PIPE)
+				current->type = ARGUMENT;
+			current = current->next;
+		}
+		else
+			current = current->next;
+	}
+}
+
+void	check_infile(t_token *token)
+{
+	(void)token;
+}
+
+void	check_outfile(t_token *token)
+{
+	(void)token;
+}
+
+void	check_file(t_token *token)
+{
+	if (token->type == RE_INPUT)
+		check_infile(token);
+	else
+		check_outfile(token);
+}
+
+void	token_relativity(t_token *token)
+{
+	arguments_before_pipe(token);
+	check_file(token);
+}
+
 t_token	*tokenizer(char *str, t_type type, t_token *token)
 {
 	token = add_node_token(token, str, type);
+	token_relativity(token);
 	return (token);
 }
