@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/06 12:07:08 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/07 11:09:43 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/ioctl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
 # include <readline/history.h>
 #include <readline/readline.h>
@@ -68,6 +70,9 @@ void		ft_handle_builtin(char **av, t_mini *mini);
 char	*ft_find_key(t_env	*env, char *key);
 int		ft_update_value(t_env *env, char *key, char *value);
 void	ft_cd(char **av, t_env *env);
+
+// pipe managment
+void	ft_handle_external(int ac, char **av, t_mini *mini);
 
 // events
 void	ft_env_display(t_env *env);

@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:12 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/06 13:45:47 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/07 12:44:01 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_nbr_of_av(char **av)
+static int	ft_nbr_of_args(char **args)
 {
 	int	i;
 
 	i = 0;
-	while(av[i])
+	while(args[i])
 		i++;
 	return (i);
 }
@@ -25,28 +25,27 @@ static int	ft_nbr_of_av(char **av)
 // Expected output: "hello world"
 // handles option -n to print the arguments
 // without a \n at the end
-int	ft_echo(char **av)
+int	ft_echo(char **args)
 {
 	int	nflag;
 	int i;
 
 	nflag = 0;
 	i = 1;
-
-	if (ft_nbr_of_av(av) > 1)
+	if (ft_nbr_of_args(args) > 1)
 	{
-		while (av[i] && ft_strcmp(av[i], "-n") == 0)
+		while (args[i] && ft_strcmp(args[i], "-n") == 0)
 		{
 			nflag = 1;
 			i++;
 		}
-		while (av[i])
+		while (args[i])
 		{
-			printf ("entering loop\n");
-			ft_putstr_fd(av[i], 1);
-			printf ("%s\n", av[i]);
-			if (av[i + 1])
+			ft_putstr_fd(args[i], 1);
+			if (args[i + 1] && args[i][0] != '\0')
+			{
 				write(1, " ", 1);
+			}
 			i++;
 		}
 	}

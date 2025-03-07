@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/06 09:33:27 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/07 08:39:35 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static void	ft_free_node(t_mini *mini, t_env *env)
 {
 	if (env->key != NULL)
-		free (env->key)
+		free (env->key);
 	if (env->value != NULL)
-		free (env->value)
+		free (env->value);
 	free (env);
 }
 

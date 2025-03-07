@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 10:55:07 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/07 08:43:56 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_env_display(t_env *env)
 			tmp = ft_strjoin(tmp, temp->value);
 			tmp = ft_strjoin(tmp, "\n");
 		}
-		printf("%s", tmp);
+	//	printf("%s", tmp);
 		temp = temp->next;
 		free(tmp);
 	}

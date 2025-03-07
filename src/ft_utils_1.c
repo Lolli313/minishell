@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/05 09:41:50 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/07 12:13:22 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,4 @@ char	*ft_strdup(const char *s1)
 	}
 	dest[i] = 0;
 	return (dest);
-}
-void	ft_putstr_fd(char *str, int fd)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		write(fd, &i, 1);
-		i++;
-	}
 }
