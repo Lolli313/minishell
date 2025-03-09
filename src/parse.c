@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/06 16:18:57 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/09 18:50:53 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ t_token	*handle_input(t_token *token, char **strings)
 	}
 	if (token->type == 0 && handle_command(strings[0]) == false)
 		return (NULL);
+	token_relativity(token);
 	return (token);
 }
 
@@ -126,6 +127,8 @@ void	parse_string(char *line)
 	char	**strings;
 	t_token	*token;
 
+	if (ft_strncmp(line, "\0", 1) == 0)
+		return ;
 	token = NULL;
 	strings = ft_split(line, ' ');
 	token = handle_input(token, strings);

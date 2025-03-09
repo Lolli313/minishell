@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/06 10:56:43 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/09 18:51:07 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,9 @@ typedef enum e_type
 	APPEND = 4,
 	PIPE = 5,
 	HERE_DOC = 6,
-	LIMITER = 7
+	LIMITER = 7,
+	INFILE = 8,
+	OUTFILE = 9,
 }	t_type;
 
 typedef struct s_token
@@ -68,7 +70,7 @@ void	parse_string(char *line);
 
 t_token	*tokenizer(char *str, t_type type, t_token *token);
 
-void	initialize(t_token *token);
+void	token_relativity(t_token *token);
 
 t_env	*init_env(char **envp);
 

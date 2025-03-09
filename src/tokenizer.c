@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/07 17:40:28 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/09 19:13:00 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@ t_token	*find_last(t_token *token)
 		return (0);
 	current = token;
 	while (current->next)
-	{
 		current = current->next;
-	}
 	return (current);
 }
 
@@ -47,20 +45,27 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 	new_node->index = last->index + 1;
 	new_node->previous = last;
 	last->next = new_node;
-//	TODO here make a function that deals with token relativity (ex. if the current type is COMMAND and the previous type is also COMMAND,
-//	make the current one into type ARGUMENT and then replace the current type with the new type)	
 	return (token);
 }
 
 void	arguments_before_pipe(t_token *token)
 {
 	t_token	*current;
+	bool	flag_command;
 
-	current = token->next;
+	if (!token)
+		return ;
+	current = token;
+	flag_command = false;
+	/*while (current->type != COMMAND)
+	{
+		current = current->next;
+		if (!current)
+			return ;
+	}
+	current = current->next;
 	while (current)
 	{
-		//if (current->previous->type == PIPE && current->type == COMMAND)
-		//	current = current->next;
 		if (current->type == COMMAND)
 		{
 			if (current->previous->type != PIPE)
@@ -69,36 +74,48 @@ void	arguments_before_pipe(t_token *token)
 		}
 		else
 			current = current->next;
+	}*/
+	while (current)
+	{
+		if (current->type == COMMAND)
+		{
+			if (flag_command == true)
+				current->type = ARGUMENT;
+			else
+				flag_command = true;
+		}
+		else if (current->type == PIPE)
+			flag_command = false;
+		current = current->next;
 	}
 }
 
-void	check_infile(t_token *token)
+void	find_redirect(t_token *token)
 {
-	(void)token;
-}
+	t_token	*current;
 
-void	check_outfile(t_token *token)
-{
-	(void)token;
-}
-
-void	check_file(t_token *token)
-{
-	if (token->type == RE_INPUT)
-		check_infile(token);
-	else
-		check_outfile(token);
+	current = token->next;
+	while (current)
+	{
+		if (current->previous->type == RE_INPUT || current->previous->type == APPEND)
+			current->type = INFILE;
+		else if (current->previous->type == RE_OUTPUT)
+			current->type = OUTFILE;
+		else if (current->previous->type == HERE_DOC)
+			current->type = LIMITER;
+		current = current->next;
+	}
 }
 
 void	token_relativity(t_token *token)
 {
+	find_redirect(token);
 	arguments_before_pipe(token);
-	check_file(token);
 }
 
 t_token	*tokenizer(char *str, t_type type, t_token *token)
 {
 	token = add_node_token(token, str, type);
-	token_relativity(token);
+//	token_relativity(token);
 	return (token);
 }
