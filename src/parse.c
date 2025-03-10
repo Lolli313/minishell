@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/09 18:50:53 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/10 17:36:42 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,17 +122,38 @@ t_token	*handle_input(t_token *token, char **strings)
 	return (token);
 }
 
+void	print_lines(t_line *line)
+{
+	t_line	*current;
+	int		i;
+
+	current = line;
+	while (current)
+	{
+		i = 0;
+		ft_printf("COMMAND: ");
+		while (current->command[i])
+			ft_printf("%s ", current->command[i++]);
+		ft_printf("\nINFILE: %s, OUTFILE: %s, APPEND: %d, LIMITER: %s\n", current->infile, current->outfile, current->append, current->limiter);
+		current = current->next;
+	}
+}
+
 void	parse_string(char *line)
 {
 	char	**strings;
 	t_token	*token;
+	t_line	*parsed_lines;
 
 	if (ft_strncmp(line, "\0", 1) == 0)
 		return ;
 	token = NULL;
+	parsed_lines = NULL;
 	strings = ft_split(line, ' ');
 	token = handle_input(token, strings);
 	print_tokens(token);
-	free_matrix(strings);
-	free_token_list(token);
+	parsed_lines = structurize_line(token, parsed_lines);
+	print_lines(parsed_lines);
+//	free_matrix(strings);
+//	free_token_list(token);
 }
