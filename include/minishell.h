@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/10 16:07:32 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:17:16 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_line
 {
 	char	**command;
 	char	*infile;
+	bool	use_infile;
 	char	*outfile;
 	bool	append;
 	char	*limiter;

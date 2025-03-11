@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/10 17:27:10 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:01:25 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,12 @@ char	**make_command_into_array(t_token *token)
 	int		i;
 	
 	counter = calculate_number_of_commands(token);
+	if (counter == 0)
+		return (NULL);
 	current = find_command(token);
 	array = ft_calloc(counter + 1, sizeof(char *));
-	array[0] = current->str;
+	if (current->str)
+		array[0] = current->str;
 	current = current->next;
 	i = 1;
 	while (current && current->type != PIPE)

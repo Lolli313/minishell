@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/10 17:36:42 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:08:15 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	print_lines(t_line *line)
 	{
 		i = 0;
 		ft_printf("COMMAND: ");
-		while (current->command[i])
+		while (current->command && current->command[i])
 			ft_printf("%s ", current->command[i++]);
 		ft_printf("\nINFILE: %s, OUTFILE: %s, APPEND: %d, LIMITER: %s\n", current->infile, current->outfile, current->append, current->limiter);
 		current = current->next;
