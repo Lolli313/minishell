@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/09 17:44:17 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:31:57 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	main(int ac, char **av, char **envp)
 {
+	t_mini	mini;
 	(void)ac;
 	(void)av;
 //	(void)envp;
@@ -21,8 +22,8 @@ int	main(int ac, char **av, char **envp)
 	while (1)
 	{
 		char	*line = readline("minishell$ ");
-		parse_string(line);
-		init_env(envp);
+		mini.env = init_env(envp);
+		parse_string(&mini, line);
 		free(line);
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/12 11:06:09 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:31:45 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,21 @@ typedef struct s_env
 	struct s_env	*next;
 }		t_env;
 
-typedef struct s_shell
+typedef struct s_mini
 {
-	t_env	env;
-}	t_shell;
+    int			exit_flag;
+    char		*infile;
+    char		*outfile;
+    int			stdin;
+    int			stdout;
+    int			pid;
+    t_line		*line;
+    t_type		type;
+    t_token		*token;
+    t_env		*env;
+}                    t_mini;
 
-void	parse_string(char *line);
+void	parse_string(t_mini *mini, char *line);
 
 t_token	*tokenizer(char *str, t_type type, t_token *token);
 

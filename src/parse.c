@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/12 12:33:50 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:11:20 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,39 @@ t_token	*handle_input(t_token *token, char **strings)
 	if (token->type == 0 && handle_command(strings[0]) == false)
 		return (NULL);
 	token_relativity(token);
+	while (token)
+	{
+		// TODO check for a $ character in every token
+	}
 	return (token);
+}
+
+char	*ft_getenv(t_env *env, char *str)
+{
+	t_env	*current;
+
+	current = env;
+	while (current)
+	{
+		if (ft_strncmp(current->key, str, ft_strlen(str)) == 0)
+			return (current->value);
+		current = current->next;
+	}
+	return (str);
+}
+
+char	*expand_variable(char *token, t_mini *mini)
+{
+	char	*value;
+	char	*variable;
+
+	variable = token + 1;
+	if (ft_strncmp(token, "?", 2))
+		return (mini->exit_flag);
+	value = ft_getenv(mini->env, token + 1);
+	if (value == NULL)
+		ft_printf("ERROR\n");
+	return (value);
 }
 
 void	print_lines(t_line *line)
@@ -164,21 +196,21 @@ void	print_lines(t_line *line)
 	}
 }
 
-void	parse_string(char *line)
+void	parse_string(t_mini *mini, char *line)
 {
 	char	**strings;
-	t_token	*token;
-	t_line	*parsed_lines;
+	//t_token	*token;
+	//t_line	*parsed_lines;
 
 	if (ft_strncmp(line, "\0", 1) == 0)
 		return ;
-	token = NULL;
-	parsed_lines = NULL;
+	mini->token = NULL;
+	mini->line = NULL;
 	strings = ft_split(line, ' ');
-	token = handle_input(token, strings);
-	print_tokens(token);
-	parsed_lines = structurize_line(token, parsed_lines);
-	print_lines(parsed_lines);
+	mini->token= handle_input(mini->token, strings);
+	print_tokens(mini->token);
+	mini->line = structurize_line(mini->token, mini->line);
+	print_lines(mini->line);
 //	free_matrix(strings);
 //	free_token_list(token);
 }
