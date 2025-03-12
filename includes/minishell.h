@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/07 11:09:43 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/12 15:21:53 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include "libft.h"
 # include <dirent.h>
 # include <limits.h>
+# include <stdbool.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -23,8 +26,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <readline/history.h>
-#include <readline/readline.h>
 
 // colours
 # define R "\033[1;31m"
@@ -37,53 +38,97 @@
 # define arrow_up "\033[A"
 # define arrow_down "\033[B"
 
+// tokenazation
+typedef enum e_type
+{
+	COMMAND = 0,
+	ARGUMENT = 1,
+	RE_INPUT = 2,
+	RE_OUTPUT = 3,
+	APPEND = 4,
+	PIPE = 5,
+	HERE_DOC = 6,
+	LIMITER = 7,
+	INFILE = 8,
+	OUTFILE = 9,
+}					t_type;
+
+typedef struct s_line
+{
+	char	**command;
+	char	**infile;
+	bool	use_infile;
+	char	**outfile;
+	bool	append;
+	char	**delimiter;
+	struct s_line	*next;
+}	t_line;
+
+typedef struct s_token
+{
+	char			*str;
+	int				index;
+	t_type			type;
+	struct s_token	*next;
+	struct s_token	*previous;
+}					t_token;
+
 // USER=fmick ---> (USER = key) & (fmick = value)
 typedef struct s_env
 {
 	char			*key;
 	char			*value;
-	// char			*key_value;
 	struct s_env	*next;
-}   t_env;
+}					t_env;
 
 typedef struct s_mini
 {
-	int		exit_flag;
-	// t_token	*token;
-	t_env	*env_lst;
-	t_env	*env;
-}			t_mini;
+	int				exit_flag;
+	char			*infile;
+	char			*outfile;
+	int				stdin;
+	int				stdout;
+	int				pid;
+	t_line			*line;
+	t_type			type;
+	t_token			*token;
+	t_env			*env;
+}					t_mini;
 
 // utils
-void		ft_putstr_fd(char *str, int fd);
-int			ft_strcmp(const char *s1, const char *s2);
-char		*ft_strdup(const char *s1);
+void				ft_putstr_fd(char *str, int fd);
+int					ft_strcmp(const char *s1, const char *s2);
+char				*ft_strdup(const char *s1);
 
 // builtins
-int			ft_is_builtin(char **av);
-int			ft_pwd(void);
-int			ft_echo(char **av);
-int			ft_env(t_env *env);
-int	ft_export(t_env *env, char *key, char *value);
-int	ft_env_exists(t_env *env, char *key, char *value);
-void		ft_handle_builtin(char **av, t_mini *mini);
-char	*ft_find_key(t_env	*env, char *key);
-int		ft_update_value(t_env *env, char *key, char *value);
-void	ft_cd(char **av, t_env *env);
+int					ft_is_builtin(char **av);
+int					ft_pwd(void);
+int					ft_echo(char **av);
+int					ft_env(t_env *env);
+int					ft_export(t_env *env, char *key, char *value);
+int					ft_env_exists(t_env *env, char *key, char *value);
+void				ft_handle_builtin(char **av, t_mini *mini);
+char				*ft_find_key(t_env *env, char *key);
+int					ft_update_value(t_env *env, char *key, char *value);
+void				ft_cd(char **av, t_env *env);
 
-// pipe managment
+// externals
 void	ft_handle_external(int ac, char **av, t_mini *mini);
 
+// pipe managment
+void				ft_handle_external(int ac, char **av, t_mini *mini);
+
 // events
-void	ft_env_display(t_env *env);
-t_env	*ft_add_env_node(char **array);
-t_env	*ft_init_env(char **envp);
-char	*ft_get_env(const char *key, t_env *env);
-int		ft_setenv(t_env *env, const char *key, const char *new_value, int overwrite);
+void				ft_env_display(t_env *env);
+t_env				*ft_add_env_node(char **array);
+t_env				*ft_init_env(char **envp);
+char				*ft_get_env(const char *key, t_env *env);
+int					ft_setenv(t_env *env, const char *key,
+						const char *new_value, int overwrite);
+void	ft_sort_env(t_env *env);
 
 // signal
-void	ft_handle_sigint(int signal);
-int	ft_get_g_global(void);
-
+void				ft_handle_sigint(int signal);
+int					ft_get_g_global(void);
 
 #endif

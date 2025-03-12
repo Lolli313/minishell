@@ -3,18 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
+#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/06 08:20:04 by Barmyh           ###   ########.fr        #
+#    Updated: 2025/03/12 15:03:00 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME 		=	minishell
 CFLAGS 		=	-g -Wall -Wextra -Werror -fpie
-SRC 		=	$(addprefix src/env/, ft_env.c \
-				ft_get_env.c) \
+SRC 		=	$(addprefix src/env/, ft_env.c) \
 				$(addprefix src/builtins/, ft_cd.c \
 				ft_echo.c \
 				ft_pwd.c \

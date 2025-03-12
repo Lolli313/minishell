@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/07 08:43:56 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/12 15:28:45 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,10 @@ void	ft_env_display(t_env *env)
 	{
 		if (temp->key && temp->value)
 		{
-			//ft_strjoin(temp->key, temp->key);
 			tmp = ft_strjoin(temp->key, "=");
 			tmp = ft_strjoin(tmp, temp->value);
 			tmp = ft_strjoin(tmp, "\n");
 		}
-	//	printf("%s", tmp);
 		temp = temp->next;
 		free(tmp);
 	}
@@ -69,6 +67,67 @@ t_env	*ft_init_env(char **envp)
 		i++;
 		free (temp);
 	}
+	// ft_sort_env(env);
 	ft_env_display(env);
 	return (env);
 }
+
+void	ft_sort_env(t_env *env)
+{
+	t_env	*lst;
+	char	*tmpk;
+	char	*tmpv;
+	int swapped;
+
+	if (!env)
+		return;
+	swapped = 1;
+	while (swapped)
+	{
+		swapped = 0;
+		lst = env;
+	while (lst)
+	{
+		if (ft_strcmp(lst->key, lst->next->key) > 0)
+		{
+			tmpk = lst->key;
+			lst->key = lst->next->key;
+			lst->next->key = tmpk;
+
+			tmpv = lst->value;
+			lst->value = lst->next->value;
+			lst->next->value = tmpv;
+		}
+		lst = lst->next;
+	}
+}
+}
+/*
+	int		swapped;
+	t_env	*ptr;
+	t_env	*last = NULL;
+
+	if (!env)
+		return;
+	
+	do {
+		swapped = 0;
+		ptr = env;
+
+		while (ptr->next != last)
+		{
+			if (ft_strcmp(ptr->key, ptr->next->key) > 0) // Compare keys
+			{
+				// Swap keys and values instead of nodes
+				char *temp_key = ptr->key;
+				char *temp_value = ptr->value;
+				ptr->key = ptr->next->key;
+				ptr->value = ptr->next->value;
+				ptr->next->key = temp_key;
+				ptr->next->value = temp_value;
+				swapped = 1;
+			}
+			ptr = ptr->next;
+		}
+		last = ptr;
+	} while (swapped);*/
