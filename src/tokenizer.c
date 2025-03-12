@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/11 14:01:25 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:45:16 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ char	**make_command_into_array(t_token *token)
 {
 	t_token	*current;
 	char	**array;
-	int		counter;
-	int		i;
+	size_t	counter;
+	size_t	i;
 	
 	counter = calculate_number_of_commands(token);
 	if (counter == 0)
@@ -190,6 +190,80 @@ t_token	*find_pipe(t_token *token)
 	return (NULL);
 }
 
+size_t	calculate_number_of_types(t_token *token, t_type type)
+{
+	t_token	*current;
+	size_t	counter;
+
+	current = token;
+	counter = 0;
+	while (current && current->type != PIPE)
+	{
+		if (current->type == type)
+			counter++;
+		current = current->next;
+	}
+	return (counter);
+}
+
+char	**make_type_into_array(t_token *token, t_type type)
+{
+	t_token	*current;
+	char	**array;
+	size_t	counter;
+	size_t	i;
+
+	counter = calculate_number_of_types(token, type);
+	if (counter == 0)
+		return (NULL);
+	array = ft_calloc(counter + 1, sizeof(char *));
+	current = token->next;
+	i = 0;
+	while (current && current->type != PIPE)
+	{
+		if (current->previous->type == type)
+			array[i++] = current->str;
+		current = current->next;
+	}
+	return (array);
+}
+
+int	infile_or_delimiter(t_token *token)
+{
+	t_token	*current;
+	int		flag;
+
+	current = token;
+	flag = 0;
+	while (current && current->type != PIPE)
+	{
+		if (current->type == RE_INPUT)
+			flag = 1;
+		else if (current->type == HERE_DOC)
+			flag = 2;
+		current = current->next;
+	}
+	return (flag);
+}
+
+int	outfile_or_append(t_token *token)
+{
+	t_token	*current;
+	int		flag;
+
+	current = token;
+	flag = 0;
+	while (current && current->type != PIPE)
+	{
+		if (current->type == RE_OUTPUT)
+			flag = 1;
+		else if (current->type == APPEND)
+			flag = 2;
+		current = current->next;
+	}
+	return (flag);
+}
+
 t_line	*add_node_line(t_token *token)
 {
 	t_line	*new_node;
@@ -198,10 +272,12 @@ t_line	*add_node_line(t_token *token)
 	if (!new_node)
 		return (NULL);
 	new_node->command = make_command_into_array(token);
-	new_node->infile = find_last_type(token, INFILE);
-	new_node->outfile = find_last_type(token, OUTFILE);
-	new_node->limiter = find_last_type(token, LIMITER);
-	new_node->append = find_last_type(token, APPEND);
+	new_node->infile = make_type_into_array(token, RE_INPUT);
+	new_node->delimiter = make_type_into_array(token, HERE_DOC);
+	new_node->infile_or_delimiter = infile_or_delimiter(token);
+	new_node->outfile = make_type_into_array(token, RE_OUTPUT);
+	new_node->append = make_type_into_array(token, APPEND);
+	new_node->outfile_or_append = outfile_or_append(token);
 	new_node->next = NULL;
 	return (new_node);
 }

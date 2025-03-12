@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/11 14:08:15 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:33:50 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,32 @@ void	print_lines(t_line *line)
 		ft_printf("COMMAND: ");
 		while (current->command && current->command[i])
 			ft_printf("%s ", current->command[i++]);
-		ft_printf("\nINFILE: %s, OUTFILE: %s, APPEND: %d, LIMITER: %s\n", current->infile, current->outfile, current->append, current->limiter);
+		
+		i = 0;
+		ft_printf("INFILE: ");
+		while (current->infile && current->infile[i])
+			ft_printf("%s ", current->infile[i++]);
+		
+		i = 0;
+		ft_printf("DELIMITER: ");
+		while (current->delimiter && current->delimiter[i])
+			ft_printf("%s ", current->delimiter[i++]);
+		
+		ft_printf("INFILE OR DELIMITER: %d ", current->infile_or_delimiter);
+
+		i = 0;
+		ft_printf("OUTFILE: ");
+		while (current->outfile && current->outfile[i])
+			ft_printf("%s ", current->outfile[i++]);
+		
+		i = 0;
+		ft_printf("APPEND: ");
+		while (current->append && current->append[i])
+			ft_printf("%s ", current->append[i++]);
+
+		ft_printf("OUTFILE OR APPEND: %d ", current->outfile_or_append);		
+		
+		ft_printf("\n");
 		current = current->next;
 	}
 }

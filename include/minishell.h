@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/11 14:17:16 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/12 11:06:09 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ typedef enum e_type
 typedef struct s_line
 {
 	char	**command;
-	char	*infile;
-	bool	use_infile;
-	char	*outfile;
-	bool	append;
-	char	*limiter;
+	char	**infile;
+	char	**delimiter;
+	int		infile_or_delimiter;
+	char	**outfile;
+	char	**append;
+	int		outfile_or_append;
 	struct s_line	*next;
 }	t_line;
 
