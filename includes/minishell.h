@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/13 09:22:48 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/13 12:34:26 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,7 @@ typedef struct s_env
 typedef struct s_mini
 {
 	int				exit_flag;
-	char			*infile;
-	char			*outfile;
-	int				stdin;
-	int				stdout;
+	int				iter;
 	int				pid;
 	t_line			*line;
 	t_type			type;

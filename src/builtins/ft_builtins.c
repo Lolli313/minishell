@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/13 09:24:59 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/13 11:24:37 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int	ft_is_builtin(char **av)
 // builtins execution
 void	ft_handle_builtin(char **av, t_mini *mini)
 {
-	//int     is_builtin;
+	int     is_builtin;
     t_env   *env;
 
     env = mini->env;
-  //  is_builtin = ft_is_builtin(av);
-   // if (is_builtin == 0)
-   //     return ; // TODO ERROR
+	is_builtin = ft_is_builtin(av);
+    if (is_builtin == 0)
+    	return ; // TODO ERROR
     if (ft_strcmp(av[0], "pwd") == 0)
 	    ft_pwd();
 	else if (ft_strcmp(av[0], "cd") == 0)
