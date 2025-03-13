@@ -6,22 +6,11 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/06 08:14:21 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/13 09:23:23 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static t_env	*ft_add_node(char *key, char *value)
-{
-	t_env *env = malloc(sizeof(t_env));
-	if (!env)
-		return NULL;
-	env->key = ft_strdup(key);
-	env->value = ft_strdup(value);
-	env->next = NULL;
-	return env;
-}
 
 int	ft_env_exists(t_env *env, char *key, char *value)
 {
@@ -48,18 +37,36 @@ int	ft_env_exists(t_env *env, char *key, char *value)
 // locates the variable and eiter adds it to the end of the
 // linked list of env variables or updates the value of an
 // existing varuable /handles no arguments
-int	ft_export(t_env *env, char *key, char *value)
+int	ft_export(t_env **env, char *str)
 {
-	t_env	*lst;
-	t_env	*new_node;
+	char **temp;
+    char *key;
+    char *value;
 
-	lst = env;
-	new_node = ft_add_node(key, value);
-	if (!new_node)
-		return -1;
-	while (lst && lst->next)
-		lst = lst->next;
-	if (lst)
-		lst->next = new_node;
-	return (0);
+    temp = ft_split(str, '=');
+    if (!temp || !temp[0])
+        return -1; 
+
+    key = temp[0];
+    value = (temp[1] != NULL) ? temp[1] : "";
+
+    printf("Export key: %s\n", key);
+    printf("Export value: %s\n", value);
+
+    if (ft_env_exists(*env, key, value) == 0)
+    {
+        if (*env == NULL)
+            *env = ft_add_env_node(key, value);
+        else
+        {
+            t_env *last = *env;
+            while (last->next)
+                last = last->next;
+            last->next = ft_add_env_node(key, value);
+        }
+    }
+    free(temp[0]);
+    free(temp[1]);
+    free(temp);
+    return 0;
 }

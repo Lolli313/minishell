@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/06 12:36:06 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/13 07:58:53 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 // USER=Barmyh
 
 //update var or add a new one
-
+/*
 char	*ft_find_key(t_env	*env, char *key)
 {
 	t_env	*lst;
@@ -32,7 +32,7 @@ char	*ft_find_key(t_env	*env, char *key)
 		lst = lst->next;
 	}
 	return NULL;
-}
+}*/
 int		ft_update_value(t_env *env, char *key, char *value)
 {
 	t_env *lst;

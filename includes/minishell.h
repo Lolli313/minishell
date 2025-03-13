@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/12 15:21:53 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/13 09:22:48 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,13 @@ char				*ft_strdup(const char *s1);
 
 // builtins
 int					ft_is_builtin(char **av);
+void				ft_handle_builtin(char **av, t_mini *mini);
 int					ft_pwd(void);
 int					ft_echo(char **av);
 int					ft_env(t_env *env);
-int					ft_export(t_env *env, char *key, char *value);
+int					ft_unset(t_mini *mini, char **av);
+int	ft_export(t_env **env, char *str);
 int					ft_env_exists(t_env *env, char *key, char *value);
-void				ft_handle_builtin(char **av, t_mini *mini);
-char				*ft_find_key(t_env *env, char *key);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
 
@@ -120,12 +120,14 @@ void				ft_handle_external(int ac, char **av, t_mini *mini);
 
 // events
 void				ft_env_display(t_env *env);
-t_env				*ft_add_env_node(char **array);
+t_env				*ft_add_env_node(char *key, char *value);
 t_env				*ft_init_env(char **envp);
 char				*ft_get_env(const char *key, t_env *env);
+char				*ft_find_key(t_env *env, char *key);
+char    			*ft_update_key(t_env *env, char *key, char *new_value);
+void    			ft_unset_key(t_env *env, char *key);
 int					ft_setenv(t_env *env, const char *key,
 						const char *new_value, int overwrite);
-void	ft_sort_env(t_env *env);
 
 // signal
 void				ft_handle_sigint(int signal);

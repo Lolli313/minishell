@@ -3,52 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execution.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:01:23 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/12 15:38:48 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/13 06:07:01 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// handle builtin commands (boolean expression, return true1 or false0)
-int	ft_is_builtin(char **av)
-{
-	if (ft_strcmp(av[0], "pwd") == 0)
-		return (1);
-	if (ft_strcmp(av[0], "cd") == 0)
-		return (1);
-	if (ft_strcmp(av[0], "export") == 0)
-		return (1);
-	if (ft_strcmp(av[0], "unset") == 0)
-		return (1);
-	if (ft_strcmp(av[0], "env") == 0)
-		return (1);
-	if (ft_strcmp(av[0], "echo") == 0)
-		return (1);
-	return 0;
-}
-
-void	ft_handle_builtin(char **av, t_mini *mini)
-{
-	
-	if (ft_strcmp(av[0], "echo") == 0)
-		ft_echo(av);
-	if (ft_strcmp(av[0], "export") == 0)
-		ft_export(mini->env, mini->env->key, mini->env->value); 
-	if (ft_strcmp(av[0], "env") == 0)
-		ft_env(mini->env);
-	if (ft_strcmp(av[0], "pwd") == 0)
-		ft_pwd();
-/*	if (ft_strcmp(av[0], "cd") == 0)
-		ft_cd();
-	if (ft_strcmp(av[0], "unset") == 0)
-		ft_unset();
-	if (ft_strcmp(av[0], "echo") == 0)
-		ft_echo(); */
-}
-
 
 // count size of env
 static int		ft_env_size(t_env *env)

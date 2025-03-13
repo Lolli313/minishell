@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/12 15:28:45 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/13 09:16:19 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,21 +25,29 @@ void	ft_env_display(t_env *env)
 		{
 			tmp = ft_strjoin(temp->key, "=");
 			tmp = ft_strjoin(tmp, temp->value);
-			tmp = ft_strjoin(tmp, "\n");
+			free(tmp);
 		}
 		temp = temp->next;
-		free(tmp);
 	}
 }
 
-t_env	*ft_add_env_node(char **array)
+t_env	*ft_add_env_node(char *key, char *value)
 {
 	t_env	*env;
 
 	env = malloc(sizeof(t_env));
-	env->key = array[0];
-	env->value = array[1];
+	if (!env)
+		return (NULL);
+	env->key = ft_strdup(key);
+	env->value = ft_strdup(value);
 	env->next = NULL;
+	if (!env->key || !env->value)
+	{
+		free(env->key);
+		free(env->value);
+		free(env);
+		return NULL;
+	}
 	return (env);
 }
 
@@ -55,19 +63,20 @@ t_env	*ft_init_env(char **envp)
 	while (envp[i])
 	{
 		temp = ft_split(envp[i], '=');
+		if (!temp)
+			return (NULL);
 		if (env == NULL)
-			env = ft_add_env_node(temp);
+			env = ft_add_env_node(temp[0], temp[1]);
 		else
 		{
 			last = env;
 			while (last->next)
 				last = last->next;
-			last->next = ft_add_env_node(temp);
+			last->next = ft_add_env_node(temp[0], temp[1]);
 		}
 		i++;
 		free (temp);
 	}
-	// ft_sort_env(env);
 	ft_env_display(env);
 	return (env);
 }
@@ -103,6 +112,8 @@ void	ft_sort_env(t_env *env)
 }
 }
 /*
+
+sort env, do when bored/have time TODO
 	int		swapped;
 	t_env	*ptr;
 	t_env	*last = NULL;

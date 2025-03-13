@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:12 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/07 12:44:01 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/13 09:22:52 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ int	ft_echo(char **args)
 			i++;
 		}
 	}
-	printf("nflag = %d\n", nflag);
 	if (nflag == 0)
 		write (1, "\n", 1);
 	return (0);
