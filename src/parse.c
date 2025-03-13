@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/12 18:11:20 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:10:33 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,17 +97,23 @@ int	token_type(char *strings)
 	else if (!ft_strncmp(strings, ">", 2))
 		return (RE_OUTPUT);
 	else if (!ft_strncmp(strings, ">>", 3))
-		return (APPEND);
+		return (RE_APPEND);
 	else if (!ft_strncmp(strings, "|", 2))
 		return (PIPE);
 	else if (!ft_strncmp(strings, "<<", 3))
 		return (HERE_DOC);
 	else
 		return (COMMAND);
-	}
+}
+
+char	*extract_env_variable(char *str)
+{
+	
+}
 
 t_token	*handle_input(t_token *token, char **strings)
 {
+	t_token	*current;
 	int	i;
 
 	i = 0;
@@ -116,12 +122,22 @@ t_token	*handle_input(t_token *token, char **strings)
 		token = tokenizer(strings[i], token_type(strings[i]), token);
 		i++;
 	}
-	if (token->type == 0 && handle_command(strings[0]) == false)
-		return (NULL);
+	//	if (token->type == 0 && handle_command(strings[0]) == false)
+	//		return (NULL);
 	token_relativity(token);
-	while (token)
+	current = token;
+	while (current)
 	{
-		// TODO check for a $ character in every token
+		while (*current->str)
+		{
+			if (*current->str == '$')
+			{
+				current->str = extract_env_variable(current->str);
+				break ;
+			}
+			current->str++;
+		}
+		current = current->next;
 	}
 	return (token);
 }

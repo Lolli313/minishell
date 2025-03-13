@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/12 16:31:45 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:28:14 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef enum e_type
 	ARGUMENT = 1,
 	RE_INPUT = 2,
 	RE_OUTPUT = 3,
-	APPEND = 4,
+	RE_APPEND = 4,
 	PIPE = 5,
 	HERE_DOC = 6,
 	LIMITER = 7,
@@ -45,15 +45,23 @@ typedef enum e_type
 	OUTFILE = 9,
 }	t_type;
 
+typedef struct s_redirect
+{
+	t_type		type;
+	char		*str;
+	struct s_re	*next;
+}	t_redirect;
+
 typedef struct s_line
 {
-	char	**command;
-	char	**infile;
-	char	**delimiter;
-	int		infile_or_delimiter;
-	char	**outfile;
-	char	**append;
-	int		outfile_or_append;
+	char		**command;
+	/*char		**infile;
+	char		**delimiter;
+	int			infile_or_delimiter;
+	char		**outfile;
+	char		**append;
+	int			outfile_or_append;*/
+	t_redirect	*redirect;
 	struct s_line	*next;
 }	t_line;
 

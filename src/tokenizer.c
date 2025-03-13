@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/12 12:45:16 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:10:33 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	find_redirect(t_token *token)
 	current = token->next;
 	while (current)
 	{
-		if (current->previous->type == RE_OUTPUT || current->previous->type == APPEND)
+		if (current->previous->type == RE_OUTPUT || current->previous->type == RE_APPEND)
 			current->type = OUTFILE;
 		else if (current->previous->type == RE_INPUT)
 			current->type = INFILE;
@@ -257,11 +257,41 @@ int	outfile_or_append(t_token *token)
 	{
 		if (current->type == RE_OUTPUT)
 			flag = 1;
-		else if (current->type == APPEND)
+		else if (current->type == RE_APPEND)
 			flag = 2;
 		current = current->next;
 	}
 	return (flag);
+}
+
+t_redirect	*add_node_redirect(t_token *token)
+{
+	t_redirect	*new_node;
+
+	new_node = malloc(sizeof(t_redirect));
+	if (!new_node)
+		return (0);
+	new_node->str = token->str;
+	new_node->type = token->type;
+	new_node->next = NULL;
+	return (new_node);
+}
+
+t_redirect	*structurize_redirect(t_token *token)
+{
+	t_token		*current;
+	t_redirect	*redirect;
+
+	redirect = NULL;
+	current	= token;
+	while (current && current->type != PIPE)
+	{
+		if (current->type == RE_INPUT || current->type == RE_OUTPUT || current->type == RE_APPEND || current->type == HERE_DOC)
+		{
+			redirect = add_node_redirect(current);
+			
+		}
+	}
 }
 
 t_line	*add_node_line(t_token *token)
@@ -276,7 +306,7 @@ t_line	*add_node_line(t_token *token)
 	new_node->delimiter = make_type_into_array(token, HERE_DOC);
 	new_node->infile_or_delimiter = infile_or_delimiter(token);
 	new_node->outfile = make_type_into_array(token, RE_OUTPUT);
-	new_node->append = make_type_into_array(token, APPEND);
+	new_node->append = make_type_into_array(token, RE_APPEND);
 	new_node->outfile_or_append = outfile_or_append(token);
 	new_node->next = NULL;
 	return (new_node);
