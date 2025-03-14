@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/13 18:10:33 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:27:53 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,58 @@ char	*extract_env_variable(char *str)
 	
 }
 
-t_token	*handle_input(t_token *token, char **strings)
+
+
+
+char	*ft_getenv(t_env *env, char *str)
+{
+	t_env	*current;
+	
+	current = env;
+	while (current)
+	{
+		if (ft_strncmp(current->key, str, ft_strlen(str)) == 0)
+		return (current->value);
+		current = current->next;
+	}
+	while (*str)
+	{
+
+	}
+	return (str);
+}
+
+char	*expand_variable(char *token, t_mini *mini)
+{
+	char	*value;
+	char	*variable;
+	
+	variable = token + 1;
+	if (ft_strncmp(token, "$?", 3))
+		return (mini->exit_flag);
+	value = ft_getenv(mini->env, token + 1);
+	if (value == NULL)
+		ft_printf("ERROR\n");
+	return (value);
+}
+
+bool	check_dollar_sign(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i++] == '$')
+			return (true);
+	}
+	return (false);
+}
+
+t_token	*handle_input(t_mini *mini, t_token *token, char **strings)
 {
 	t_token	*current;
-	int	i;
+	size_t	i;
 
 	i = 0;
 	while (strings[i])
@@ -126,55 +174,36 @@ t_token	*handle_input(t_token *token, char **strings)
 	//		return (NULL);
 	token_relativity(token);
 	current = token;
-	while (current)
+	/*while (current)
 	{
 		while (*current->str)
 		{
 			if (*current->str == '$')
 			{
-				current->str = extract_env_variable(current->str);
+				current->str = expand_variable(current->str);
 				break ;
 			}
 			current->str++;
+		}
+		current = current->next;
+	}*/
+	while (current)
+	{
+		if (current->str)
+		{
+			if (check_dollar_sign(current->str) == true);
+				current->str = expand_variable(current->str, mini);
 		}
 		current = current->next;
 	}
 	return (token);
 }
 
-char	*ft_getenv(t_env *env, char *str)
-{
-	t_env	*current;
-
-	current = env;
-	while (current)
-	{
-		if (ft_strncmp(current->key, str, ft_strlen(str)) == 0)
-			return (current->value);
-		current = current->next;
-	}
-	return (str);
-}
-
-char	*expand_variable(char *token, t_mini *mini)
-{
-	char	*value;
-	char	*variable;
-
-	variable = token + 1;
-	if (ft_strncmp(token, "?", 2))
-		return (mini->exit_flag);
-	value = ft_getenv(mini->env, token + 1);
-	if (value == NULL)
-		ft_printf("ERROR\n");
-	return (value);
-}
-
 void	print_lines(t_line *line)
 {
 	t_line	*current;
 	int		i;
-
+	
 	current = line;
 	while (current)
 	{
@@ -223,7 +252,7 @@ void	parse_string(t_mini *mini, char *line)
 	mini->token = NULL;
 	mini->line = NULL;
 	strings = ft_split(line, ' ');
-	mini->token= handle_input(mini->token, strings);
+	mini->token= handle_input(mini, mini->token, strings);
 	print_tokens(mini->token);
 	mini->line = structurize_line(mini->token, mini->line);
 	print_lines(mini->line);
