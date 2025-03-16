@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/13 18:10:33 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/16 16:28:09 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -276,7 +276,7 @@ t_redirect	*add_node_redirect(t_token *token)
 	new_node->next = NULL;
 	return (new_node);
 }
-
+/*
 t_redirect	*structurize_redirect(t_token *token)
 {
 	t_token		*current;
@@ -332,7 +332,7 @@ t_line	*structurize_line(t_token *token, t_line *line)
 		i++;
 	}
 	return (line);
-}
+}*/
 
 void	token_relativity(t_token *token)
 {

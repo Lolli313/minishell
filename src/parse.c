@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/14 19:27:53 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/16 16:55:54 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	token_type(char *strings)
 	else
 		return (COMMAND);
 }
-
+/*
 char	*extract_env_variable(char *str)
 {
 	
@@ -157,6 +157,49 @@ bool	check_dollar_sign(char *str)
 			return (true);
 	}
 	return (false);
+}*/
+
+//    \' \" \\ \$ can be escaped with a backslash in bash without -e flag"
+//    make a check for unclosed quotes
+/*
+size_t	find_specific_character(char *str, char c)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+char	*handle_single_quote(char *str)
+{
+	char	*new_str;
+	int		len;
+
+	len = find_specific_character(str, '\'');
+	new_str = ft_substr(str, 0, len);
+	return (new_str);
+}
+
+char	*check_expand_variable(char	*str)
+{
+	char	*new_str;
+	char	*temp;
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'')
+			handle_single_quote(str + i + 1);
+		else if (str[i] == '\"')
+			handle_double_quote(str + i + 1);			
+	}
 }
 
 t_token	*handle_input(t_mini *mini, t_token *token, char **strings)
@@ -174,26 +217,10 @@ t_token	*handle_input(t_mini *mini, t_token *token, char **strings)
 	//		return (NULL);
 	token_relativity(token);
 	current = token;
-	/*while (current)
-	{
-		while (*current->str)
-		{
-			if (*current->str == '$')
-			{
-				current->str = expand_variable(current->str);
-				break ;
-			}
-			current->str++;
-		}
-		current = current->next;
-	}*/
 	while (current)
 	{
 		if (current->str)
-		{
-			if (check_dollar_sign(current->str) == true);
-				current->str = expand_variable(current->str, mini);
-		}
+			current->str = check_expand_variable(current->str);
 		current = current->next;
 	}
 	return (token);
@@ -239,23 +266,127 @@ void	print_lines(t_line *line)
 		ft_printf("\n");
 		current = current->next;
 	}
+}*/
+
+int is_operator_char(char c)
+{
+	return (c == '<' || c == '>' || c == '|');
+}
+
+t_type get_operator_type(char *op, int len)
+{
+    if (len == 1) {
+        if (op[0] == '<')
+            return RE_INPUT;
+        else if (op[0] == '>')
+            return RE_OUTPUT;
+        else if (op[0] == '|')
+            return PIPE;
+    } else if (len == 2) {
+        if (op[0] == '<' && op[1] == '<')
+            return HERE_DOC;
+        else if (op[0] == '>' && op[1] == '>')
+            return RE_APPEND;
+    }
+    return COMMAND;
+}
+
+void	init_extract(t_extract *extract, int pos)
+{
+	extract->start = pos;
+	extract->len = 0;
+	extract->in_quotes = false;
+	extract->quote_char = '\0';
+}
+
+char	*check_unclosed_quote(char *input, int start, int len, bool in_quotes)
+{
+	if (in_quotes)
+		return (ft_printf("Error: Unclosed quote detected\n"), NULL);
+	return (ft_substr(input, start, len));
+} 
+
+char *extract_word(t_extract *extract, char *input, int *pos)
+{
+	init_extract(extract, *pos);
+    while (input[extract->start + extract->len]) 
+	{
+        if ((input[extract->start + extract->len] == '\'' || input[extract->start + extract->len] == '\"') && 
+            (!extract->in_quotes || input[extract->start + extract->len] == extract->quote_char)) 
+		{
+			if (!extract->in_quotes) 
+			{
+				extract->in_quotes = true;
+                extract->quote_char = input[extract->start + extract->len];
+            } 
+			else 
+			{
+				extract->in_quotes = false;
+                extract->quote_char = '\0';
+            }
+        }
+        if (!extract->in_quotes && (input[extract->start + extract->len] == ' ' || is_operator_char(input[extract->start + extract->len])))
+			break; 
+        extract->len++;
+    }
+	if (extract->in_quotes)
+		return (ft_printf("Error: Unclosed quote detected\n"), NULL);
+	*pos = extract->start + extract->len;
+    return (ft_substr(input, extract->start, extract->len));
+}
+
+t_token	*if_operator(t_token *token, char *input, int *i)
+{
+	char	op[2];
+	int		op_len;
+
+	op_len = 1;
+	op[0] = input[(*i)++];
+	if (input[*i] == op[0] && (op[0] == '<' || op[0] == '>'))
+	{
+		op[1] = input[(*i)++];
+		op_len = 2;
+	}
+	token = add_node_token(token, ft_strdup(op), get_operator_type(op, op_len));
+	return (token);
+}
+
+t_token *tokenize_input(t_mini *mini, t_token *token, char *input)
+{
+    int		i;
+	char	*word;
+
+    i = 0;
+    while (input[i]) 
+	{
+        if (input[i] == ' ' || input[i] == '\t') 
+			i++;
+        else if (is_operator_char(input[i])) 
+			token = if_operator(token, input, &i);
+        else
+		{
+			word = extract_word(&mini->extract, input, &i);
+			if (word == NULL)
+				return (NULL);
+			token = add_node_token(token, word, COMMAND);
+		}
+    }
+	token_relativity(token);
+    return (token);
 }
 
 void	parse_string(t_mini *mini, char *line)
 {
-	char	**strings;
-	//t_token	*token;
-	//t_line	*parsed_lines;
-
 	if (ft_strncmp(line, "\0", 1) == 0)
 		return ;
 	mini->token = NULL;
 	mini->line = NULL;
-	strings = ft_split(line, ' ');
-	mini->token= handle_input(mini, mini->token, strings);
+	mini->token = tokenize_input(mini, mini->token, line);
+	if (mini->token == NULL)
+		return ;
 	print_tokens(mini->token);
-	mini->line = structurize_line(mini->token, mini->line);
-	print_lines(mini->line);
+//	mini->line = structurize_line(mini->token, mini->line);
+//	print_lines(mini->line);
 //	free_matrix(strings);
 //	free_token_list(token);
 }

@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/13 16:28:14 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:15:53 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,6 @@ typedef struct s_redirect
 typedef struct s_line
 {
 	char		**command;
-	/*char		**infile;
-	char		**delimiter;
-	int			infile_or_delimiter;
-	char		**outfile;
-	char		**append;
-	int			outfile_or_append;*/
 	t_redirect	*redirect;
 	struct s_line	*next;
 }	t_line;
@@ -81,6 +75,14 @@ typedef struct s_env
 	struct s_env	*next;
 }		t_env;
 
+typedef struct s_extract
+{
+	int		start;
+	int		len;
+	bool	in_quotes;
+	char	quote_char;
+}	t_extract;
+
 typedef struct s_mini
 {
     int			exit_flag;
@@ -93,7 +95,8 @@ typedef struct s_mini
     t_type		type;
     t_token		*token;
     t_env		*env;
-}                    t_mini;
+	t_extract	extract;
+}	t_mini;
 
 void	parse_string(t_mini *mini, char *line);
 
@@ -104,5 +107,7 @@ void	token_relativity(t_token *token);
 t_line	*structurize_line(t_token *token, t_line *line);
 
 t_env	*init_env(char **envp);
+
+t_token	*add_node_token(t_token *token, char *str, t_type type);
 
 #endif
