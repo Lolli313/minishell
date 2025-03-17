@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/16 16:55:54 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:31:00 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	print_tokens(t_token *token)
 		current = current->next;
 	}
 }
-
+/*
 int	token_type(char *strings)
 {
 	if (!ft_strncmp(strings, "<", 2))
@@ -105,7 +105,7 @@ int	token_type(char *strings)
 	else
 		return (COMMAND);
 }
-/*
+
 char	*extract_env_variable(char *str)
 {
 	
@@ -268,6 +268,69 @@ void	print_lines(t_line *line)
 	}
 }*/
 
+void	free_many(char *str1, char *str2, char *str3, char *str4)
+{
+	if (str1)
+		free(str1);
+	if (str2)
+		free(str2);
+	if (str3)
+		free(str3);
+	if (str4)
+		free(str4);
+}
+
+char	*handle_single_quote(char *org, char *sub, int *pos)
+{
+	char	*result;
+	char	*temp;
+	char	*temp1;
+	int		len;
+
+	if (org[*pos + 1] == '\'')
+		return (free(org), ft_strdup(""));
+	len = 1;
+	temp = ft_substr(org, 0, *pos);
+	while (sub[len])
+	{
+		if (sub[len] == '\'')
+			break ;
+		len++;
+	}
+	temp1 = ft_substr(org, *pos + 1, len - 1);
+	result = ft_strjoin(temp, temp1);
+	free_many(temp, temp1, 0, 0);
+	temp = ft_substr(sub, len + 1, ft_strlen(org));
+	temp1 = ft_strjoin(result, temp);
+	free_many(temp, result, org, 0);
+	*pos += len - 1;
+	return (temp1);
+}
+
+void	expand_variables(t_token *token)
+{
+	t_token	*current;
+	int	i;
+
+	current = token;
+	while (current)
+	{
+		i = 0;
+		while (current->str[i])
+		{
+			if (current->str[i] == '\'')
+				current->str = handle_single_quote(current->str, current->str + i, &i);
+			/*else if (current->str[i] == '\"')
+				current->str = handle_double_quote(current->str, current->str + 1, &i);
+			else if (current->str[i] == '$')
+				current->str = handle_dollar_sign(current->str, current->str + 1, &i);*/
+			else
+				i++;
+		}
+		current = current->next;
+	}
+}
+
 int is_operator_char(char c)
 {
 	return (c == '<' || c == '>' || c == '|');
@@ -275,14 +338,17 @@ int is_operator_char(char c)
 
 t_type get_operator_type(char *op, int len)
 {
-    if (len == 1) {
+    if (len == 1)
+	{
         if (op[0] == '<')
             return RE_INPUT;
         else if (op[0] == '>')
             return RE_OUTPUT;
         else if (op[0] == '|')
             return PIPE;
-    } else if (len == 2) {
+    }
+	else if (len == 2)
+	{
         if (op[0] == '<' && op[1] == '<')
             return HERE_DOC;
         else if (op[0] == '>' && op[1] == '>')
@@ -309,12 +375,12 @@ char	*check_unclosed_quote(char *input, int start, int len, bool in_quotes)
 char *extract_word(t_extract *extract, char *input, int *pos)
 {
 	init_extract(extract, *pos);
-    while (input[extract->start + extract->len]) 
+    while (input[extract->start + extract->len])
 	{
         if ((input[extract->start + extract->len] == '\'' || input[extract->start + extract->len] == '\"') && 
             (!extract->in_quotes || input[extract->start + extract->len] == extract->quote_char)) 
 		{
-			if (!extract->in_quotes) 
+			if (!extract->in_quotes)
 			{
 				extract->in_quotes = true;
                 extract->quote_char = input[extract->start + extract->len];
@@ -372,6 +438,7 @@ t_token *tokenize_input(t_mini *mini, t_token *token, char *input)
 		}
     }
 	token_relativity(token);
+	expand_variables(token);
     return (token);
 }
 
