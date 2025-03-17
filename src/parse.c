@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/17 17:31:00 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/17 20:01:58 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,23 +114,7 @@ char	*extract_env_variable(char *str)
 
 
 
-char	*ft_getenv(t_env *env, char *str)
-{
-	t_env	*current;
-	
-	current = env;
-	while (current)
-	{
-		if (ft_strncmp(current->key, str, ft_strlen(str)) == 0)
-		return (current->value);
-		current = current->next;
-	}
-	while (*str)
-	{
 
-	}
-	return (str);
-}
 
 char	*expand_variable(char *token, t_mini *mini)
 {
@@ -268,6 +252,20 @@ void	print_lines(t_line *line)
 	}
 }*/
 
+char    *ft_getenv(t_env *env, char *key)
+{
+    t_env   *current;
+
+    current = env;
+    while (current)
+    {
+        if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
+            return (current->value);
+        current = current->next;
+    }
+    return (NULL);
+}
+
 void	free_many(char *str1, char *str2, char *str3, char *str4)
 {
 	if (str1)
@@ -307,12 +305,69 @@ char	*handle_single_quote(char *org, char *sub, int *pos)
 	return (temp1);
 }
 
-void	expand_variables(t_token *token)
+bool	is_valid_char(char c, bool first)
+{
+	if (first == true)
+		return (ft_isalpha(c) || c == '_');
+	return (ft_isalnum(c) || c == '_');
+}
+
+int	handle_dollar_get_end(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i++] == '$')
+			break ;
+	}
+	return (i);
+}
+
+char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
+{
+	char	*temp1;
+	char	*temp2;
+	char	*temp3;
+	int		len;
+
+	if (org[1] == 0)
+		return (org);
+	len = 1;
+	temp1 = ft_substr(org, 0, *pos);
+	if (is_valid_char(sub[len], true) == false)
+	{
+		len = handle_dollar_get_end(sub + len);
+		temp2 = ft_substr(org, *pos + 1, len - 1);
+		temp3 = ft_strjoin(temp1, temp2);
+		free_many(temp1, temp2, 0, 0);
+	}
+	else
+	{
+		while (is_valid_char(sub[len], false) == true)
+			len++;
+		temp2 = ft_substr(org, *pos + 1, len - 1);
+		temp3 = ft_getenv(env, temp2);
+		free(temp2);
+		temp2 = ft_strjoin(temp1, temp3);
+		free_many(temp1, temp3, 0, 0);
+		len += handle_dollar_get_end(sub + len);
+		//TODO substr until the end and strjoin I think
+	}
+	temp1 = ft_substr(sub, len, ft_strlen(org));
+	temp2 = ft_strjoin(temp1, temp3);
+	free_many(temp1, temp3, org, 0);
+	*pos += len - 1;
+	return (temp2);
+}
+
+void	expand_variables(t_mini *mini)
 {
 	t_token	*current;
 	int	i;
 
-	current = token;
+	current = mini->token;
 	while (current)
 	{
 		i = 0;
@@ -321,9 +376,9 @@ void	expand_variables(t_token *token)
 			if (current->str[i] == '\'')
 				current->str = handle_single_quote(current->str, current->str + i, &i);
 			/*else if (current->str[i] == '\"')
-				current->str = handle_double_quote(current->str, current->str + 1, &i);
+				current->str = handle_double_quote(current->str, current->str + 1, &i);*/
 			else if (current->str[i] == '$')
-				current->str = handle_dollar_sign(current->str, current->str + 1, &i);*/
+				current->str = handle_dollar_sign(mini->env, current->str, current->str + i, &i);
 			else
 				i++;
 		}
@@ -438,7 +493,7 @@ t_token *tokenize_input(t_mini *mini, t_token *token, char *input)
 		}
     }
 	token_relativity(token);
-	expand_variables(token);
+	expand_variables(mini);
     return (token);
 }
 
