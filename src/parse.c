@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/17 20:01:58 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:37:33 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,10 +260,10 @@ char    *ft_getenv(t_env *env, char *key)
     while (current)
     {
         if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
-            return (current->value);
+            return (ft_strdup(current->value));
         current = current->next;
     }
-    return (NULL);
+    return (ft_strdup(""));
 }
 
 void	free_many(char *str1, char *str2, char *str3, char *str4)
@@ -333,32 +333,30 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	int		len;
 
 	if (org[1] == 0)
-		return (org);
+		return ((void)(*(pos))++, org);
 	len = 1;
 	temp1 = ft_substr(org, 0, *pos);
 	if (is_valid_char(sub[len], true) == false)
 	{
-		len = handle_dollar_get_end(sub + len);
-		temp2 = ft_substr(org, *pos + 1, len - 1);
+		len = handle_dollar_get_end(sub + len) + 1;
+		temp2 = ft_substr(org, *pos, len);
 		temp3 = ft_strjoin(temp1, temp2);
-		free_many(temp1, temp2, 0, 0);
 	}
 	else
 	{
 		while (is_valid_char(sub[len], false) == true)
 			len++;
-		temp2 = ft_substr(org, *pos + 1, len - 1);
-		temp3 = ft_getenv(env, temp2);
-		free(temp2);
-		temp2 = ft_strjoin(temp1, temp3);
-		free_many(temp1, temp3, 0, 0);
-		len += handle_dollar_get_end(sub + len);
-		//TODO substr until the end and strjoin I think
+		temp3 = ft_substr(org, *pos + 1, len - 1);
+		temp2 = ft_getenv(env, temp3);
+		free(temp3);
+		temp3 = ft_strjoin(temp1, temp2);
+		len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
 	}
+	*pos += ft_strlen(temp2);
+	free_many(temp1, temp2, 0, 0);
 	temp1 = ft_substr(sub, len, ft_strlen(org));
-	temp2 = ft_strjoin(temp1, temp3);
+	temp2 = ft_strjoin(temp3, temp1);
 	free_many(temp1, temp3, org, 0);
-	*pos += len - 1;
 	return (temp2);
 }
 
@@ -396,20 +394,20 @@ t_type get_operator_type(char *op, int len)
     if (len == 1)
 	{
         if (op[0] == '<')
-            return RE_INPUT;
+            return (RE_INPUT);
         else if (op[0] == '>')
-            return RE_OUTPUT;
+            return (RE_OUTPUT);
         else if (op[0] == '|')
-            return PIPE;
+            return (PIPE);
     }
 	else if (len == 2)
 	{
         if (op[0] == '<' && op[1] == '<')
-            return HERE_DOC;
+            return (HERE_DOC);
         else if (op[0] == '>' && op[1] == '>')
-            return RE_APPEND;
+            return (RE_APPEND);
     }
-    return COMMAND;
+    return (COMMAND);
 }
 
 void	init_extract(t_extract *extract, int pos)
@@ -419,13 +417,13 @@ void	init_extract(t_extract *extract, int pos)
 	extract->in_quotes = false;
 	extract->quote_char = '\0';
 }
-
+/*
 char	*check_unclosed_quote(char *input, int start, int len, bool in_quotes)
 {
 	if (in_quotes)
 		return (ft_printf("Error: Unclosed quote detected\n"), NULL);
 	return (ft_substr(input, start, len));
-} 
+}*/
 
 char *extract_word(t_extract *extract, char *input, int *pos)
 {
@@ -463,6 +461,7 @@ t_token	*if_operator(t_token *token, char *input, int *i)
 
 	op_len = 1;
 	op[0] = input[(*i)++];
+	op[1]= 0;
 	if (input[*i] == op[0] && (op[0] == '<' || op[0] == '>'))
 	{
 		op[1] = input[(*i)++];
@@ -472,29 +471,29 @@ t_token	*if_operator(t_token *token, char *input, int *i)
 	return (token);
 }
 
-t_token *tokenize_input(t_mini *mini, t_token *token, char *input)
+t_token *tokenize_input(t_mini *mini, char *input)
 {
     int		i;
 	char	*word;
 
     i = 0;
-    while (input[i]) 
+    while (input[i])
 	{
-        if (input[i] == ' ' || input[i] == '\t') 
+        if (input[i] == ' ' || input[i] == '\t')
 			i++;
-        else if (is_operator_char(input[i])) 
-			token = if_operator(token, input, &i);
+        else if (is_operator_char(input[i]))
+			mini->token = if_operator(mini->token, input, &i);
         else
 		{
 			word = extract_word(&mini->extract, input, &i);
 			if (word == NULL)
 				return (NULL);
-			token = add_node_token(token, word, COMMAND);
+			mini->token = add_node_token(mini->token, word, COMMAND);
 		}
     }
-	token_relativity(token);
+	token_relativity(mini->token);
 	expand_variables(mini);
-    return (token);
+    return (mini->token);
 }
 
 void	parse_string(t_mini *mini, char *line)
@@ -503,7 +502,7 @@ void	parse_string(t_mini *mini, char *line)
 		return ;
 	mini->token = NULL;
 	mini->line = NULL;
-	mini->token = tokenize_input(mini, mini->token, line);
+	mini->token = tokenize_input(mini, line);
 	if (mini->token == NULL)
 		return ;
 	print_tokens(mini->token);
