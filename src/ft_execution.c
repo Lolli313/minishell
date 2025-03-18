@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execution.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 10:01:23 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/13 06:07:01 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/18 10:14:49 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*
 // count size of env
 static int		ft_env_size(t_env *env)
 {
@@ -58,7 +58,7 @@ static char	**ft_combine_keyvalue(t_mini *mini)
 	return (envp);
 }
 
-/*
+
 smth    | smth1    | smth2
   |           |          |
   v           v          v
@@ -70,7 +70,7 @@ Yes, each command in the pipeline gets its own child process.
 Each child process has its own file descriptors and executes the command independently.
 dup2 is used to set up input/output redirection, connecting
 the output of one process to the input of the next.
-*/
+
 // create pipes based on number of commands
 // fork child processes to execute each command
 // set up dup2 to connect pipes correctly
@@ -135,7 +135,7 @@ void	ft_handle_external(int ac, char **av, t_mini *mini)
 // check execve (pathname, argv, envp)
 // check pipex -> arttu
 
-/*
+
 
 void	redir (char *cmd, char **env, int fdin)
 {

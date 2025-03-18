@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/13 09:16:19 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/18 11:55:23 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	ft_env_display(t_env *env)
 {
 	t_env	*temp;
 	char	*tmp;
+	char	*joined;
 	
 	temp = env;
 	while (temp)
@@ -24,8 +25,9 @@ void	ft_env_display(t_env *env)
 		if (temp->key && temp->value)
 		{
 			tmp = ft_strjoin(temp->key, "=");
-			tmp = ft_strjoin(tmp, temp->value);
+			joined = ft_strjoin(tmp, temp->value);
 			free(tmp);
+			free(joined);
 		}
 		temp = temp->next;
 	}
@@ -80,7 +82,7 @@ t_env	*ft_init_env(char **envp)
 	ft_env_display(env);
 	return (env);
 }
-
+/*
 void	ft_sort_env(t_env *env)
 {
 	t_env	*lst;
@@ -110,7 +112,7 @@ void	ft_sort_env(t_env *env)
 		lst = lst->next;
 	}
 }
-}
+}*/
 /*
 
 sort env, do when bored/have time TODO

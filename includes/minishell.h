@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/13 12:34:26 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/18 10:14:21 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef enum e_type
 	ARGUMENT = 1,
 	RE_INPUT = 2,
 	RE_OUTPUT = 3,
-	APPEND = 4,
+	RE_APPEND = 4,
 	PIPE = 5,
 	HERE_DOC = 6,
 	LIMITER = 7,
@@ -53,14 +53,17 @@ typedef enum e_type
 	OUTFILE = 9,
 }					t_type;
 
+typedef struct s_redirect
+{
+	t_type		type;
+	char		*str;
+	struct s_re	*next;
+}	t_redirect;
+
 typedef struct s_line
 {
-	char	**command;
-	char	**infile;
-	bool	use_infile;
-	char	**outfile;
-	bool	append;
-	char	**delimiter;
+	char		**command;
+	t_redirect	*redirect;
 	struct s_line	*next;
 }	t_line;
 
@@ -73,6 +76,14 @@ typedef struct s_token
 	struct s_token	*previous;
 }					t_token;
 
+typedef struct s_extract
+{
+	int		start;
+	int		len;
+	bool	in_quotes;
+	char	quote_char;
+}	t_extract;
+
 // USER=fmick ---> (USER = key) & (fmick = value)
 typedef struct s_env
 {
@@ -83,14 +94,17 @@ typedef struct s_env
 
 typedef struct s_mini
 {
-	int				exit_flag;
-	int				iter;
-	int				pid;
-	t_line			*line;
-	t_type			type;
-	t_token			*token;
-	t_env			*env;
-}					t_mini;
+    int			exit_flag;
+    char		*infile;
+    char		*outfile;
+	int			nbr_of_pipes;
+    int			pid;
+    t_line		*line;
+    t_type		type;
+    t_token		*token;
+    t_env		*env;
+	t_extract	extract;
+}	t_mini;
 
 // utils
 void				ft_putstr_fd(char *str, int fd);
@@ -109,11 +123,8 @@ int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
 
-// externals
-void	ft_handle_external(int ac, char **av, t_mini *mini);
-
 // pipe managment
-void				ft_handle_external(int ac, char **av, t_mini *mini);
+void	ft_handle_pipes(t_mini *mini);
 
 // events
 void				ft_env_display(t_env *env);
