@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/19 11:54:07 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:28:30 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,11 +335,17 @@ int	handle_dollar_get_end(char *str)
 	return (i);
 }
 
-char	*handle_dollar_sign_single(char *before, char *sub, char *org)
+char	*handle_dollar_sign_single(char *before, char *sub, char *org, int *pos)
 {
 	char	*result;
 
-	result = ft_strjoin(before, sub + 1);
+	if (sub[1] == '$')
+	{
+		(void)(*(pos))++;
+		result = ft_strjoin(before, sub);
+	}
+	else
+		result = ft_strjoin(before, sub + 1);
 	free(org);
 	free(before);
 	return (result);
@@ -352,33 +358,77 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	char	*temp3;
 	int		len;
 
-//	if (org[1] == 0)
-//		return ((void)(*(pos))++, org);
-	len = 1;
-//	if (sub[len] == '\'')
-//		handle_single_quote()
-	temp1 = ft_substr(org, 0, *pos);
-	if (org[1] == 0 || is_valid_char(sub[len], true) == false)
-	{
-		if (sub[len] == '\'')
-			return (handle_dollar_sign_single(temp1, sub, org));
+	if (sub[1] == 0)
 		return ((void)(*(pos))++, org);
-	}
-	//else
+	temp1 = ft_substr(org, 0, *pos);
+	if (is_valid_char(sub[1], true) == false)
 	{
-		while (is_valid_char(sub[len], false) == true)
-			len++;
-		temp3 = ft_substr(org, *pos + 1, len - 1);
-		temp2 = ft_getenv(env, temp3);
-		free(temp3);
-		temp3 = ft_strjoin(temp1, temp2);
-		len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
+		if (sub[1] == '\'' || sub[1] == '$' || sub[1] == '\"')
+			return (handle_dollar_sign_single(temp1, sub, org, pos));
+		temp2 = ft_strdup(org);
+		free(org);
+		return ((void)(*(pos))++, temp2);
 	}
+	len = 1;
+	while (is_valid_char(sub[len], false) == true)
+		len++;
+	temp3 = ft_substr(org, *pos + 1, len - 1);
+	temp2 = ft_getenv(env, temp3);
+	free(temp3);
+	temp3 = ft_strjoin(temp1, temp2);
+	len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
 	*pos += ft_strlen(temp2);
 	free_many(temp1, temp2, 0, 0);
 	temp1 = ft_substr(sub, len, ft_strlen(org));
 	temp2 = ft_strjoin(temp3, temp1);
 	free_many(temp1, temp3, org, 0);
+	return (temp2);
+}
+
+char	*check_double_quote_variable(t_env *env, char *org, int *pos)
+{
+	char	*temp2;
+	int		len;
+
+	len = 0;
+	(void)temp2;
+	(void)pos;
+	while (org[len])
+	{
+		if (org[len] == '$')
+			org = handle_dollar_sign(env, org, org + len, &len);
+		else
+			len++;
+	}
+//	*pos = len - 1;
+	return (org);
+}
+
+char	*handle_double_quote(t_env *env, char *org, char *sub, int *pos)
+{
+	char	*temp1;
+	char	*temp2;
+	char	*temp3;
+	int		len;
+
+	len = 1;
+	temp1 = ft_substr(org, 0, *pos);
+	if (sub[1] == '\"')
+		return (if_empty_single_quote(temp1, sub, len, org));
+	while (sub[len])
+	{
+		if (sub[len] == '\"')
+			break ;
+		len++;
+	}
+	temp2 = ft_substr(org, *pos + 1, len - 1);
+	temp2 = check_double_quote_variable(env, temp2, &len);
+	temp3 = ft_strjoin(temp1, temp2);
+	*pos += ft_strlen(temp2);
+	free_many(temp1, temp2, 0, 0);
+	temp1 = ft_substr(sub, len + 1, ft_strlen(org));
+	temp2 = ft_strjoin(temp3, temp1);
+	free_many(temp1, temp3, 0, 0);
 	return (temp2);
 }
 
@@ -395,8 +445,8 @@ void	expand_variables(t_mini *mini)
 		{
 			if (current->str[i] == '\'')
 				current->str = handle_single_quote(current->str, current->str + i, &i);
-			/*else if (current->str[i] == '\"')
-				current->str = handle_double_quote(current->str, current->str + 1, &i);*/
+			else if (current->str[i] == '\"')
+				current->str = handle_double_quote(mini->env, current->str, current->str + i, &i);
 			else if (current->str[i] == '$')
 				current->str = handle_dollar_sign(mini->env, current->str, current->str + i, &i);
 			else
