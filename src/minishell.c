@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:39:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/18 14:04:19 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/19 07:56:14 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	main(int ac, char **av, char **envp)
 				break;
 			}
 			ft_handle_builtin(cmd_args, mini);
+			ft_handle_pipes(mini, envp);
 		}
 		ft_free_split(cmd_args);
 		free(input);

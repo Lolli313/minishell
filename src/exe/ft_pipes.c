@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/18 10:41:51 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/19 08:07:37 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int		ft_count_pipes(t_line *line)
 
 	tmp = line;
 	i = 0;
-	while (tmp->next)
+	while (tmp && tmp->next)
 	{
 		i++;
 		tmp = tmp->next;
@@ -27,20 +27,22 @@ static int		ft_count_pipes(t_line *line)
 	return i;
 }
 
-void	ft_handle_pipes(t_mini *mini)
+void	ft_handle_pipes(t_mini *mini, char **envp)
 {
 	int	i;
 	int	j;
 	pid_t cpid[mini->nbr_of_pipes + 1]; // childpid
-	int pipefd[mini->nbr_of_pipes][2]; 
+	int pipefd[mini->nbr_of_pipes][2];
+	t_line *cmd;
 
 	mini->nbr_of_pipes = ft_count_pipes(mini->line);
+	cmd = mini->line;
 	// create pipes
 	i = 0;
 	while (i < mini->nbr_of_pipes)
 	{
 		if (pipe(pipefd[i]) == -1)
-			exit; // ERROR TODO
+			exit (1); // ERROR TODO
 		i++;
 	}
 	// Fork child processes
@@ -49,21 +51,21 @@ void	ft_handle_pipes(t_mini *mini)
 	{
 		cpid[i] = fork();
 		if (cpid[i] < 0)
-			exit; // ERROR TODO
+			exit (1); // ERROR TODO
 		if (cpid[i] == 0)
 		{
 			if (i == 0)
 			{
-				dup2(pipefd[i][1], STDOUT_FILENO);
+				dup2(pipefd[i][1], STDOUT_FILENO); // write to pipe
 			}
 			else if (i == mini->nbr_of_pipes)
 			{
-				dup2(pipefd[i][0], STDIN_FILENO);
+				dup2(pipefd[i][0], STDIN_FILENO); // read from prev pipe
 			}
 			else
 			{
-				dup2(pipefd[i - 1][0], STDIN_FILENO);
-				dup2(pipefd[i][1], STDOUT_FILENO);
+				dup2(pipefd[i - 1][0], STDIN_FILENO); // read from prev pipe
+				dup2(pipefd[i][1], STDOUT_FILENO); // write to next pipe
 			}
 			j = 0;
 			if (j < mini->nbr_of_pipes)
@@ -72,9 +74,10 @@ void	ft_handle_pipes(t_mini *mini)
 				close(pipefd[j][1]);
 				j++;
 			}
-			execve(mini->line->command[0], mini->line->command, ft_function(envp));
+			execve(cmd->command[0], cmd->command, envp);
 			exit(1);
 		}
+		cmd = cmd->next;
 		i++;
 	}
 	// Close all pipes in parent
@@ -92,7 +95,6 @@ void	ft_handle_pipes(t_mini *mini)
 		waitpid(cpid[i], NULL, 0);
 		i++;
 	}
-	return (0);
 }
 
 //        int execve(const char *pathname, char *const _Nullable argv[],

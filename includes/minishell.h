@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/18 10:14:21 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/19 07:59:20 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_line
 	struct s_line	*next;
 }	t_line;
 
-typedef struct s_token
+typedef struct s_token //lexer
 {
 	char			*str;
 	int				index;
@@ -124,7 +124,7 @@ int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
 
 // pipe managment
-void	ft_handle_pipes(t_mini *mini);
+void	ft_handle_pipes(t_mini *mini, char **envp);
 
 // events
 void				ft_env_display(t_env *env);

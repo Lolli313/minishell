@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
+#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/18 14:07:07 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/19 08:00:55 by Barmyh           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,8 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				$(addprefix src/, minishell.c \
 				ft_execution.c \
 				ft_utils_1.c \
-				ft_signals.c)
+				ft_signals.c) \
+				$(addprefix src/exe/, ft_pipes.c) 
 LIBS 		=	-lreadline -lhistory
 LIBFTDIR 	=	libft/
 LIBFT 		=	$(LIBFTDIR)libft.a
