@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/18 17:37:33 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:54:07 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,6 +278,16 @@ void	free_many(char *str1, char *str2, char *str3, char *str4)
 		free(str4);
 }
 
+char	*if_empty_single_quote(char *before, char *sub, int len, char *org)
+{
+	char	*result;
+
+	result = ft_strjoin(ft_strdup(before), ft_substr(sub, len + 1, ft_strlen(org)));
+	free(before);
+	free(org);
+	return (result);
+}
+
 char	*handle_single_quote(char *org, char *sub, int *pos)
 {
 	char	*result;
@@ -285,10 +295,10 @@ char	*handle_single_quote(char *org, char *sub, int *pos)
 	char	*temp1;
 	int		len;
 
-	if (org[*pos + 1] == '\'')
-		return (free(org), ft_strdup(""));
 	len = 1;
 	temp = ft_substr(org, 0, *pos);
+	if (org[*pos + 1] == '\'')
+		return (if_empty_single_quote(temp, sub, len, org));
 	while (sub[len])
 	{
 		if (sub[len] == '\'')
@@ -325,6 +335,16 @@ int	handle_dollar_get_end(char *str)
 	return (i);
 }
 
+char	*handle_dollar_sign_single(char *before, char *sub, char *org)
+{
+	char	*result;
+
+	result = ft_strjoin(before, sub + 1);
+	free(org);
+	free(before);
+	return (result);
+}
+
 char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 {
 	char	*temp1;
@@ -332,17 +352,19 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	char	*temp3;
 	int		len;
 
-	if (org[1] == 0)
-		return ((void)(*(pos))++, org);
+//	if (org[1] == 0)
+//		return ((void)(*(pos))++, org);
 	len = 1;
+//	if (sub[len] == '\'')
+//		handle_single_quote()
 	temp1 = ft_substr(org, 0, *pos);
-	if (is_valid_char(sub[len], true) == false)
+	if (org[1] == 0 || is_valid_char(sub[len], true) == false)
 	{
-		len = handle_dollar_get_end(sub + len) + 1;
-		temp2 = ft_substr(org, *pos, len);
-		temp3 = ft_strjoin(temp1, temp2);
+		if (sub[len] == '\'')
+			return (handle_dollar_sign_single(temp1, sub, org));
+		return ((void)(*(pos))++, org);
 	}
-	else
+	//else
 	{
 		while (is_valid_char(sub[len], false) == true)
 			len++;
