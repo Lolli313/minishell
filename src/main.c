@@ -6,11 +6,14 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 10:45:21 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:33:02 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+// unsure how to deal with 'ABC=hola' as input
+// do we add that to the env variables or no
 
 int	main(int ac, char **av, char **envp)
 {
@@ -27,10 +30,4 @@ int	main(int ac, char **av, char **envp)
 //		free(line);
 	}
 	return (1);
-/*	char	*line = readline("bash-5.1$ ");
-	parse_string(line);
-//	ft_printf("%s\n", line);
-	init_env(envp);
-//	free(line);
-	return (1);*/
 }

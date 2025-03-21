@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 11:25:17 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:18:08 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -375,17 +375,19 @@ char	*check_double_quote_variable(t_env *env, char *org, int *pos)
 	int		len;
 
 	len = 0;
-	(void)temp2;
+	temp2 = org;
 	(void)pos;
-	while (org[len])
+	while (temp2[len])
 	{
-		if (org[len] == '$')
-			org = handle_dollar_sign(env, org, org + len, &len);
+		if (temp2[len] == '$')
+			temp2 = handle_dollar_sign(env, org, org + len, &len);
 		else
 			len++;
 	}
+	if (temp2 != org)
+		free(org);
 //	*pos = len - 1;
-	return (org);
+	return (temp2);
 }
 
 char	*handle_double_quote(t_env *env, char *org, char *sub, int *pos)
@@ -520,6 +522,33 @@ t_token	*if_operator(t_token *token, char *input, int *i)
 	return (token);
 }
 
+bool	token_validity(t_token *token)
+{
+	t_token	*current;
+
+	current = token;
+	while (current)
+	{
+		if (current->next == NULL)
+		{
+			if (current->type == PIPE || current->type == RE_INPUT || current->type == RE_OUTPUT || current->type == RE_APPEND || current->type == HERE_DOC)
+				return (ft_printf("Error: invalid syntax\n"), false);
+		}
+		else if (current->type == PIPE && (current->next->type == PIPE || current->index == 0))
+			return (ft_printf("Error: invalid syntax\n"), false);
+		else if (current->type == RE_INPUT && current->next->type != INFILE)
+			return (ft_printf("Error: invalid syntax\n"), false);
+		else if (current->type == RE_OUTPUT && current->next->type != OUTFILE)
+			return (ft_printf("Error: invalid syntax\n"), false);
+		else if (current->type == RE_APPEND && current->next->type != APPEND_OUTFILE)
+			return (ft_printf("Error: invalid syntax\n"), false);
+		else if (current->type == HERE_DOC && current->next->type != LIMITER)
+			return (ft_printf("Error: invalid syntax\n"), false);
+		current = current->next;
+	}
+	return (true);
+}
+
 t_token *tokenize_input(t_mini *mini, char *input)
 {
     int		i;
@@ -540,7 +569,11 @@ t_token *tokenize_input(t_mini *mini, char *input)
 			mini->token = add_node_token(mini->token, word, COMMAND);
 		}
     }
+	if (mini->token == NULL)
+		return (NULL);
 	token_relativity(mini->token);
+	if (token_validity(mini->token) == false)
+		return (NULL);
 	expand_variables(mini);
     return (mini->token);
 }

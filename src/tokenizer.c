@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 11:20:00 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:24:01 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ void	find_redirect(t_token *token)
 	current = token->next;
 	while (current)
 	{
-		if (current->previous->type == RE_OUTPUT)
+		if (current->previous->type == RE_OUTPUT && current->type == COMMAND)
 			current->type = OUTFILE;
-		else if (current->previous->type == RE_APPEND)
+		else if (current->previous->type == RE_APPEND && current->type == COMMAND)
 			current->type = APPEND_OUTFILE;
-		else if (current->previous->type == RE_INPUT)
+		else if (current->previous->type == RE_INPUT && current->type == COMMAND)
 			current->type = INFILE;
-		else if (current->previous->type == HERE_DOC)
+		else if (current->previous->type == HERE_DOC && current->type == COMMAND)
 			current->type = LIMITER;
 		current = current->next;
 	}
