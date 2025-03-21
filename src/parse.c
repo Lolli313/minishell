@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/19 16:28:30 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:25:17 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ t_token	*handle_input(t_mini *mini, t_token *token, char **strings)
 		current = current->next;
 	}
 	return (token);
-}
+}*/
 
 void	print_lines(t_line *line)
 {
@@ -224,33 +224,17 @@ void	print_lines(t_line *line)
 			ft_printf("%s ", current->command[i++]);
 		
 		i = 0;
-		ft_printf("INFILE: ");
-		while (current->infile && current->infile[i])
-			ft_printf("%s ", current->infile[i++]);
-		
-		i = 0;
-		ft_printf("DELIMITER: ");
-		while (current->delimiter && current->delimiter[i])
-			ft_printf("%s ", current->delimiter[i++]);
-		
-		ft_printf("INFILE OR DELIMITER: %d ", current->infile_or_delimiter);
-
-		i = 0;
-		ft_printf("OUTFILE: ");
-		while (current->outfile && current->outfile[i])
-			ft_printf("%s ", current->outfile[i++]);
-		
-		i = 0;
-		ft_printf("APPEND: ");
-		while (current->append && current->append[i])
-			ft_printf("%s ", current->append[i++]);
-
-		ft_printf("OUTFILE OR APPEND: %d ", current->outfile_or_append);		
-		
+		ft_printf("\nREDIRECTS: ");		
+		while (current->redirect)
+		{
+			ft_printf("%s ", current->redirect->str);
+			ft_printf("and type %d, ", current->redirect->type);
+			current->redirect = current->redirect->next;
+		}		
 		ft_printf("\n");
 		current = current->next;
 	}
-}*/
+}
 
 char    *ft_getenv(t_env *env, char *key)
 {
@@ -278,7 +262,7 @@ void	free_many(char *str1, char *str2, char *str3, char *str4)
 		free(str4);
 }
 
-char	*if_empty_single_quote(char *before, char *sub, int len, char *org)
+char	*if_empty_quote(char *before, char *sub, int len, char *org)
 {
 	char	*result;
 
@@ -298,7 +282,7 @@ char	*handle_single_quote(char *org, char *sub, int *pos)
 	len = 1;
 	temp = ft_substr(org, 0, *pos);
 	if (org[*pos + 1] == '\'')
-		return (if_empty_single_quote(temp, sub, len, org));
+		return (if_empty_quote(temp, sub, len, org));
 	while (sub[len])
 	{
 		if (sub[len] == '\'')
@@ -358,16 +342,16 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	char	*temp3;
 	int		len;
 
-	if (sub[1] == 0)
-		return ((void)(*(pos))++, org);
+//	if (sub[1] == 0)
+//		return ((void)(*(pos))++, org);
 	temp1 = ft_substr(org, 0, *pos);
 	if (is_valid_char(sub[1], true) == false)
 	{
 		if (sub[1] == '\'' || sub[1] == '$' || sub[1] == '\"')
 			return (handle_dollar_sign_single(temp1, sub, org, pos));
-		temp2 = ft_strdup(org);
-		free(org);
-		return ((void)(*(pos))++, temp2);
+//		temp2 = ft_strdup(org);
+//		free(org);
+		return ((void)(*(pos))++, org);
 	}
 	len = 1;
 	while (is_valid_char(sub[len], false) == true)
@@ -379,9 +363,9 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
 	*pos += ft_strlen(temp2);
 	free_many(temp1, temp2, 0, 0);
-	temp1 = ft_substr(sub, len, ft_strlen(org));
-	temp2 = ft_strjoin(temp3, temp1);
-	free_many(temp1, temp3, org, 0);
+//	temp1 = ft_substr(sub, len, ft_strlen(org));
+	temp2 = ft_strjoin(temp3, ft_substr(sub, len, ft_strlen(org)));
+	free_many(0, temp3, org, 0);
 	return (temp2);
 }
 
@@ -414,7 +398,7 @@ char	*handle_double_quote(t_env *env, char *org, char *sub, int *pos)
 	len = 1;
 	temp1 = ft_substr(org, 0, *pos);
 	if (sub[1] == '\"')
-		return (if_empty_single_quote(temp1, sub, len, org));
+		return (if_empty_quote(temp1, sub, len, org));
 	while (sub[len])
 	{
 		if (sub[len] == '\"')
@@ -489,13 +473,6 @@ void	init_extract(t_extract *extract, int pos)
 	extract->in_quotes = false;
 	extract->quote_char = '\0';
 }
-/*
-char	*check_unclosed_quote(char *input, int start, int len, bool in_quotes)
-{
-	if (in_quotes)
-		return (ft_printf("Error: Unclosed quote detected\n"), NULL);
-	return (ft_substr(input, start, len));
-}*/
 
 char *extract_word(t_extract *extract, char *input, int *pos)
 {
@@ -578,8 +555,8 @@ void	parse_string(t_mini *mini, char *line)
 	if (mini->token == NULL)
 		return ;
 	print_tokens(mini->token);
-//	mini->line = structurize_line(mini->token, mini->line);
-//	print_lines(mini->line);
+	mini->line = structurize_line(mini);
+	print_lines(mini->line);
 //	free_matrix(strings);
 //	free_token_list(token);
 }

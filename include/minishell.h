@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/16 15:15:53 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:16:15 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,19 +43,20 @@ typedef enum e_type
 	LIMITER = 7,
 	INFILE = 8,
 	OUTFILE = 9,
+	APPEND_OUTFILE = 10,
 }	t_type;
 
-typedef struct s_redirect
+typedef struct s_re
 {
 	t_type		type;
 	char		*str;
 	struct s_re	*next;
-}	t_redirect;
+}	t_re;
 
 typedef struct s_line
 {
 	char		**command;
-	t_redirect	*redirect;
+	t_re	*redirect;
 	struct s_line	*next;
 }	t_line;
 
@@ -104,7 +105,7 @@ t_token	*tokenizer(char *str, t_type type, t_token *token);
 
 void	token_relativity(t_token *token);
 
-t_line	*structurize_line(t_token *token, t_line *line);
+t_line	*structurize_line(t_mini *mini);
 
 t_env	*init_env(char **envp);
 

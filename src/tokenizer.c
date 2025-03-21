@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/16 16:28:09 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:20:00 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ void	find_redirect(t_token *token)
 	current = token->next;
 	while (current)
 	{
-		if (current->previous->type == RE_OUTPUT || current->previous->type == RE_APPEND)
+		if (current->previous->type == RE_OUTPUT)
 			current->type = OUTFILE;
+		else if (current->previous->type == RE_APPEND)
+			current->type = APPEND_OUTFILE;
 		else if (current->previous->type == RE_INPUT)
 			current->type = INFILE;
 		else if (current->previous->type == HERE_DOC)
@@ -264,11 +266,11 @@ int	outfile_or_append(t_token *token)
 	return (flag);
 }
 
-t_redirect	*add_node_redirect(t_token *token)
+t_re	*add_node_redirect(t_token *token)
 {
-	t_redirect	*new_node;
+	t_re	*new_node;
 
-	new_node = malloc(sizeof(t_redirect));
+	new_node = malloc(sizeof(t_re));
 	if (!new_node)
 		return (0);
 	new_node->str = token->str;
@@ -276,22 +278,30 @@ t_redirect	*add_node_redirect(t_token *token)
 	new_node->next = NULL;
 	return (new_node);
 }
-/*
-t_redirect	*structurize_redirect(t_token *token)
+
+t_re	*structurize_redirect(t_token *token)
 {
 	t_token		*current;
-	t_redirect	*redirect;
+	t_re	*redirect;
+	t_re	*first;
 
-	redirect = NULL;
+	first = NULL;
 	current	= token;
 	while (current && current->type != PIPE)
 	{
-		if (current->type == RE_INPUT || current->type == RE_OUTPUT || current->type == RE_APPEND || current->type == HERE_DOC)
+		if (first == NULL && (current->type == INFILE || current->type == OUTFILE || current->type == APPEND_OUTFILE || current->type == LIMITER))
 		{
-			redirect = add_node_redirect(current);
-			
+			first = add_node_redirect(current);
+			redirect = first;
 		}
+		else if (current->type == INFILE || current->type == OUTFILE || current->type == APPEND_OUTFILE || current->type == LIMITER)
+		{
+			redirect->next = add_node_redirect(current);
+			redirect = redirect->next;
+		}
+		current = current->next;
 	}
+	return (first);
 }
 
 t_line	*add_node_line(t_token *token)
@@ -302,28 +312,23 @@ t_line	*add_node_line(t_token *token)
 	if (!new_node)
 		return (NULL);
 	new_node->command = make_command_into_array(token);
-	new_node->infile = make_type_into_array(token, RE_INPUT);
-	new_node->delimiter = make_type_into_array(token, HERE_DOC);
-	new_node->infile_or_delimiter = infile_or_delimiter(token);
-	new_node->outfile = make_type_into_array(token, RE_OUTPUT);
-	new_node->append = make_type_into_array(token, RE_APPEND);
-	new_node->outfile_or_append = outfile_or_append(token);
+	new_node->redirect = structurize_redirect(token);
 	new_node->next = NULL;
 	return (new_node);
 }
 
-t_line	*structurize_line(t_token *token, t_line *line)
+t_line	*structurize_line(t_mini *mini)
 {
 	t_line	*current;
 	t_token	*next_pipe;
 	size_t	pipes;
 	size_t	i;
 
-	pipes = count_pipes(token);
+	pipes = count_pipes(mini->token);
 	i = 0;
-	line = add_node_line(token);
-	current = line;
-	next_pipe = token;
+	mini->line = add_node_line(mini->token);
+	current = mini->line;
+	next_pipe = mini->token;
 	while (i < pipes)
 	{
 		next_pipe = find_pipe(next_pipe);
@@ -331,8 +336,8 @@ t_line	*structurize_line(t_token *token, t_line *line)
 		current = current->next;
 		i++;
 	}
-	return (line);
-}*/
+	return (mini->line);
+}
 
 void	token_relativity(t_token *token)
 {

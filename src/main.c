@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/17 10:15:56 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 10:45:21 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int ac, char **av, char **envp)
 		char	*line = readline(G "😭 minishell$ " RESET);
 		mini.env = init_env(envp);
 		parse_string(&mini, line);
-		free(line);
+//		free(line);
 	}
 	return (1);
 /*	char	*line = readline("bash-5.1$ ");
