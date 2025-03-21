@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 14:33:02 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 20:15:24 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 // unsure how to deal with 'ABC=hola' as input
 // do we add that to the env variables or no
+
+// TODO signals (CTRL + D and CTRL + \), free line related structures after every readline loop
+// look into echo -n and how the syntax should be handled, look into how to handle the $?
 
 int	main(int ac, char **av, char **envp)
 {

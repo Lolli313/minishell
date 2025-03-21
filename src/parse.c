@@ -6,11 +6,25 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 14:18:08 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/21 20:20:22 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+char    *ft_getenv(t_env *env, char *key)
+{
+    t_env   *current;
+
+    current = env;
+    while (current)
+    {
+        if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
+            return (ft_strdup(current->value));
+        current = current->next;
+    }
+    return (ft_strdup(""));
+}
 
 bool	check_builtin(char *command)
 {
@@ -28,20 +42,25 @@ bool	check_builtin(char *command)
 		return (true);
 	else if (!ft_strncmp(command, "exit", 5))
 		return (true);
-	else if (!ft_strncmp(command, "$?", 3))
-		return (true);
 	else
 		return (false);
 }
 
-bool	check_external(char *command)
+bool	check_external(t_env *env, char *command)
 {
 	char	**all_paths;
 	char	*temp;
 	char	*str;
 	char	*str1;
 
-	temp = getenv("PATH");
+	if (ft_strncmp(command, "/", 1) == 0)
+	{
+		if (access(command, X_OK) == 0)
+			return (true);
+		else
+			return (false);
+	}
+	temp = ft_getenv(env, "PATH");
 	all_paths = ft_split(temp + 5, ':');
 	while (*all_paths)
 	{
@@ -56,12 +75,12 @@ bool	check_external(char *command)
 	return (false);
 }
 
-bool	handle_command(char *command)
+bool	handle_command(t_env *env, char *command)
 {
-	if (check_builtin(command) == true || check_external(command) == true)
-		return (ft_printf("SUCCESS\n"), true);
+	if (check_builtin(command) == true || check_external(env, command) == true)
+		return (ft_printf("%s is a valid command :)\n", command), true);
 	else
-		return (ft_printf("THIS IS NOT A VALID COMMAND YOU KNOBHEAD\n"), false);
+		return (ft_printf("%s IS NOT A VALID COMMAND YOU KNOBHEAD\n", command), false);
 }
 
 void	free_token_list(t_token *token)
@@ -228,26 +247,13 @@ void	print_lines(t_line *line)
 		while (current->redirect)
 		{
 			ft_printf("%s ", current->redirect->str);
-			ft_printf("and type %d, ", current->redirect->type);
+			ft_printf("is type %d, ", current->redirect->type);
+			ft_printf("\n");
 			current->redirect = current->redirect->next;
-		}		
+		}
 		ft_printf("\n");
 		current = current->next;
 	}
-}
-
-char    *ft_getenv(t_env *env, char *key)
-{
-    t_env   *current;
-
-    current = env;
-    while (current)
-    {
-        if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
-            return (ft_strdup(current->value));
-        current = current->next;
-    }
-    return (ft_strdup(""));
 }
 
 void	free_many(char *str1, char *str2, char *str3, char *str4)
@@ -522,14 +528,16 @@ t_token	*if_operator(t_token *token, char *input, int *i)
 	return (token);
 }
 
-bool	token_validity(t_token *token)
+bool	token_validity(t_mini *mini)
 {
 	t_token	*current;
 
-	current = token;
+	current = mini->token;
 	while (current)
 	{
-		if (current->next == NULL)
+		if (current->type == COMMAND && handle_command(mini->env, current->str) == false)
+			return (false);
+		else if (current->next == NULL)
 		{
 			if (current->type == PIPE || current->type == RE_INPUT || current->type == RE_OUTPUT || current->type == RE_APPEND || current->type == HERE_DOC)
 				return (ft_printf("Error: invalid syntax\n"), false);
@@ -572,7 +580,7 @@ t_token *tokenize_input(t_mini *mini, char *input)
 	if (mini->token == NULL)
 		return (NULL);
 	token_relativity(mini->token);
-	if (token_validity(mini->token) == false)
+	if (token_validity(mini) == false)
 		return (NULL);
 	expand_variables(mini);
     return (mini->token);
