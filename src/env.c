@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:16:50 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/06 16:11:13 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:30:21 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ t_env	*add_env_node(char **array)
 	t_env	*env;
 
 	env = malloc(sizeof(t_env));
-	env->key = array[0];
-	env->value = array[1];
+	env->key = ft_strdup(array[0]);
+	if (array[1] == NULL)
+		env->value = ft_strdup("");
+	else
+		env->value = ft_strdup(array[1]);
 	env->next = NULL;
 	return (env);
 }
@@ -58,7 +61,7 @@ t_env	*init_env(char **envp)
 			last->next = add_env_node(temp);
 		}
 		i++;
-//		free_matrix(temp);
+		free_matrix(temp);
 	}
 //	print_env(env);
 	return (env);

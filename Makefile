@@ -6,7 +6,7 @@
 #    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/05 11:34:52 by aakerblo         ###   ########.fr        #
+#    Updated: 2025/03/22 12:04:16 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 CFLAGS = -g -Wall -Wextra -Werror
 DEPS = -Iinclude
 SRCDIR = ./src/
-SRC = $(SRCDIR)main.c $(SRCDIR)parse.c $(SRCDIR)env.c $(SRCDIR)tokenizer.c $(SRCDIR)init.c
+SRC = $(SRCDIR)main.c $(SRCDIR)parse.c $(SRCDIR)env.c $(SRCDIR)tokenizer.c $(SRCDIR)init.c $(SRCDIR)cleanup.c
 LIBS = -lreadline -lhistory
 LIBFTDIR = ./libft/
 LIBFT = $(LIBFTDIR)libft.a

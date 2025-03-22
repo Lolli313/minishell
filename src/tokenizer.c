@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 13:24:01 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/22 14:24:30 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 
 	new_node = malloc(sizeof(t_token));
 	if (!new_node)
-	return (0);
+		return (0);
 	new_node->str = str;
 	new_node->type = type;
 	new_node->next = NULL;
@@ -134,13 +134,13 @@ char	**make_command_into_array(t_token *token)
 	current = find_command(token);
 	array = ft_calloc(counter + 1, sizeof(char *));
 	if (current->str)
-		array[0] = current->str;
+		array[0] = ft_strdup(current->str);
 	current = current->next;
 	i = 1;
 	while (current && current->type != PIPE)
 	{
 		if (current->type == ARGUMENT)
-			array[i++] = current->str;
+			array[i++] = ft_strdup(current->str);
 		current = current->next;
 	}
 	return (array);
@@ -273,7 +273,7 @@ t_re	*add_node_redirect(t_token *token)
 	new_node = malloc(sizeof(t_re));
 	if (!new_node)
 		return (0);
-	new_node->str = token->str;
+	new_node->str = ft_strdup(token->str);
 	new_node->type = token->type;
 	new_node->next = NULL;
 	return (new_node);

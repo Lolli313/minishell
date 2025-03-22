@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/21 11:16:15 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/22 12:41:27 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,5 +110,11 @@ t_line	*structurize_line(t_mini *mini);
 t_env	*init_env(char **envp);
 
 t_token	*add_node_token(t_token *token, char *str, t_type type);
+
+void	line_cleanup(t_mini *mini);
+
+void	free_env(t_env *env);
+
+void	free_many(char *str1, char *str2, char *str3, char *str4);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/21 20:20:22 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/22 15:55:04 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ bool	check_external(t_env *env, char *command)
 	char	*temp;
 	char	*str;
 	char	*str1;
+	int		i;
 
 	if (ft_strncmp(command, "/", 1) == 0)
 	{
@@ -62,22 +63,25 @@ bool	check_external(t_env *env, char *command)
 	}
 	temp = ft_getenv(env, "PATH");
 	all_paths = ft_split(temp + 5, ':');
-	while (*all_paths)
+	free(temp);
+	i = 0;
+	while (all_paths[i])
 	{
-		str = ft_strjoin(*all_paths, "/");
+		str = ft_strjoin(all_paths[i], "/");
 		str1 = ft_strjoin(str, command);
 		free(str);
 		if (access(str1, X_OK) == 0)
-			return (free(str1), true);
+			return (free_matrix(all_paths), free(str1), true);
 		free(str1);
-		all_paths++;
+		i++;
 	}
+	free_matrix(all_paths);
 	return (false);
 }
 
 bool	handle_command(t_env *env, char *command)
 {
-	if (check_builtin(command) == true || check_external(env, command) == true)
+	if (ft_strlen(command) && (check_builtin(command) == true || check_external(env, command)) == true)
 		return (ft_printf("%s is a valid command :)\n", command), true);
 	else
 		return (ft_printf("%s IS NOT A VALID COMMAND YOU KNOBHEAD\n", command), false);
@@ -232,6 +236,7 @@ t_token	*handle_input(t_mini *mini, t_token *token, char **strings)
 void	print_lines(t_line *line)
 {
 	t_line	*current;
+	t_re	*temp_re;
 	int		i;
 	
 	current = line;
@@ -243,13 +248,14 @@ void	print_lines(t_line *line)
 			ft_printf("%s ", current->command[i++]);
 		
 		i = 0;
-		ft_printf("\nREDIRECTS: ");		
-		while (current->redirect)
+		ft_printf("\nREDIRECTS: ");
+		temp_re = current->redirect;	
+		while (temp_re)
 		{
-			ft_printf("%s ", current->redirect->str);
-			ft_printf("is type %d, ", current->redirect->type);
+			ft_printf("%s ", temp_re->str);
+			ft_printf("is type %d, ", temp_re->type);
 			ft_printf("\n");
-			current->redirect = current->redirect->next;
+			temp_re = temp_re->next;
 		}
 		ft_printf("\n");
 		current = current->next;
@@ -271,10 +277,13 @@ void	free_many(char *str1, char *str2, char *str3, char *str4)
 char	*if_empty_quote(char *before, char *sub, int len, char *org)
 {
 	char	*result;
+	char	*temp;
+	char	*temp1;
 
-	result = ft_strjoin(ft_strdup(before), ft_substr(sub, len + 1, ft_strlen(org)));
-	free(before);
-	free(org);
+	temp = ft_substr(sub, len + 1, ft_strlen(org));
+	temp1 = ft_strdup(before);
+	result = ft_strjoin(temp1, temp);
+	free_many(temp, before, org, temp1);
 	return (result);
 }
 
@@ -357,7 +366,7 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 			return (handle_dollar_sign_single(temp1, sub, org, pos));
 //		temp2 = ft_strdup(org);
 //		free(org);
-		return ((void)(*(pos))++, org);
+		return (free(temp1), (void)(*(pos))++, org);
 	}
 	len = 1;
 	while (is_valid_char(sub[len], false) == true)
@@ -369,9 +378,9 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
 	*pos += ft_strlen(temp2);
 	free_many(temp1, temp2, 0, 0);
-//	temp1 = ft_substr(sub, len, ft_strlen(org));
-	temp2 = ft_strjoin(temp3, ft_substr(sub, len, ft_strlen(org)));
-	free_many(0, temp3, org, 0);
+	temp1 = ft_substr(sub, len, ft_strlen(org));
+	temp2 = ft_strjoin(temp3, temp1);
+	free_many(temp1, temp3, org, 0);
 	return (temp2);
 }
 
@@ -390,9 +399,8 @@ char	*check_double_quote_variable(t_env *env, char *org, int *pos)
 		else
 			len++;
 	}
-	if (temp2 != org)
-		free(org);
-//	*pos = len - 1;
+//	if (temp2 != org)
+//		free(org);
 	return (temp2);
 }
 
@@ -420,7 +428,7 @@ char	*handle_double_quote(t_env *env, char *org, char *sub, int *pos)
 	free_many(temp1, temp2, 0, 0);
 	temp1 = ft_substr(sub, len + 1, ft_strlen(org));
 	temp2 = ft_strjoin(temp3, temp1);
-	free_many(temp1, temp3, 0, 0);
+	free_many(temp1, temp3, org, 0);
 	return (temp2);
 }
 
@@ -573,16 +581,16 @@ t_token *tokenize_input(t_mini *mini, char *input)
 		{
 			word = extract_word(&mini->extract, input, &i);
 			if (word == NULL)
-				return (NULL);
+				return (line_cleanup(mini), NULL);
 			mini->token = add_node_token(mini->token, word, COMMAND);
 		}
     }
 	if (mini->token == NULL)
-		return (NULL);
+		return (line_cleanup(mini), NULL);
 	token_relativity(mini->token);
-	if (token_validity(mini) == false)
-		return (NULL);
 	expand_variables(mini);
+	if (token_validity(mini) == false)
+		return (line_cleanup(mini), NULL);
     return (mini->token);
 }
 
