@@ -3,14 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/13 07:44:08 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/24 10:43:26 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char    *ft_getenv(t_env *env, char *key)
+{
+    t_env   *current;
+
+    current = env;
+    while (current)
+    {
+        if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
+            return (ft_strdup(current->value));
+        current = current->next;
+    }
+    return (ft_strdup(""));
+}
 
 char    *ft_find_key(t_env *env, char *key)
 {

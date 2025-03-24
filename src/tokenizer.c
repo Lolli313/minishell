@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 11:16:47 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 16:43:45 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,6 +325,7 @@ t_line	*structurize_line(t_mini *mini)
 	size_t	i;
 
 	pipes = count_pipes(mini->token);
+	mini->nbr_of_pipes = pipes;
 	i = 0;
 	mini->line = add_node_line(mini->token);
 	current = mini->line;

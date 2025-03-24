@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 14:45:44 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 16:43:11 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include "../libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 // colours
 # define R "\033[1;31m"
@@ -93,6 +95,7 @@ typedef struct s_mini
 	int			nbr_of_pipes;
     int			stdin;
     int			stdout;
+	int			nbr_of_pipes;
     int			pid;
     t_line		*line;
     t_type		type;
@@ -144,7 +147,7 @@ void	ft_handle_pipes(t_mini *mini, char **envp);
 void				ft_env_display(t_env *env);
 t_env				*ft_add_env_node(char *key, char *value);
 t_env				*ft_init_env(char **envp);
-char  				*ft_getenv(t_env *env, char *key);
+char    			*ft_getenv(t_env *env, char *key);
 char				*ft_find_key(t_env *env, char *key);
 char    			*ft_update_key(t_env *env, char *key, char *new_value);
 void    			ft_unset_key(t_env *env, char *key);

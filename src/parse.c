@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 11:16:43 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 16:44:17 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-char    *ft_getenv(t_env *env, char *key)
-{
-    t_env   *current;
-
-    current = env;
-    while (current)
-    {
-        if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
-            return (ft_strdup(current->value));
-        current = current->next;
-    }
-    return (ft_strdup(""));
-}
 
 bool	check_builtin(char *command)
 {
@@ -233,6 +219,8 @@ t_token	*handle_input(t_mini *mini, t_token *token, char **strings)
 	return (token);
 }*/
 
+
+
 void	print_lines(t_line *line)
 {
 	t_line	*current;
@@ -334,45 +322,61 @@ int	handle_dollar_get_end(char *str)
 	return (i);
 }
 
-char	*handle_dollar_sign_single(char *before, char *sub, char *org, int *pos)
+char	*handle_dollar_sign_single(t_mini *mini, char *before, char *org, int *pos)
 {
 	char	*result;
+	char	*temp;
 
-	if (sub[1] == '$')
+	if (org[*pos + 1] == '$')
 	{
 		(void)(*(pos))++;
-		result = ft_strjoin(before, sub);
+		result = ft_strjoin(before, org + *pos);
 	}
 	else
-		result = ft_strjoin(before, sub + 1);
+		result = ft_strjoin(before, org + *pos + 1);
 	free(org);
 	free(before);
 	return (result);
 }
 
-char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
+char	*handle_exit_code(t_mini *mini, char *before, char *org, int *pos)
+{
+	char	*result;
+	char	*temp;
+	int		len;
+	
+	result = ft_itoa(mini->exit_flag);
+	len = ft_strlen(result);
+	temp = ft_strjoin(before, result);
+	free(result);
+	result = ft_strjoin(temp, org + *pos + 2);
+	*pos += len;
+	free(temp);
+	return (result);
+}
+
+char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos)
 {
 	char	*temp1;
 	char	*temp2;
 	char	*temp3;
 	int		len;
 
-//	if (sub[1] == 0)
-//		return ((void)(*(pos))++, org);
+	mini->exit_flag = 58;
 	temp1 = ft_substr(org, 0, *pos);
+	if (sub[1] == '?')
+		return (handle_exit_code(mini, temp1, org, pos));
 	if (is_valid_char(sub[1], true) == false)
 	{
 		if (sub[1] == '\'' || sub[1] == '$' || sub[1] == '\"')
-			return (handle_dollar_sign_single(temp1, sub, org, pos));
-//		temp2 = ft_strdup(org);
-//		free(org);
+			return (handle_dollar_sign_single(mini, temp1, org, pos));
 		return (free(temp1), (void)(*(pos))++, org);
 	}
 	len = 1;
 	while (is_valid_char(sub[len], false) == true)
 		len++;
 	temp3 = ft_substr(org, *pos + 1, len - 1);
-	temp2 = ft_getenv(env, temp3);
+	temp2 = ft_getenv(mini->env, temp3);
 	free(temp3);
 	temp3 = ft_strjoin(temp1, temp2);
 	len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
@@ -384,7 +388,7 @@ char	*handle_dollar_sign(t_env *env, char *org, char *sub, int *pos)
 	return (temp2);
 }
 
-char	*check_double_quote_variable(t_env *env, char *org, int *pos)
+char	*check_double_quote_variable(t_mini *mini, char *org, int *pos)
 {
 	char	*temp2;
 	int		len;
@@ -395,7 +399,7 @@ char	*check_double_quote_variable(t_env *env, char *org, int *pos)
 	while (temp2[len])
 	{
 		if (temp2[len] == '$')
-			temp2 = handle_dollar_sign(env, org, org + len, &len);
+			temp2 = handle_dollar_sign(mini, org, org + len, &len);
 		else
 			len++;
 	}
@@ -404,7 +408,7 @@ char	*check_double_quote_variable(t_env *env, char *org, int *pos)
 	return (temp2);
 }
 
-char	*handle_double_quote(t_env *env, char *org, char *sub, int *pos)
+char	*handle_double_quote(t_mini *mini, char *org, char *sub, int *pos)
 {
 	char	*temp1;
 	char	*temp2;
@@ -422,7 +426,7 @@ char	*handle_double_quote(t_env *env, char *org, char *sub, int *pos)
 		len++;
 	}
 	temp2 = ft_substr(org, *pos + 1, len - 1);
-	temp2 = check_double_quote_variable(env, temp2, &len);
+	temp2 = check_double_quote_variable(mini, temp2, &len);
 	temp3 = ft_strjoin(temp1, temp2);
 	*pos += ft_strlen(temp2);
 	free_many(temp1, temp2, 0, 0);
@@ -446,9 +450,9 @@ void	expand_variables(t_mini *mini)
 			if (current->str[i] == '\'')
 				current->str = handle_single_quote(current->str, current->str + i, &i);
 			else if (current->str[i] == '\"')
-				current->str = handle_double_quote(mini->env, current->str, current->str + i, &i);
+				current->str = handle_double_quote(mini, current->str, current->str + i, &i);
 			else if (current->str[i] == '$')
-				current->str = handle_dollar_sign(mini->env, current->str, current->str + i, &i);
+				current->str = handle_dollar_sign(mini, current->str, current->str + i, &i);
 			else
 				i++;
 		}

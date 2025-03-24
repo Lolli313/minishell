@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
+#    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/24 15:06:34 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/24 16:45:21 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				cleanup.c \
 				tokenizer.c \
 				parse.c \
+				env.c \
 				) \
 				$(addprefix src/exe/, ft_pipes.c) \
 
