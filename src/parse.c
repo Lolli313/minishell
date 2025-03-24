@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 16:44:17 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:02:05 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,10 +322,9 @@ int	handle_dollar_get_end(char *str)
 	return (i);
 }
 
-char	*handle_dollar_sign_single(t_mini *mini, char *before, char *org, int *pos)
+char	*handle_dollar_sign_single(char *before, char *org, int *pos)
 {
 	char	*result;
-	char	*temp;
 
 	if (org[*pos + 1] == '$')
 	{
@@ -369,7 +368,7 @@ char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos)
 	if (is_valid_char(sub[1], true) == false)
 	{
 		if (sub[1] == '\'' || sub[1] == '$' || sub[1] == '\"')
-			return (handle_dollar_sign_single(mini, temp1, org, pos));
+			return (handle_dollar_sign_single(temp1, org, pos));
 		return (free(temp1), (void)(*(pos))++, org);
 	}
 	len = 1;

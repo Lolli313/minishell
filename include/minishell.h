@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 16:43:11 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/24 16:52:14 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/types.h>
-# include <sys/wait.h>
 
 // colours
 # define R "\033[1;31m"
@@ -95,7 +94,6 @@ typedef struct s_mini
 	int			nbr_of_pipes;
     int			stdin;
     int			stdout;
-	int			nbr_of_pipes;
     int			pid;
     t_line		*line;
     t_type		type;
@@ -111,8 +109,6 @@ t_token	*tokenizer(char *str, t_type type, t_token *token);
 void	token_relativity(t_token *token);
 
 t_line	*structurize_line(t_mini *mini);
-
-t_env	*init_env(char **envp);
 
 t_token	*add_node_token(t_token *token, char *str, t_type type);
 
@@ -135,7 +131,7 @@ int					ft_pwd(void);
 int					ft_echo(char **av);
 int					ft_env(t_env *env);
 int					ft_unset(t_mini *mini, char **av);
-int	ft_export(t_env **env, char *str);
+int					ft_export(t_env **env, char *str);
 int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
