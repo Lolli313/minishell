@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/19 08:07:37 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/24 14:56:48 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int		ft_count_pipes(t_line *line)
-{
-	t_line	*tmp;
-	int	i;
-
-	tmp = line;
-	i = 0;
-	while (tmp && tmp->next)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return i;
-}
 
 void	ft_handle_pipes(t_mini *mini, char **envp)
 {
@@ -34,8 +19,7 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 	pid_t cpid[mini->nbr_of_pipes + 1]; // childpid
 	int pipefd[mini->nbr_of_pipes][2];
 	t_line *cmd;
-
-	mini->nbr_of_pipes = ft_count_pipes(mini->line);
+	
 	cmd = mini->line;
 	// create pipes
 	i = 0;
@@ -68,7 +52,7 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 				dup2(pipefd[i][1], STDOUT_FILENO); // write to next pipe
 			}
 			j = 0;
-			if (j < mini->nbr_of_pipes)
+			while (j < mini->nbr_of_pipes)
 			{
 				close(pipefd[j][0]);
 				close(pipefd[j][1]);
@@ -97,5 +81,5 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 	}
 }
 
-//        int execve(const char *pathname, char *const _Nullable argv[],
+// int execve(const char *pathname, char *const _Nullable argv[],
 // char *const _Nullable envp[]);

@@ -6,12 +6,12 @@
 #    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/24 11:02:55 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/24 15:06:34 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME 		= minishell
-CFLAGS		= -g -Wall -Wextra -Werror -fpie
+NAME 		=	minishell
+CFLAGS		=	-g -Wall -Wextra -Werror -fpie
 SRC 		=	$(addprefix src/env/, ft_env.c \
 				ft_env_utils.c) \
 				$(addprefix src/builtins/, ft_cd.c \
@@ -36,7 +36,7 @@ LIBFTDIR 	= 	libft/
 LIBFT 		= 	$(LIBFTDIR)libft.a
 OBJDIR 		= 	obj/
 OBJ 		= 	$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
-INCLUDE		=	-I include -I libft
+INCLUDE		=	-Iinclude -Ilibft
 
 default: all
 

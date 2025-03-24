@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 11:04:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 14:45:44 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct s_re
 typedef struct s_line
 {
 	char		**command;
-	t_re	*redirect;
+	t_re		*redirect;
 	struct s_line	*next;
 }	t_line;
 

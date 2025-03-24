@@ -6,12 +6,13 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/18 11:48:37 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 15:10:50 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// change the value of existing key
 int	ft_env_exists(t_env *env, char *key, char *value)
 {
 	t_env	*lst;

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/19 07:46:09 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/24 15:38:39 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 /*
 > output operator:
@@ -36,7 +36,6 @@ int ft_handle_input_redir(t_redirect *redir)
     fd = open(redir->str, O_RDONLY);
     if (dup2(fd, STDIN_FILENO) == -1)
     {
-        // error dup2
         close (fd);
         return (-1);
     }
@@ -46,6 +45,7 @@ int ft_handle_input_redir(t_redirect *redir)
 int ft_handle_output_redir(t_redirect *redir)
 {
     int fd;
+	
     if (redir->type == RE_OUTPUT)
         fd = open(redir->str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     else
@@ -71,52 +71,15 @@ int ft_handle_here_doc(t_redirect *redir)
     int fd;
     char *line;
 
-    fd = open(".heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
-        // open error
-
     while (1)
     {
         line = readline("> ");
-        if (!line || strcmp(line, redir->str) == 0)
+        if (!line || strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
             break;
-        write(fd, line, strlen(line));
-        write(fd, "\n", 1);
+		ft_putendl_fd(STDIN_FILENO, redir->str);
         free(line);
     }
-    free(line);
-    close(fd);
-    
-    fd = open(".heredoc_tmp", O_RDONLY);
-    if (fd == -1)
-        // open error
-    if (dup2(fd, STDIN_FILENO) == -1)
-        // dup2 error
+    free(redir->str);
     close(fd);
     return (0);
 }
-
-int ft_exe_redir(t_redirect *redir)
-{
-    while (redir)
-    {
-        if (redir->type == RE_INPUT)
-        {
-            if (handle_input_redirection(redir) == -1)
-                return (-1);
-        }
-        else if (redir->type == RE_OUTPUT || redir->type == RE_APPEND)
-        {
-            if (handle_output_redirection(redir) == -1)
-                return (-1);
-        }
-        else if (redir->type == HERE_DOC)
-        {
-            if (handle_heredoc(redir) == -1)
-                return (-1);
-        }
-        redir = redir->next;
-    }
-    return (0);
-}
-

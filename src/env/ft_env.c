@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 10:28:48 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 15:03:06 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 // Prints all environment variables stored in a linked list in the format
 void	ft_env_display(t_env *env)
 {
-	t_env	*temp;
+	t_env	*lst;
 	char	*tmp;
 	char	*joined;
 	
-	temp = env;
-	while (temp)
+	lst = env;
+	while (lst)
 	{
-		if (temp->key && temp->value)
+		if (lst->key && lst->value)
 		{
-			tmp = ft_strjoin(temp->key, "=");
-			joined = ft_strjoin(tmp, temp->value);
+			tmp = ft_strjoin(lst->key, "=");
+			joined = ft_strjoin(tmp, lst->value);
 			free(tmp);
 			free(joined);
 		}
-		temp = temp->next;
+		lst = lst->next;
 	}
 }
 
@@ -58,7 +58,7 @@ t_env	*ft_add_env_node(char *key, char *value)
 
 t_env	*ft_init_env(char **envp)
 {
-	char	**temp;
+	char	**tmp;
 	t_env	*env;
 	int		i;
 	t_env	*last;
@@ -67,20 +67,20 @@ t_env	*ft_init_env(char **envp)
 	env = NULL;
 	while (envp[i])
 	{
-		temp = ft_split(envp[i], '=');
-		if (!temp)
+		tmp = ft_split(envp[i], '=');
+		if (!tmp)
 			return (NULL);
 		if (env == NULL)
-			env = ft_add_env_node(temp[0], temp[1]);
+			env = ft_add_env_node(tmp[0], tmp[1]);
 		else
 		{
 			last = env;
 			while (last->next)
 				last = last->next;
-			last->next = ft_add_env_node(temp[0], temp[1]);
+			last->next = ft_add_env_node(tmp[0], tmp[1]);
 		}
 		i++;
-		free_matrix(temp);
+		free_matrix(tmp);
 	}
 	return (env);
 }
