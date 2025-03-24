@@ -3,13 +3,23 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
+#    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/19 08:00:55 by Barmyh           ###   ########.fr        #
+#    Updated: 2025/03/24 09:35:17 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+NAME = minishell
+CFLAGS = -g -Wall -Wextra -Werror
+DEPS = -Iinclude
+SRCDIR = ./src/
+SRC = $(SRCDIR)main.c $(SRCDIR)parse.c $(SRCDIR)env.c $(SRCDIR)tokenizer.c $(SRCDIR)init.c $(SRCDIR)cleanup.c
+LIBS = -lreadline -lhistory
+LIBFTDIR = ./libft/
+LIBFT = $(LIBFTDIR)libft.a
+OBJDIR = obj/
+OBJ = $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
 NAME 		=	minishell
 CFLAGS 		=	-g -Wall -Wextra -Werror -fpie
@@ -43,6 +53,8 @@ all: $(NAME)
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(dir $@)
 	cc $(CFLAGS) -c $< -o $@ $(INCLUDES)
+$(OBJDIR)%.o: $(SRCDIR)%.c | $(OBJDIR)
+	cc $(CFLAGS) -c $< -o $@ $(DEPS)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFTDIR)
