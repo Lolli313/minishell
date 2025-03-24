@@ -6,7 +6,7 @@
 #    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/22 12:04:16 by aakerblo         ###   ########.fr        #
+#    Updated: 2025/03/24 09:35:17 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,10 +21,38 @@ LIBFT = $(LIBFTDIR)libft.a
 OBJDIR = obj/
 OBJ = $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 
+NAME 		=	minishell
+CFLAGS 		=	-g -Wall -Wextra -Werror -fpie
+SRC 		=	$(addprefix src/env/, ft_env.c \
+				ft_env_utils.c) \
+				$(addprefix src/builtins/, ft_cd.c \
+				ft_echo.c \
+				ft_pwd.c \
+				ft_export.c \
+				ft_env.c \
+				ft_unset.c \
+				ft_exit.c \
+				ft_builtins.c) \
+				$(addprefix src/, minishell.c \
+				ft_execution.c \
+				ft_utils_1.c \
+				ft_signals.c) \
+				$(addprefix src/exe/, ft_pipes.c) 
+LIBS 		=	-lreadline -lhistory
+LIBFTDIR 	=	libft/
+LIBFT 		=	$(LIBFTDIR)libft.a
+OBJDIR 		=	obj/
+OBJ 		=	$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
+
+INCLUDES	=	-I includes -I libft
+
 default: all
 
 all: $(NAME)
 
+$(OBJDIR)%.o: $(SRCDIR)%.c
+	@mkdir -p $(dir $@)
+	cc $(CFLAGS) -c $< -o $@ $(INCLUDES)
 $(OBJDIR)%.o: $(SRCDIR)%.c | $(OBJDIR)
 	cc $(CFLAGS) -c $< -o $@ $(DEPS)
 
