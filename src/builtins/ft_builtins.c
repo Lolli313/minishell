@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/13 11:24:37 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/24 10:52:24 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // handle builtin commands (boolean expression, return true1 or false0)
 int	ft_is_builtin(char **av)
 {
-	if (ft_strcmp(av[0], "pwd") == 0)
+	if (ft_strncmp(av[0], "pwd", 4) == 0)
 		return (1);
 	if (ft_strcmp(av[0], "cd") == 0)
 		return (1);

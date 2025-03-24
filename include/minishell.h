@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 10:14:02 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 11:04:10 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <dirent.h>
+# include <sys/wait.h>
 # include <sys/ioctl.h>
 # include <stdbool.h>
 # include "../libft/libft.h"
@@ -89,6 +90,7 @@ typedef struct s_mini
     int			exit_flag;
     char		*infile;
     char		*outfile;
+	int			nbr_of_pipes;
     int			stdin;
     int			stdout;
     int			pid;
@@ -142,7 +144,7 @@ void	ft_handle_pipes(t_mini *mini, char **envp);
 void				ft_env_display(t_env *env);
 t_env				*ft_add_env_node(char *key, char *value);
 t_env				*ft_init_env(char **envp);
-char				*ft_get_env(const char *key, t_env *env);
+char  				*ft_getenv(t_env *env, char *key);
 char				*ft_find_key(t_env *env, char *key);
 char    			*ft_update_key(t_env *env, char *key, char *new_value);
 void    			ft_unset_key(t_env *env, char *key);

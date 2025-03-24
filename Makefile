@@ -6,23 +6,12 @@
 #    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/24 10:20:43 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/24 11:02:55 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell
-CFLAGS = -g -Wall -Wextra -Werror
-DEPS = -Iinclude
-SRCDIR = ./src/
-SRC = $(SRCDIR)main.c $(SRCDIR)parse.c $(SRCDIR)env.c $(SRCDIR)tokenizer.c $(SRCDIR)init.c $(SRCDIR)cleanup.c
-LIBS = -lreadline -lhistory
-LIBFTDIR = ./libft/
-LIBFT = $(LIBFTDIR)libft.a
-OBJDIR = obj/
-OBJ = $(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
-
-NAME 		=	minishell
-CFLAGS 		=	-g -Wall -Wextra -Werror -fpie
+NAME 		= minishell
+CFLAGS		= -g -Wall -Wextra -Werror -fpie
 SRC 		=	$(addprefix src/env/, ft_env.c \
 				ft_env_utils.c) \
 				$(addprefix src/builtins/, ft_cd.c \
@@ -34,18 +23,20 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				ft_exit.c \
 				ft_builtins.c) \
 				$(addprefix src/, main.c \
-				ft_execution.c \
 				ft_utils_1.c \
 				ft_signals.c \
+				cleanup.c \
+				tokenizer.c \
+				parse.c \
 				) \
-				$(addprefix src/exe/, ft_pipes.c) 
-LIBS 		=	-lreadline -lhistory
-LIBFTDIR 	=	libft/
-LIBFT 		=	$(LIBFTDIR)libft.a
-OBJDIR 		=	obj/
-OBJ 		=	$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
+				$(addprefix src/exe/, ft_pipes.c) \
 
-INCLUDES	=	-I includes -I libft
+LIBS 		= 	-lreadline -lhistory
+LIBFTDIR 	= 	libft/
+LIBFT 		= 	$(LIBFTDIR)libft.a
+OBJDIR 		= 	obj/
+OBJ 		= 	$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
+INCLUDE		=	-I include -I libft
 
 default: all
 
@@ -53,9 +44,7 @@ all: $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(dir $@)
-	cc $(CFLAGS) -c $< -o $@ $(INCLUDES)
-$(OBJDIR)%.o: $(SRCDIR)%.c | $(OBJDIR)
-	cc $(CFLAGS) -c $< -o $@ $(DEPS)
+	cc $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 $(NAME): $(OBJ)
 	make -C $(LIBFTDIR)

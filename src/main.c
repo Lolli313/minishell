@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/22 16:11:54 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/24 11:04:45 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	char	*line;
 	mini = malloc(sizeof(t_mini));
-	mini->env = init_env(envp);
+	mini->env = ft_init_env(envp);
 	while (1)
 	{
 		line = readline(G "😭 minishell$ " RESET);
