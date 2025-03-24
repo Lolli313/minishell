@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/22 12:41:27 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/24 10:14:02 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,5 +116,41 @@ void	line_cleanup(t_mini *mini);
 void	free_env(t_env *env);
 
 void	free_many(char *str1, char *str2, char *str3, char *str4);
+
+// fmick
+// utils
+void				ft_putstr_fd(char *str, int fd);
+int					ft_strcmp(const char *s1, const char *s2);
+char				*ft_strdup(const char *s1);
+
+// builtins
+int					ft_is_builtin(char **av);
+void				ft_handle_builtin(char **av, t_mini *mini);
+int					ft_pwd(void);
+int					ft_echo(char **av);
+int					ft_env(t_env *env);
+int					ft_unset(t_mini *mini, char **av);
+int	ft_export(t_env **env, char *str);
+int					ft_env_exists(t_env *env, char *key, char *value);
+int					ft_update_value(t_env *env, char *key, char *value);
+void				ft_cd(char **av, t_env *env);
+
+// pipe managment
+void	ft_handle_pipes(t_mini *mini, char **envp);
+
+// events
+void				ft_env_display(t_env *env);
+t_env				*ft_add_env_node(char *key, char *value);
+t_env				*ft_init_env(char **envp);
+char				*ft_get_env(const char *key, t_env *env);
+char				*ft_find_key(t_env *env, char *key);
+char    			*ft_update_key(t_env *env, char *key, char *new_value);
+void    			ft_unset_key(t_env *env, char *key);
+int					ft_setenv(t_env *env, const char *key,
+						const char *new_value, int overwrite);
+
+// signal
+void				ft_handle_sigint(int signal);
+int					ft_get_g_global(void);
 
 #endif
