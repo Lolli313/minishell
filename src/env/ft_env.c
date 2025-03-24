@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/18 11:55:23 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 10:28:48 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,10 @@ t_env	*ft_add_env_node(char *key, char *value)
 	if (!env)
 		return (NULL);
 	env->key = ft_strdup(key);
-	env->value = ft_strdup(value);
+	if (value != NULL)
+		env->value = ft_strdup(value);
+	else
+		env->value = ft_strdup("");
 	env->next = NULL;
 	if (!env->key || !env->value)
 	{
@@ -77,9 +80,8 @@ t_env	*ft_init_env(char **envp)
 			last->next = ft_add_env_node(temp[0], temp[1]);
 		}
 		i++;
-		free (temp);
+		free_matrix(temp);
 	}
-	ft_env_display(env);
 	return (env);
 }
 /*
