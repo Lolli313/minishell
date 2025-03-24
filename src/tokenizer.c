@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 16:43:45 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/24 18:16:24 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,6 +317,35 @@ t_line	*add_node_line(t_token *token)
 	return (new_node);
 }
 
+bool	exit_validity(t_line *line)
+{
+	t_line	*temp_line;
+	char	**temp_cmd;
+	int		i;
+
+	temp_line = line->next;
+	temp_cmd = line->command;
+	if (temp_cmd[1])
+	{
+		i = 0;
+		while (temp_cmd[1][i])
+		{
+			if (ft_isdigit(temp_cmd[1][i++]) == 0)
+				return (ft_printf("Error: Numeric argument required\n"), false);
+		}
+		if (temp_cmd[2] != NULL)
+			return (ft_printf("Error: Too many arguments\n"), false);
+	}
+	return (true);
+}
+
+bool	builtin_validity(t_line *line)
+{
+	if (!ft_strncmp(line->command[0], "exit", 5))
+		return (exit_validity(line));
+	return (true);
+}
+
 t_line	*structurize_line(t_mini *mini)
 {
 	t_line	*current;
@@ -337,6 +366,8 @@ t_line	*structurize_line(t_mini *mini)
 		current = current->next;
 		i++;
 	}
+	if (builtin_validity(mini->line) == false)
+		return (line_cleanup(mini), NULL);
 	return (mini->line);
 }
 

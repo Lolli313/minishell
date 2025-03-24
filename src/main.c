@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 14:58:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/24 18:11:29 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,23 +42,26 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 		}
-		cmd_args = ft_split(input, ' ');
-		if (cmd_args && cmd_args[0])
+		if (mini->line)
 		{
-			if (strcmp(input, "exit") == 0)
+			cmd_args = ft_split(input, ' ');
+			if (cmd_args && cmd_args[0])
 			{
-				mini->exit_flag = 0;
-				free_matrix(cmd_args);
-				free(input);
-				break;
+				if (strcmp(input, "exit") == 0)
+				{
+					mini->exit_flag = 0;
+					free_matrix(cmd_args);
+					free(input);
+					break;
+				}
+				ft_handle_pipes(mini, envp);
+				ft_handle_builtin(cmd_args, mini);
 			}
-			ft_handle_pipes(mini, envp);
-			ft_handle_builtin(cmd_args, mini);
 		}
 		line_cleanup(mini);
 		free(input);
 	}
 	free_env(mini->env);
 	free(mini);
-	return (1);
+	return (42);
 }

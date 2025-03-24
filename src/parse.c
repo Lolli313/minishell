@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 17:02:05 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/24 17:26:40 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -553,16 +553,20 @@ bool	token_validity(t_mini *mini)
 			if (current->type == PIPE || current->type == RE_INPUT || current->type == RE_OUTPUT || current->type == RE_APPEND || current->type == HERE_DOC)
 				return (ft_printf("Error: invalid syntax\n"), false);
 		}
-		else if (current->type == PIPE && (current->next->type == PIPE || current->index == 0))
+		else if ((current->type == PIPE && (current->next->type == PIPE || current->index == 0))
+				|| (current->type == RE_INPUT && current->next->type != INFILE)
+				|| (current->type == RE_OUTPUT && current->next->type != OUTFILE)
+				|| (current->type == RE_APPEND && current->next->type != APPEND_OUTFILE)
+				|| (current->type == HERE_DOC && current->next->type != LIMITER))
 			return (ft_printf("Error: invalid syntax\n"), false);
-		else if (current->type == RE_INPUT && current->next->type != INFILE)
+		/*else if (current->type == RE_INPUT && current->next->type != INFILE)
 			return (ft_printf("Error: invalid syntax\n"), false);
 		else if (current->type == RE_OUTPUT && current->next->type != OUTFILE)
 			return (ft_printf("Error: invalid syntax\n"), false);
 		else if (current->type == RE_APPEND && current->next->type != APPEND_OUTFILE)
 			return (ft_printf("Error: invalid syntax\n"), false);
 		else if (current->type == HERE_DOC && current->next->type != LIMITER)
-			return (ft_printf("Error: invalid syntax\n"), false);
+			return (ft_printf("Error: invalid syntax\n"), false);*/
 		current = current->next;
 	}
 	return (true);
@@ -608,6 +612,8 @@ void	parse_string(t_mini *mini, char *line)
 		return ;
 	print_tokens(mini->token);
 	mini->line = structurize_line(mini);
+	if (mini->line == NULL)
+		return ;
 	print_lines(mini->line);
 //	free_matrix(strings);
 //	free_token_list(token);
