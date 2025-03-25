@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 18:11:29 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/25 09:11:20 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int ac, char **av, char **envp)
 			cmd_args = ft_split(input, ' ');
 			if (cmd_args && cmd_args[0])
 			{
-				if (strcmp(input, "exit") == 0)
+				if (ft_strncmp("exit", mini->line->command[0], 5) == 0)
 				{
 					mini->exit_flag = 0;
 					free_matrix(cmd_args);

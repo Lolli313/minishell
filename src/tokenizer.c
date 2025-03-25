@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 18:16:24 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/25 09:19:08 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -322,16 +322,21 @@ bool	exit_validity(t_line *line)
 	t_line	*temp_line;
 	char	**temp_cmd;
 	int		i;
+	bool	char_flag;
 
 	temp_line = line->next;
 	temp_cmd = line->command;
+	char_flag = false;
 	if (temp_cmd[1])
 	{
 		i = 0;
 		while (temp_cmd[1][i])
 		{
-			if (ft_isdigit(temp_cmd[1][i++]) == 0)
-				return (ft_printf("Error: Numeric argument required\n"), false);
+			if ((temp_cmd[1][0] == '+' || temp_cmd[1][0] == '-') && char_flag == false)
+				char_flag = true;
+			else if (ft_isdigit(temp_cmd[1][i]) == 0)
+				return (ft_printf("Error: Numeric argument required\n"), true);
+			i++;
 		}
 		if (temp_cmd[2] != NULL)
 			return (ft_printf("Error: Too many arguments\n"), false);
