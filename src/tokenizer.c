@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/25 09:19:08 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:50:49 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,10 +344,68 @@ bool	exit_validity(t_line *line)
 	return (true);
 }
 
+// loop through echo's arguments and check if each one is valid (aka -n), the first one that is not valid,
+// the rest after that one should be printed (ex. "echo -n Hola -n" should write "Hola -n")
+
+bool	echo_validity(char *str)
+{
+	int		i;
+	bool	first;
+
+	i = 0;
+	first = true;
+	while (str[i])
+	{
+		if (first == true)
+		{
+			if (str[i] != '-')
+				return (ft_printf("NONONO\n"), false);
+			first = false;
+		}
+		else if (str[i] != 'n')
+			return (ft_printf("NONONO\n"), false);
+		i++;
+	}
+	ft_printf("YIPPEEEE\n");
+	return (true);
+}
+
+// loop through export's arguments and check if each one is valid (the ones that are not valid, aka return false,
+// write an error message and continue to the next argument)
+
+bool	export_validity(char *str)
+{
+	int		i;
+	bool	first;
+	char	**key;
+
+	i = 0;
+	first = true;
+	key = ft_split(str, '=');
+	while (key[0][i])
+	{
+		if (is_valid_char(key[0][i], first) == false)
+		{
+			ft_printf("NO GOOD\n");
+			free_matrix(key);
+			return (false);
+		}
+		if (first == true)
+			first = false;
+		i++;
+	}
+	free_matrix(key);
+	return (true);
+}
+
 bool	builtin_validity(t_line *line)
 {
 	if (!ft_strncmp(line->command[0], "exit", 5))
 		return (exit_validity(line));
+	else if (!ft_strncmp(line->command[0], "export", 7))
+		return (export_validity(line->command[1]));
+	else if (!ft_strncmp(line->command[0], "echo", 5))
+		return (echo_validity(line->command[1]));
 	return (true);
 }
 

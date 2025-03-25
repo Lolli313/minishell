@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/25 09:11:20 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:12:07 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,13 @@ int	main(int ac, char **av, char **envp)
 				{
 					mini->exit_flag = 0;
 					free_matrix(cmd_args);
+					line_cleanup(mini);
 					free(input);
 					break;
 				}
 				ft_handle_pipes(mini, envp);
 				ft_handle_builtin(cmd_args, mini);
+				free_matrix(cmd_args);
 			}
 		}
 		line_cleanup(mini);
