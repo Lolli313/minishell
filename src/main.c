@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/26 10:49:26 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 11:55:31 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,13 @@
 // TODO signals (CTRL + D and CTRL + \), talk with Francois about how to handle the $?
 // look into echo -n and how the syntax should be handled
 
+
 int	main(int ac, char **av, char **envp)
 {
 	t_mini	*mini;
 	char	**cmd_args;
 
-	signal(SIGINT, &ft_handle_sigint);
+	handle_signals();
 	(void)ac;
 	(void)av;
 	char	*input;

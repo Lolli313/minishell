@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 11:01:17 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 11:58:40 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,23 +48,18 @@ int	ft_export(t_env *env, char **str)
 	while (str[i])
 	{
 		temp = ft_split(str[i], '=');
-		env->key = temp[0];
-		if (temp[1] != NULL)
-			env->value = temp[1];
-		else
-			env->value = "";
-		if(export_validity(env->key))
+		if (export_validity(temp[0]))
 		{
-			if (ft_env_exists(env, env->key, env->value) == 0)
+			if (ft_env_exists(env, temp[0], temp[1]) == 0)
 			{
 				if (env == NULL)
-					env = ft_add_env_node(env->key, env->value);
+					env = ft_add_env_node(temp[0], temp[1]);
 				else
 				{
 					last = env;
 					while (last->next)
 						last = last->next;
-					last->next = ft_add_env_node(env->key, env->value);
+					last->next = ft_add_env_node(temp[0], temp[1]);
 				}
 			}
 		}

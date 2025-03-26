@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/26 11:10:31 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 11:57:14 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -377,24 +377,24 @@ bool	export_validity(char *str)
 {
 	int		i;
 	bool	first;
-	char	**key;
+	char	*key;
 
 	i = 0;
 	first = true;
-	key = ft_split(str, '=');
-	while (key[0][i])
+	key = strdup(str);
+	while (str[i])
 	{
-		if (is_valid_char(key[0][i], first) == false)
+		if (is_valid_char(key[i], first) == false)
 		{
 			ft_printf("NO GOOD\n");
-			free_matrix(key);
+			free(key);
 			return (false);
 		}
 		if (first == true)
 			first = false;
 		i++;
 	}
-	free_matrix(key);
+	free(key);
 	return (true);
 }
 
@@ -402,8 +402,8 @@ bool	builtin_validity(t_line *line)
 {
 	if (!ft_strncmp(line->command[0], "exit", 5))
 		return (exit_validity(line));
-	else if (!ft_strncmp(line->command[0], "export", 7))
-		return (export_validity(line->command[1]));
+//	else if (!ft_strncmp(line->command[0], "export", 7))
+//		return (export_validity(line->command[1]));
 //	else if (!ft_strncmp(line->command[0], "echo", 5))
 //		return (echo_validity(line->command[1]));
 	return (true);

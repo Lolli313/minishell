@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/12 14:08:54 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 11:55:07 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,10 @@ void	ft_handle_sigint(int signal)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+}
+
+void	handle_signals(void)
+{
+	signal(SIGINT, &ft_handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

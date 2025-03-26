@@ -3,19 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 10:48:19 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 11:51:23 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	ft_count_pipes(t_line *cmd)
+{
+	int		i;
+	t_line *tmp;
+
+	i = 0;
+	tmp = cmd;
+	while(tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
 void	ft_handle_pipes(t_mini *mini, char **envp)
 {
 	int	i;
 	int	j;
+	mini->nbr_of_pipes = ft_count_pipes(mini->line);
 	pid_t cpid[mini->nbr_of_pipes + 1]; // childpid
 	int pipefd[mini->nbr_of_pipes][2];
 	t_line *cmd;
