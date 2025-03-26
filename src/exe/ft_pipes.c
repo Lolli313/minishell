@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 11:51:23 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:18:29 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	ft_count_pipes(t_line *cmd)
 	int		i;
 	t_line *tmp;
 
-	i = 0;
+	i = -1;
 	tmp = cmd;
 	while(tmp)
 	{
@@ -35,8 +35,9 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 	pid_t cpid[mini->nbr_of_pipes + 1]; // childpid
 	int pipefd[mini->nbr_of_pipes][2];
 	t_line *cmd;
-	
+	printf(R"Pipes: %d\n"RESET, mini->nbr_of_pipes);	
 	cmd = mini->line;
+
 	// create pipes
 	i = 0;
 	while (i < mini->nbr_of_pipes)
@@ -45,6 +46,7 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 			exit (1); // ERROR TODO
 		i++;
 	}
+	printf(R"Pipes: %d\n"RESET, i);
 	// Fork child processes
 	i = 0;
 	while (i <= mini->nbr_of_pipes)
@@ -74,12 +76,13 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 				close(pipefd[j][1]);
 				j++;
 			}
-			execve(cmd->command[0], cmd->command, envp);
-			exit(1);
+			if (execve(cmd->command[0], cmd->command, envp) == -1)
+				exit(1);
 		}
 		cmd = cmd->next;
 		i++;
 	}
+	printf(R"Forks: %d\n"RESET, i);
 	// Close all pipes in parent
 	i = 0;
 	while (i < mini->nbr_of_pipes)

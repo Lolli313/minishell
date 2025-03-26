@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 17:26:40 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:19:15 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,45 +32,45 @@ bool	check_builtin(char *command)
 		return (false);
 }
 
-bool	check_external(t_env *env, char *command)
+char    *check_external(t_env *env, char *command)
 {
-	char	**all_paths;
-	char	*temp;
-	char	*str;
-	char	*str1;
-	int		i;
+    char    **all_paths;
+    char    *temp;
+    char    *str;
+    char    *str1;
+    int        i;
 
-	if (ft_strncmp(command, "/", 1) == 0)
-	{
-		if (access(command, X_OK) == 0)
-			return (true);
-		else
-			return (false);
-	}
-	temp = ft_getenv(env, "PATH");
-	all_paths = ft_split(temp + 5, ':');
-	free(temp);
-	i = 0;
-	while (all_paths[i])
-	{
-		str = ft_strjoin(all_paths[i], "/");
-		str1 = ft_strjoin(str, command);
-		free(str);
-		if (access(str1, X_OK) == 0)
-			return (free_matrix(all_paths), free(str1), true);
-		free(str1);
-		i++;
-	}
-	free_matrix(all_paths);
-	return (false);
+    if (ft_strncmp(command, "/", 1) == 0)
+    {
+        if (access(command, X_OK) == 0)
+            return (command);
+        else
+            return (NULL);
+    }
+    temp = ft_getenv(env, "PATH");
+    all_paths = ft_split(temp + 5, ':');
+    free(temp);
+    i = 0;
+    while (all_paths[i])
+    {
+        str = ft_strjoin(all_paths[i], "/");
+        str1 = ft_strjoin(str, command);
+        free(str);
+        if (access(str1, X_OK) == 0)
+            return (free_matrix(all_paths), free(command), str1);
+        free(str1);
+        i++;
+    }
+    free_matrix(all_paths);
+    return (NULL);
 }
 
-bool	handle_command(t_env *env, char *command)
+bool    handle_command(t_env *env, char *command)
 {
-	if (ft_strlen(command) && (check_builtin(command) == true || check_external(env, command)) == true)
-		return (ft_printf("%s is a valid command :)\n", command), true);
-	else
-		return (ft_printf("%s IS NOT A VALID COMMAND YOU KNOBHEAD\n", command), false);
+    if (ft_strlen(command) && (check_builtin(command) == true || check_external(env, command) != NULL))
+        return (ft_printf("%s is a valid command :)\n", command), true);
+    else
+        return (ft_printf("%s IS NOT A VALID COMMAND YOU KNOBHEAD\n", command), false);
 }
 
 void	free_token_list(t_token *token)

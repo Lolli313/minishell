@@ -6,7 +6,7 @@
 #    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/25 15:44:44 by fmick            ###   ########.fr        #
+#    Updated: 2025/03/26 14:38:08 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,8 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				parse.c \
 				) \
 				$(addprefix src/exe/, ft_pipes.c \
-				ft_redir.c) \
+				ft_redir.c \
+				ft_externals.c) \
 
 LIBS 		= 	-lreadline -lhistory
 LIBFTDIR 	= 	libft/
@@ -39,12 +40,19 @@ OBJDIR 		= 	obj/
 OBJ 		= 	$(SRC:$(SRCDIR)%.c=$(OBJDIR)%.o)
 INCLUDE		=	-Iinclude -Ilibft
 
+R = \033[1;31m
+G = \033[1;32m
+Y = \033[1;33m
+B = \033[1;34m
+RESET = \033[0m
+
 default: all
 
 all: $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.c
 	@mkdir -p $(dir $@)
+	@echo -e "$(G)Building Project successfull$(RESET)"
 	cc $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 $(NAME): $(OBJ)

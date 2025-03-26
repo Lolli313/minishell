@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 11:54:58 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:15:49 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,8 @@ bool	is_valid_char(char c, bool first);
 
 bool	export_validity(char *str);
 
+char	*check_external(t_env *env, char *command);
+
 void	handle_signals(void);
 
 // fmick
@@ -144,7 +146,8 @@ int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
 
-// pipe managment
+// pipe managment/externals
+void	ft_handle_external(t_mini *mini, char **args, char **envp);
 void	ft_handle_pipes(t_mini *mini, char **envp);
 
 // redirections
