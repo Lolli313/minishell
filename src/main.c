@@ -6,9 +6,10 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/25 15:20:28 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 10:29:59 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -48,16 +49,18 @@ int	main(int ac, char **av, char **envp)
 			cmd_args = ft_split(input, ' ');
 			if (cmd_args && cmd_args[0])
 			{
-				if (strcmp(input, "exit") == 0)
+				if (ft_strncmp("exit", mini->line->command[0], 5) == 0)
 				{
 					mini->exit_flag = 0;
 					free_matrix(cmd_args);
+					line_cleanup(mini);
 					free(input);
 					break;
 				}
 				ft_handle_pipes(mini, envp);
 				ft_handle_output_redir(mini->line->redirect);
 				ft_handle_builtin(cmd_args, mini);
+				free_matrix(cmd_args);
 			}
 		}
 		line_cleanup(mini);
