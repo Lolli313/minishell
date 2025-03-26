@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 16:52:14 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:16:48 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <signal.h>
 # include <dirent.h>
 # include <sys/wait.h>
+# include <fcntl.h>
 # include <sys/ioctl.h>
 # include <stdbool.h>
 # include "../libft/libft.h"
@@ -127,17 +128,22 @@ char				*ft_strdup(const char *s1);
 // builtins
 int					ft_is_builtin(char **av);
 void				ft_handle_builtin(char **av, t_mini *mini);
-int					ft_pwd(void);
+int					ft_pwd(t_env *env);
 int					ft_echo(char **av);
 int					ft_env(t_env *env);
 int					ft_unset(t_mini *mini, char **av);
-int					ft_export(t_env **env, char *str);
+int					ft_export(t_env *env, char **str);
 int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
 
 // pipe managment
 void	ft_handle_pipes(t_mini *mini, char **envp);
+
+// redirections
+int ft_handle_here_doc(t_re *redir);
+int ft_handle_output_redir(t_re *redir);
+int ft_handle_input_redir(t_re *redir);
 
 // events
 void				ft_env_display(t_env *env);

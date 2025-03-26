@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/24 18:11:29 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:20:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	main(int ac, char **av, char **envp)
 	t_mini	*mini;
 	char	**cmd_args;
 
+	signal(SIGINT, &ft_handle_sigint);
 	(void)ac;
 	(void)av;
 	char	*input;
@@ -55,6 +56,7 @@ int	main(int ac, char **av, char **envp)
 					break;
 				}
 				ft_handle_pipes(mini, envp);
+				ft_handle_output_redir(mini->line->redirect);
 				ft_handle_builtin(cmd_args, mini);
 			}
 		}

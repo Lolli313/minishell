@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/13 07:45:48 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/25 09:49:42 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,16 @@
 int		ft_unset(t_mini *mini, char **av)
 {
 	t_env	*env;
+	int		i;
 
+	i = 1;
 	env = mini->env;
-	if (av[1] == NULL)
+	if (av[i] == NULL)
 		return 0;
-	ft_unset_key(env, av[1]);
+	while (av[i])
+	{
+		ft_unset_key(env, av[i]);
+		i++;
+	}
 	return 0;
 }

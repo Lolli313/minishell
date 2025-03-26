@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/24 15:12:33 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/25 11:17:33 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,18 +44,18 @@ void	ft_handle_builtin(char **av, t_mini *mini)
     if (is_builtin == 0)
     	return ; // TODO ERROR
     if (ft_strncmp(cmd[0], "pwd", 4) == 0)
-	    ft_pwd();
+	    ft_pwd(env);
 	else if (ft_strncmp(cmd[0], "cd", 3) == 0)
+	{
+		ft_printf (R "Entering CD\n" RESET);
 	    ft_cd(cmd, env);
+	}
 	else if (ft_strncmp(cmd[0], "export", 7) == 0)
-	    ft_export(&(mini->env), cmd[1]);
+	    ft_export(mini->env, cmd);
 	else if (ft_strncmp(cmd[0], "unset", 6) == 0)
 	    ft_unset(mini, cmd);
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 	    ft_env(env);
 	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
-	{
-		ft_printf(R "entering echo\n" RESET);
 	    ft_echo(mini->line->command);
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/24 15:38:39 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/25 15:22:42 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ sort < my.txt will sort lines in the txt file
 | `<<` (Heredoc)         | `pipe(fd)`                          | Stores input in a pipe instead of a file |
 */
 
-int ft_handle_input_redir(t_redirect *redir)
+int ft_handle_input_redir(t_re *redir)
 {
     int fd;
 
@@ -42,7 +42,7 @@ int ft_handle_input_redir(t_redirect *redir)
     close (fd);
     return (0);
 }
-int ft_handle_output_redir(t_redirect *redir)
+int ft_handle_output_redir(t_re *redir)
 {
     int fd;
 	
@@ -66,9 +66,8 @@ int ft_handle_output_redir(t_redirect *redir)
     return (0);
 }
 
-int ft_handle_here_doc(t_redirect *redir)
+int ft_handle_here_doc(t_re *redir)
 {
-    int fd;
     char *line;
 
     while (1)
@@ -76,10 +75,9 @@ int ft_handle_here_doc(t_redirect *redir)
         line = readline("> ");
         if (!line || strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
             break;
-		ft_putendl_fd(STDIN_FILENO, redir->str);
+		ft_putendl_fd(redir->str, STDIN_FILENO);
         free(line);
     }
     free(redir->str);
-    close(fd);
     return (0);
 }

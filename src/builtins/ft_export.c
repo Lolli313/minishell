@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 15:10:50 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/25 11:33:11 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,37 +38,38 @@ int	ft_env_exists(t_env *env, char *key, char *value)
 // locates the variable and eiter adds it to the end of the
 // linked list of env variables or updates the value of an
 // existing varuable /handles no arguments
-int	ft_export(t_env **env, char *str)
+int	ft_export(t_env *env, char **str)
 {
-	char	**temp;
-	char	*key;
-	char	*value;
+	char 	**temp;
 	t_env	*last;
+	int		i;
 
-	temp = ft_split(str, '=');
-	if (!temp || !temp[0])
-		return (-1);
-	key = temp[0];
-	if (temp[1] != NULL)
-		value = temp[1];
-	else
-		value = "";
-	printf("Export key: %s\n", key);
-	printf("Export value: %s\n", value);
-	if (ft_env_exists(*env, key, value) == 0)
+	i = 1;
+	while (str[i])
 	{
-		if (*env == NULL)
-			*env = ft_add_env_node(key, value);
+		temp = ft_split(str[i], '=');
+		env->key = temp[0];
+		if (temp[1] != NULL)
+			env->value = temp[1];
 		else
+			env->value = "";
+		if (ft_env_exists(env, env->key, env->value) == 0)
 		{
-			last = *env;
-			while (last->next)
-				last = last->next;
-			last->next = ft_add_env_node(key, value);
+			if (env == NULL)
+				env = ft_add_env_node(env->key, env->value);
+			else
+			{
+				last = env;
+				while (last->next)
+					last = last->next;
+				last->next = ft_add_env_node(env->key, env->value);
+			}
 		}
+		int j = 0;
+		while (temp[j])
+			free(temp[j++]);
+		free(temp);
+		i++;
 	}
-	free(temp[0]);
-	free(temp[1]);
-	free(temp);
 	return (0);
 }
