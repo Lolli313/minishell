@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/25 17:50:49 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:10:31 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -404,8 +404,8 @@ bool	builtin_validity(t_line *line)
 		return (exit_validity(line));
 	else if (!ft_strncmp(line->command[0], "export", 7))
 		return (export_validity(line->command[1]));
-	else if (!ft_strncmp(line->command[0], "echo", 5))
-		return (echo_validity(line->command[1]));
+//	else if (!ft_strncmp(line->command[0], "echo", 5))
+//		return (echo_validity(line->command[1]));
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/24 14:56:48 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 10:48:19 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,3 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 		i++;
 	}
 }
-
-// int execve(const char *pathname, char *const _Nullable argv[],
-// char *const _Nullable envp[]);

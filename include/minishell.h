@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 10:29:20 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 10:52:10 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ void	free_env(t_env *env);
 void	free_many(char *str1, char *str2, char *str3, char *str4);
 
 bool	is_valid_char(char c, bool first);
+
+bool	export_validity(char *str);
 
 // fmick
 // utils

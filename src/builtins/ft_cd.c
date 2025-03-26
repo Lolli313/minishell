@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/25 15:09:55 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 10:34:36 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,11 @@ void	ft_cd(char **av, t_env *env)
 		ft_go_to_dir(env, 0);
 	else if (ft_strncmp(av[1], "-", 2) == 0)
 		ft_go_to_dir(env, 1);
+	else if (av[1][0] == '/')
+	 {
+		if (access(av[1], F_OK) == 0)
+			ft_update_value(env, "PWD", av[1]);
+	 }
 	else
 		ft_update_value(env, "PWD", av[1]);
 }

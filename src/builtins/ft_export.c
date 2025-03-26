@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/25 11:33:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/26 11:01:17 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,19 @@ int	ft_export(t_env *env, char **str)
 			env->value = temp[1];
 		else
 			env->value = "";
-		if (ft_env_exists(env, env->key, env->value) == 0)
+		if(export_validity(env->key))
 		{
-			if (env == NULL)
-				env = ft_add_env_node(env->key, env->value);
-			else
+			if (ft_env_exists(env, env->key, env->value) == 0)
 			{
-				last = env;
-				while (last->next)
-					last = last->next;
-				last->next = ft_add_env_node(env->key, env->value);
+				if (env == NULL)
+					env = ft_add_env_node(env->key, env->value);
+				else
+				{
+					last = env;
+					while (last->next)
+						last = last->next;
+					last->next = ft_add_env_node(env->key, env->value);
+				}
 			}
 		}
 		int j = 0;
