@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/27 07:34:35 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/27 08:13:46 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 int	main(int ac, char **av, char **envp)
 {
 	t_mini	*mini;
-	char	**cmd_args;
 
 	handle_signals();
 	(void)ac;
@@ -47,22 +46,21 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (mini->line)
 		{
-			cmd_args = ft_split(input, ' ');
-			if (cmd_args && cmd_args[0])
+			if (mini->line->command && mini->line->command[0])
 			{
 				if (ft_strncmp("exit", mini->line->command[0], 5) == 0)
 				{
 					mini->exit_flag = 0;
-					free_matrix(cmd_args);
+				//	free_matrix(cmd_args);
 					line_cleanup(mini);
 					free(input);
 					break;
 				}
 				ft_handle_pipes(mini, envp);
-				ft_handle_external(mini, cmd_args, envp);
+				ft_handle_external(mini, mini->line->command, envp);
 			//	ft_handle_output_redir(mini->line->redirect);
-				ft_handle_builtin(cmd_args, mini);
-				free_matrix(cmd_args);
+				ft_handle_builtin(mini->line->command, mini);
+			//	free_matrix(cmd_args);
 			}
 		}
 		line_cleanup(mini);

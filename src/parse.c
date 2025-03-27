@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/27 07:49:11 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/27 08:22:42 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char    *check_external(t_env *env, char *command)
         if (access(str1, X_OK) == 0)
 		{
 			free_matrix(all_paths);
-		//	free(command);
+			free(command);
             return (str1);
 		}
 		free(str1);
@@ -68,14 +68,14 @@ char    *check_external(t_env *env, char *command)
     free_matrix(all_paths);
     return (NULL);
 }
-
+/*
 bool    handle_command(t_env *env, char *command)
 {
     if (ft_strlen(command) && (check_builtin(command) == true || check_external(env, command) != NULL))
         return (ft_printf("%s is a valid command :)\n", command), true);
     else
         return (ft_printf("%s IS NOT A VALID COMMAND YOU KNOBHEAD\n", command), false);
-}
+}*/
 
 void	free_token_list(t_token *token)
 {
@@ -550,9 +550,9 @@ bool	token_validity(t_mini *mini)
 	current = mini->token;
 	while (current)
 	{
-		if (current->type == COMMAND && handle_command(mini->env, current->str) == false)
-			return (false);
-		else if (current->next == NULL)
+	//	if (current->type == COMMAND && handle_command(mini->env, current->str) == false)
+//			return (false);
+		if (current->next == NULL)
 		{
 			if (current->type == PIPE || current->type == RE_INPUT || current->type == RE_OUTPUT || current->type == RE_APPEND || current->type == HERE_DOC)
 				return (ft_printf("Error: invalid syntax\n"), false);
