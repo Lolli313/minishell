@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/27 08:13:46 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/27 13:48:44 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,19 @@ int	main(int ac, char **av, char **envp)
 				if (ft_strncmp("exit", mini->line->command[0], 5) == 0)
 				{
 					mini->exit_flag = 0;
-				//	free_matrix(cmd_args);
 					line_cleanup(mini);
 					free(input);
 					break;
 				}
+				ft_handle_redirections(mini);
 				ft_handle_pipes(mini, envp);
-				ft_handle_external(mini, mini->line->command, envp);
-			//	ft_handle_output_redir(mini->line->redirect);
-				ft_handle_builtin(mini->line->command, mini);
-			//	free_matrix(cmd_args);
+				if (ft_is_builtin(mini->line->command))
+					ft_handle_builtin(mini->line->command, mini);
+				else
+					ft_handle_external(mini, mini->line->command, envp);
+				line_cleanup(mini);
 			}
 		}
-		line_cleanup(mini);
 		free(input);
 	}
 	free_env(mini->env);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/25 15:22:42 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/27 13:46:46 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,31 @@ sort < my.txt will sort lines in the txt file
 | `<<` (Heredoc)         | `pipe(fd)`                          | Stores input in a pipe instead of a file |
 */
 
+void ft_handle_redirections(t_mini *mini)
+{
+    t_re *redir = mini->line->redirect;
+    
+    while (redir)
+    {
+        if (redir->type == INFILE)
+            ft_handle_input_redir(redir);
+        else if (redir->type == OUTFILE || redir->type == APPEND_OUTFILE)
+            ft_handle_output_redir(redir);
+        else if (redir->type == LIMITER)
+            ft_handle_here_doc(redir);
+        redir = redir->next;
+    }
+}
+
 int ft_handle_input_redir(t_re *redir)
 {
     int fd;
 
+    if (!redir->str)
+    {
+        perror("Redirection is NULL");
+        return (-1);
+    }
     fd = open(redir->str, O_RDONLY);
     if (dup2(fd, STDIN_FILENO) == -1)
     {
@@ -42,23 +63,32 @@ int ft_handle_input_redir(t_re *redir)
     close (fd);
     return (0);
 }
+
 int ft_handle_output_redir(t_re *redir)
 {
     int fd;
 	
-    if (redir->type == RE_OUTPUT)
-        fd = open(redir->str, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    else
-        fd = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    
-    if (fd == -1)
+    if (redir->type == OUTFILE)
     {
-        // open error
-        return (-1);
+        fd = open(redir->str, O_WRONLY | O_CREAT | O_TRUNC, 0700);
+        if (fd == -1)
+        {
+            perror("Fail");
+            return (-1);
+        }
+    }
+    else if (redir->type == APPEND_OUTFILE)
+    {
+        fd = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 0700);
+        if (fd == -1)
+        {
+            perror("Fail");
+            return (-1);
+        }
     }
     if (dup2(fd, STDOUT_FILENO) == -1)
     {
-        // dup2 error
+        perror("dup2 error");
         close(fd);
         return (-1);
     }

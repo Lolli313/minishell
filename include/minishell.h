@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 15:15:49 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/27 11:30:10 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ typedef struct s_mini
     char		*infile;
     char		*outfile;
 	int			nbr_of_pipes;
-    int			stdin;
-    int			stdout;
     int			pid;
+	int			fd_in;
+	int			fd_out;
     t_line		*line;
     t_type		type;
     t_token		*token;
@@ -151,9 +151,10 @@ void	ft_handle_external(t_mini *mini, char **args, char **envp);
 void	ft_handle_pipes(t_mini *mini, char **envp);
 
 // redirections
-int ft_handle_here_doc(t_re *redir);
-int ft_handle_output_redir(t_re *redir);
+void	ft_handle_redirections(t_mini *mini);
 int ft_handle_input_redir(t_re *redir);
+int ft_handle_output_redir(t_re *redir);
+int ft_handle_here_doc(t_re *redir);
 
 // events
 void				ft_env_display(t_env *env);
