@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 14:18:29 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/27 07:21:04 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 	pid_t cpid[mini->nbr_of_pipes + 1]; // childpid
 	int pipefd[mini->nbr_of_pipes][2];
 	t_line *cmd;
-	printf(R"Pipes: %d\n"RESET, mini->nbr_of_pipes);	
+
 	cmd = mini->line;
 
 	// create pipes
@@ -46,7 +46,6 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 			exit (1); // ERROR TODO
 		i++;
 	}
-	printf(R"Pipes: %d\n"RESET, i);
 	// Fork child processes
 	i = 0;
 	while (i <= mini->nbr_of_pipes)
@@ -58,11 +57,11 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 		{
 			if (i == 0)
 			{
-				dup2(pipefd[i][1], STDOUT_FILENO); // write to pipe
+				dup2(pipefd[i][1], STDOUT_FILENO);
 			}
 			else if (i == mini->nbr_of_pipes)
 			{
-				dup2(pipefd[i][0], STDIN_FILENO); // read from prev pipe
+				dup2(pipefd[i - 1][0], STDIN_FILENO); // read from prev pipe
 			}
 			else
 			{
@@ -82,7 +81,6 @@ void	ft_handle_pipes(t_mini *mini, char **envp)
 		cmd = cmd->next;
 		i++;
 	}
-	printf(R"Forks: %d\n"RESET, i);
 	// Close all pipes in parent
 	i = 0;
 	while (i < mini->nbr_of_pipes)

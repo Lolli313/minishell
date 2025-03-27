@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/26 11:57:14 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/27 06:38:49 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,12 +319,12 @@ t_line	*add_node_line(t_token *token)
 
 bool	exit_validity(t_line *line)
 {
-	t_line	*temp_line;
+	// t_line	*temp_line;
 	char	**temp_cmd;
 	int		i;
 	bool	char_flag;
 
-	temp_line = line->next;
+	//temp_line = line->next;
 	temp_cmd = line->command;
 	char_flag = false;
 	if (temp_cmd[1])

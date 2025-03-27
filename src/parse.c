@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/26 15:19:15 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/27 07:03:08 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,11 @@ char    *check_external(t_env *env, char *command)
         str1 = ft_strjoin(str, command);
         free(str);
         if (access(str1, X_OK) == 0)
-            return (free_matrix(all_paths), free(command), str1);
-        free(str1);
+		{
+			free_matrix(all_paths);
+            return (str1);
+		}
+		free(str1);
         i++;
     }
     free_matrix(all_paths);

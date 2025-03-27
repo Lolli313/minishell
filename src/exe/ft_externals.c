@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 15:26:15 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/27 07:00:09 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,10 @@ void	ft_handle_external(t_mini *mini, char **args, char **envp)
 	if (cpid == 0)
 	{
 		if (execve(mini->line->command[0], args, envp) == -1)
-		{
-			free(mini->line->command[0]);
 			exit(1);
-		}
 	}
 	else // parent
 		waitpid(cpid, NULL, 0);
-	free(mini->line->command[0]);
 }
 /*
 
