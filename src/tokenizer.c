@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/27 06:38:49 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/27 07:39:42 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,10 @@ t_token	*find_pipe(t_token *token)
 	while (current)
 	{
 		if (current->type == PIPE)
+		{
+			printf("DEBUG: Found pipe at token: %s\n", token->str);
 			return (current->next);
+		}
 		current = current->next;
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/27 07:21:04 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/27 07:38:01 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ static int	ft_count_pipes(t_line *cmd)
 		i++;
 		tmp = tmp->next;
 	}
+	printf("DEBUG: Pipe count = %u\n", i);
 	return (i);
 }
 
