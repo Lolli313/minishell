@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:20:57 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/27 07:39:42 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/28 11:41:48 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_token	*find_last_token(t_token *token)
 
 t_token	*add_node_token(t_token *token, char *str, t_type type)
 {
-	t_token *new_node;
+	t_token	*new_node;
 	t_token	*last;
 
 	new_node = malloc(sizeof(t_token));
@@ -81,11 +81,14 @@ void	find_redirect(t_token *token)
 	{
 		if (current->previous->type == RE_OUTPUT && current->type == COMMAND)
 			current->type = OUTFILE;
-		else if (current->previous->type == RE_APPEND && current->type == COMMAND)
+		else if (current->previous->type == RE_APPEND
+			&& current->type == COMMAND)
 			current->type = APPEND_OUTFILE;
-		else if (current->previous->type == RE_INPUT && current->type == COMMAND)
+		else if (current->previous->type == RE_INPUT
+			&& current->type == COMMAND)
 			current->type = INFILE;
-		else if (current->previous->type == HERE_DOC && current->type == COMMAND)
+		else if (current->previous->type == HERE_DOC
+			&& current->type == COMMAND)
 			current->type = LIMITER;
 		current = current->next;
 	}
@@ -93,7 +96,7 @@ void	find_redirect(t_token *token)
 
 t_token	*find_command(t_token *token)
 {
-	t_token *current;
+	t_token	*current;
 
 	current = token;
 	while (current)
@@ -127,7 +130,7 @@ char	**make_command_into_array(t_token *token)
 	char	**array;
 	size_t	counter;
 	size_t	i;
-	
+
 	counter = calculate_number_of_commands(token);
 	if (counter == 0)
 		return (NULL);
@@ -284,20 +287,23 @@ t_re	*add_node_redirect(t_token *token)
 
 t_re	*structurize_redirect(t_token *token)
 {
-	t_token		*current;
+	t_token	*current;
 	t_re	*redirect;
 	t_re	*first;
 
 	first = NULL;
-	current	= token;
+	current = token;
 	while (current && current->type != PIPE)
 	{
-		if (first == NULL && (current->type == INFILE || current->type == OUTFILE || current->type == APPEND_OUTFILE || current->type == LIMITER))
+		if (first == NULL && (current->type == INFILE
+				|| current->type == OUTFILE || current->type == APPEND_OUTFILE
+				|| current->type == LIMITER))
 		{
 			first = add_node_redirect(current);
 			redirect = first;
 		}
-		else if (current->type == INFILE || current->type == OUTFILE || current->type == APPEND_OUTFILE || current->type == LIMITER)
+		else if (current->type == INFILE || current->type == OUTFILE
+			|| current->type == APPEND_OUTFILE || current->type == LIMITER)
 		{
 			redirect->next = add_node_redirect(current);
 			redirect = redirect->next;
@@ -322,12 +328,10 @@ t_line	*add_node_line(t_token *token)
 
 bool	exit_validity(t_line *line)
 {
-	// t_line	*temp_line;
 	char	**temp_cmd;
 	int		i;
 	bool	char_flag;
 
-	//temp_line = line->next;
 	temp_cmd = line->command;
 	char_flag = false;
 	if (temp_cmd[1])
@@ -335,7 +339,8 @@ bool	exit_validity(t_line *line)
 		i = 0;
 		while (temp_cmd[1][i])
 		{
-			if ((temp_cmd[1][0] == '+' || temp_cmd[1][0] == '-') && char_flag == false)
+			if ((temp_cmd[1][0] == '+' || temp_cmd[1][0] == '-')
+				&& char_flag == false)
 				char_flag = true;
 			else if (ft_isdigit(temp_cmd[1][i]) == 0)
 				return (ft_printf("Error: Numeric argument required\n"), true);
@@ -347,8 +352,10 @@ bool	exit_validity(t_line *line)
 	return (true);
 }
 
-// loop through echo's arguments and check if each one is valid (aka -n), the first one that is not valid,
-// the rest after that one should be printed (ex. "echo -n Hola -n" should write "Hola -n")
+// loop through echo's arguments and check if each one is valid (aka -n),
+//	the first one that is not valid,
+// the rest after that one should be printed (ex. "echo -n Hola
+//	-n" should write "Hola -n")
 
 bool	echo_validity(char *str)
 {
@@ -373,7 +380,8 @@ bool	echo_validity(char *str)
 	return (true);
 }
 
-// loop through export's arguments and check if each one is valid (the ones that are not valid, aka return false,
+// loop through export's arguments and check if each one is valid 
+// (the ones that are not valid, aka return false,
 // write an error message and continue to the next argument)
 
 bool	export_validity(char *str)
@@ -405,10 +413,6 @@ bool	builtin_validity(t_line *line)
 {
 	if (!ft_strncmp(line->command[0], "exit", 5))
 		return (exit_validity(line));
-//	else if (!ft_strncmp(line->command[0], "export", 7))
-//		return (export_validity(line->command[1]));
-//	else if (!ft_strncmp(line->command[0], "echo", 5))
-//		return (echo_validity(line->command[1]));
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/28 10:48:07 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/28 11:38:39 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,19 +195,27 @@ int	handle_dollar_get_end(char *str)
 	return (i);
 }
 
-char	*handle_dollar_sign_single(char *before, char *org, int *pos)
+char	*handle_dollar_sign_single(t_env *env, char *b4, char *org, int *pos)
 {
 	char	*result;
+	char	*temp;
+	char	*temp1;
 
 	if (org[*pos + 1] == '$')
 	{
-		(void)(*(pos))++;
-		result = ft_strjoin(before, org + *pos);
+		temp = ft_getenv(env, "SYSTEMD_EXEC_PID");
+		temp1 = ft_strjoin(b4, temp);
+		free(temp);
+		temp = ft_substr(org, *pos + 2, ft_strlen(org));
+		*pos += ft_strlen(temp1);
+		result = ft_strjoin(temp1, temp);
+		free(temp1);
+		free(temp);
 	}
 	else
-		result = ft_strjoin(before, org + *pos + 1);
+		result = ft_strjoin(b4, org + *pos + 1);
 	free(org);
-	free(before);
+	free(b4);
 	return (result);
 }
 
@@ -227,10 +235,10 @@ char	*handle_exit_code(t_mini *mini, char *before, char *org, int *pos)
 	return (result);
 }
 
-char	*handle_invalid_char(char *temp, char *org, char *sub, int *pos)
+char	*handle_invalid_char(t_env *env, char *temp, char *org, int *pos)
 {
-	if (sub[1] == '\'' || sub[1] == '$' || sub[1] == '\"')
-		return (handle_dollar_sign_single(temp, org, pos));
+	if (org[*pos + 1] == '\'' || org[*pos + 1] == '$' || org[*pos + 1] == '\"')
+		return (handle_dollar_sign_single(env, temp, org, pos));
 	return (free(temp), (void)(*(pos))++, org);
 }
 
@@ -246,7 +254,7 @@ char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos)
 	if (sub[1] == '?')
 		return (handle_exit_code(mini, temp1, org, pos));
 	if (is_valid_char(sub[1], true) == false)
-		return (handle_invalid_char(temp1, org, sub, pos));
+		return (handle_invalid_char(mini->env, temp1, org, pos));
 	len = 1;
 	while (is_valid_char(sub[len], false) == true)
 		len++;
