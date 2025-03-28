@@ -3,14 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/27 07:57:27 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/28 18:31:08 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*check_absolute_command(char *command)
+{
+	if (access(command, X_OK) == 0)
+		return (command);
+	else
+		return (NULL);
+}
+
+char	*check_external(t_env *env, char *command)
+{
+	char	**all_paths;
+	char	*temp;
+	char	*str;
+	char	*str1;
+	int		i;
+
+	if (ft_strncmp(command, "/", 1) == 0)
+		return (check_absolute_command(command));
+	temp = ft_getenv(env, "PATH");
+	all_paths = ft_split(temp + 5, ':');
+	free(temp);
+	i = 0;
+	while (all_paths[i])
+	{
+		str = ft_strjoin(all_paths[i], "/");
+		str1 = ft_strjoin(str, command);
+		free(str);
+		if (access(str1, X_OK) == 0)
+			return (free_matrix(all_paths), free(command), str1);
+		free(str1);
+		i++;
+	}
+	free_matrix(all_paths);
+	return (NULL);
+}
 
 void	ft_handle_external(t_mini *mini, char **args, char **envp)
 {

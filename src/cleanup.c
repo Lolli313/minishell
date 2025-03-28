@@ -12,6 +12,18 @@
 
 #include <minishell.h>
 
+void	free_many(char *str1, char *str2, char *str3, char *str4)
+{
+	if (str1)
+		free(str1);
+	if (str2)
+		free(str2);
+	if (str3)
+		free(str3);
+	if (str4)
+		free(str4);
+}
+
 void	free_env(t_env *env)
 {
 	t_env	*current;
@@ -70,4 +82,3 @@ void	line_cleanup(t_mini *mini)
 	}
 	mini->line = NULL;
 }
-	

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/27 11:30:10 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/28 19:11:21 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,6 @@ typedef struct s_mini
 
 void	parse_string(t_mini *mini, char *line);
 
-t_token	*tokenizer(char *str, t_type type, t_token *token);
-
 void	token_relativity(t_token *token);
 
 t_line	*structurize_line(t_mini *mini);
@@ -127,6 +125,40 @@ bool	export_validity(char *str);
 char	*check_external(t_env *env, char *command);
 
 void	handle_signals(void);
+
+char	*handle_single_quote(char *org, char *sub, int *pos);
+
+char	*handle_double_quote(t_mini *mini, char *org, char *sub, int *pos);
+
+char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos);
+
+size_t	count_pipes(t_token *token);
+
+t_line	*add_node_line(t_token *token);
+
+t_token	*find_pipe(t_token *token);
+
+bool	exit_validity(t_line *line);
+
+t_token	*tokenize_input(t_mini *mini, char *input);
+
+void	print_tokens(t_token *token);
+
+void	print_lines(t_line *line);
+
+int	is_operator_char(char c);
+
+size_t	calculate_number_of_commands(t_token *token);
+
+t_token	*find_command(t_token *token);
+
+t_token	*if_operator(t_token *token, char *input, int *i);
+
+char	*extract_word(t_extract *extract, char *input, int *pos);
+
+void	expand_variables(t_mini *mini);
+
+bool	token_validity(t_mini *mini);
 
 // fmick
 // utils
