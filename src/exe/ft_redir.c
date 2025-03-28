@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/27 13:46:46 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/03/28 09:54:44 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int ft_handle_output_redir(t_re *redir)
             return (-1);
         }
     }
-    else if (redir->type == APPEND_OUTFILE)
+    else
     {
         fd = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 0700);
         if (fd == -1)
