@@ -3,111 +3,74 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/28 09:54:44 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:31:47 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <errno.h>
 
-/*
-> output operator:
-overwrites
->> output append:
-
-< input operator
-sort < my.txt will sort lines in the txt file
-
-
-| Redirection Type       | File Open Mode                      | Behavior                                 |
-|------------------ -----|-------------------------------------|------------------------------------------|
-| `<` (Input)            | `O_RDONLY`                          | Opens file for reading (stdin)          |
-| `>` (Overwrite Output) | `O_WRONLY | O_CREAT | O_TRUNC`      | Opens or creates file, truncates if exists |
-| `>>` (Append Output)   | `O_WRONLY | O_CREAT | O_APPEND`     | Opens or creates file, appends if exists |
-| `<<` (Heredoc)         | `pipe(fd)`                          | Stores input in a pipe instead of a file |
-*/
 
 void ft_handle_redirections(t_mini *mini)
 {
     t_re *redir = mini->line->redirect;
-    
     while (redir)
     {
         if (redir->type == INFILE)
-            ft_handle_input_redir(redir);
+            ft_handle_input_redir(mini, redir);
         else if (redir->type == OUTFILE || redir->type == APPEND_OUTFILE)
-            ft_handle_output_redir(redir);
-        else if (redir->type == LIMITER)
-            ft_handle_here_doc(redir);
+            ft_handle_output_redir(mini, redir);
         redir = redir->next;
     }
+    if (mini->hd_count > 0)
+        ft_redirect_heredoc_stdin(mini);
 }
 
-int ft_handle_input_redir(t_re *redir)
+void    ft_handle_input_redir(t_mini *mini, t_re *redir)
 {
-    int fd;
-
     if (!redir->str)
     {
         perror("Redirection is NULL");
-        return (-1);
+        exit(1);
     }
-    fd = open(redir->str, O_RDONLY);
-    if (dup2(fd, STDIN_FILENO) == -1)
+    mini->fd_in = open(redir->str, O_RDONLY);
+    if (dup2(mini->fd_in, STDIN_FILENO) == -1)
     {
-        close (fd);
-        return (-1);
+        perror("dup2");
+        close(mini->fd_in);
+        return;
     }
-    close (fd);
-    return (0);
+    close (mini->fd_in);
 }
 
-int ft_handle_output_redir(t_re *redir)
+void    ft_handle_output_redir(t_mini *mini, t_re *redir)
 {
-    int fd;
-	
     if (redir->type == OUTFILE)
     {
-        fd = open(redir->str, O_WRONLY | O_CREAT | O_TRUNC, 0700);
-        if (fd == -1)
+        mini->fd_out = open(redir->str, O_CREAT | O_WRONLY | O_TRUNC, 0700);
+        if (mini->fd_out == -1)
         {
             perror("Fail");
-            return (-1);
+            exit(1);
         }
     }
-    else
+    else if (redir->type == APPEND_OUTFILE)
     {
-        fd = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 0700);
-        if (fd == -1)
+        mini->fd_out = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 0700);
+        if (mini->fd_out == -1)
         {
             perror("Fail");
-            return (-1);
+            exit(1);
         }
     }
-    if (dup2(fd, STDOUT_FILENO) == -1)
+    if (dup2(mini->fd_out, STDOUT_FILENO) == -1)
     {
-        perror("dup2 error");
-        close(fd);
-        return (-1);
+        perror("dup2 output redirection\n");
+        close(mini->fd_out);
+        exit(1);
     }
-    close(fd);
-    return (0);
-}
-
-int ft_handle_here_doc(t_re *redir)
-{
-    char *line;
-
-    while (1)
-    {
-        line = readline("> ");
-        if (!line || strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
-            break;
-		ft_putendl_fd(redir->str, STDIN_FILENO);
-        free(line);
-    }
-    free(redir->str);
-    return (0);
+    close(mini->fd_out);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/25 09:49:42 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/31 08:22:37 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,24 @@
 // env variables
 // handles "_" notcate the variable specified and then deletes it
 // from the linked list of  being able to unset
-int		ft_unset(t_mini *mini, char **av)
+int	ft_unset(t_mini *mini, char **av)
 {
-	t_env	*env;
-	int		i;
+    int	i;
 
-	i = 1;
-	env = mini->env;
-	if (av[i] == NULL)
-		return 0;
-	while (av[i])
-	{
-		ft_unset_key(env, av[i]);
-		i++;
-	}
-	return 0;
+    i = 1;
+    if (!av[i])
+        return (0);
+    while (av[i])
+    {
+        if (!export_validity(av[i]))
+        {
+            ft_putstr_fd("minishell: unset: `", STDERR_FILENO);
+            ft_putstr_fd(av[i], STDERR_FILENO);
+            ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+        }
+        else
+            ft_unset_key(mini->env, av[i]);
+        i++;
+    }
+    return (0);
 }

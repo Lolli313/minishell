@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/25 11:17:33 by fmick            ###   ########.fr       */
+/*   Updated: 2025/03/31 11:58:49 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,35 +27,38 @@ int	ft_is_builtin(char **av)
 		return (1);
 	if (ft_strncmp(av[0], "echo", 5) == 0)
 		return (1);
+	if (ft_strncmp(av[0], "exit", 5) == 0)
+		return (1);
 	return 0;
 }
 
 // builtins execution
-void	ft_handle_builtin(char **av, t_mini *mini)
+void	ft_handle_builtin(t_mini *mini)
 {
 	int     is_builtin;
     t_env   *env;
 	char **cmd;
 
-	(void)av;
 	cmd = mini->line->command;
     env = mini->env;
 	is_builtin = ft_is_builtin(cmd);
     if (is_builtin == 0)
-    	return ; // TODO ERROR
-    if (ft_strncmp(cmd[0], "pwd", 4) == 0)
+    	{
+			ft_printf(R "Error: Command not found\n" RESET);
+			return;
+		}
+    if (ft_strncmp(cmd[0], "pwd", 3) == 0)
 	    ft_pwd(env);
-	else if (ft_strncmp(cmd[0], "cd", 3) == 0)
-	{
-		ft_printf (R "Entering CD\n" RESET);
+	else if (ft_strncmp(cmd[0], "cd", 2) == 0)
 	    ft_cd(cmd, env);
-	}
-	else if (ft_strncmp(cmd[0], "export", 7) == 0)
-	    ft_export(mini->env, cmd);
-	else if (ft_strncmp(cmd[0], "unset", 6) == 0)
+	else if (ft_strncmp(cmd[0], "export", 6) == 0)
+	    ft_export(env, cmd);
+	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 	    ft_unset(mini, cmd);
-	else if (ft_strncmp(cmd[0], "env", 4) == 0)
+	else if (ft_strncmp(cmd[0], "env", 3) == 0)
 	    ft_env(env);
-	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
-	    ft_echo(mini->line->command);
+	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
+	    ft_echo(cmd);
+	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
+	    ft_exit(mini, cmd);
 }

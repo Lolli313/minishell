@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
+#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/28 19:08:04 by aakerblo         ###   ########.fr        #
+#    Updated: 2025/03/31 11:59:37 by Barmyh           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,6 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				ft_utils_1.c \
 				ft_signals.c \
 				cleanup.c \
-				tokenizer.c \
 				parse.c \
 				check_operator.c \
 				check_validity.c \
@@ -35,14 +34,13 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				find_functions.c \
 				handle_dollar.c \
 				handle_quotes.c \
-				print_functions.c \
 				structurize_line.c \
 				token_relativity.c \
-				tokenizer1.c \
-				) \
+				tokenizer.c) \
 				$(addprefix src/exe/, ft_pipes.c \
 				ft_redir.c \
-				ft_externals.c) \
+				ft_externals.c \
+				ft_heredoc.c) \
 
 LIBS 		= 	-lreadline -lhistory
 LIBFTDIR 	= 	libft/

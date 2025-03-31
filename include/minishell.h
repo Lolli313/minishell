@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/28 19:11:21 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:33:45 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,19 @@ typedef struct s_extract
 typedef struct s_mini
 {
     int			exit_flag;
+	int			exit_status;
+	bool		interactive;
     char		*infile;
     char		*outfile;
+	int			**pipefd;
+	int			**hd_pipefd;
+	int			hd_count;
+	pid_t		*cpid;
 	int			nbr_of_pipes;
-    int			pid;
 	int			fd_in;
 	int			fd_out;
+	int			stdin;
+	int			stdout;
     t_line		*line;
     t_type		type;
     t_token		*token;
@@ -160,6 +167,9 @@ void	expand_variables(t_mini *mini);
 
 bool	token_validity(t_mini *mini);
 
+t_token	*find_last_token(t_token *token);
+
+
 // fmick
 // utils
 void				ft_putstr_fd(char *str, int fd);
@@ -168,7 +178,7 @@ char				*ft_strdup(const char *s1);
 
 // builtins
 int					ft_is_builtin(char **av);
-void				ft_handle_builtin(char **av, t_mini *mini);
+void				ft_handle_builtin(t_mini *mini);
 int					ft_pwd(t_env *env);
 int					ft_echo(char **av);
 int					ft_env(t_env *env);
@@ -180,13 +190,13 @@ void				ft_cd(char **av, t_env *env);
 
 // pipe managment/externals
 void	ft_handle_external(t_mini *mini, char **args, char **envp);
-void	ft_handle_pipes(t_mini *mini, char **envp);
+void ft_handle_pipes(t_mini *mini, char **envp);
 
 // redirections
-void	ft_handle_redirections(t_mini *mini);
-int ft_handle_input_redir(t_re *redir);
-int ft_handle_output_redir(t_re *redir);
-int ft_handle_here_doc(t_re *redir);
+void ft_handle_redirections(t_mini *mini);
+void    ft_handle_input_redir(t_mini *mini, t_re *redir);
+void	ft_handle_output_redir(t_mini *mini, t_re *redir);
+void ft_handle_here_doc(t_mini *mini, t_re *redir, int index);
 
 // events
 void				ft_env_display(t_env *env);
@@ -202,5 +212,23 @@ int					ft_setenv(t_env *env, const char *key,
 // signal
 void				ft_handle_sigint(int signal);
 int					ft_get_g_global(void);
+
+void	ft_execute_command(t_mini *mini, char **envp);
+int		ft_parse_input(t_mini *mini);
+void ft_close_all_pipes(int **pipefd, int nbr_of_pipes);
+void ft_cleanup_pipes(t_mini *mini);
+void ft_allocate_pipes(t_mini *mini);
+void ft_fork_processes(t_mini *mini, char **envp);
+void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i);
+
+
+
+void ft_prepare_heredocs(t_mini *mini);
+void ft_redirect_heredoc_stdin(t_mini *mini);
+void ft_cleanup_heredocs(t_mini *mini);
+void ft_allocate_heredoc_pipes(t_mini *mini);
+int ft_count_heredocs(t_re *redir);
+void    ft_exit(t_mini *mini, char **cmd);
+void ft_execute_single_command(t_mini *mini, char **envp);
 
 #endif
