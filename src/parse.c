@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/31 11:28:55 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 11:03:50 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ void	parse_string(t_mini *mini, char *line)
 	mini->token = tokenize_input(mini, line);
 	if (mini->token == NULL)
 		return ;
-//	print_tokens(mini->token);
+	print_tokens(mini->token);
 	mini->line = structurize_line(mini);
 	if (mini->line == NULL)
 		return ;
-//	print_lines(mini->line);
+	print_lines(mini->line);
 }

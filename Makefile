@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
+#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/03/31 11:59:37 by Barmyh           ###   ########.fr        #
+#    Updated: 2025/04/01 11:09:39 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,8 @@ SRC 		=	$(addprefix src/env/, ft_env.c \
 				handle_quotes.c \
 				structurize_line.c \
 				token_relativity.c \
-				tokenizer.c) \
+				tokenizer.c \
+				print_functions.c) \
 				$(addprefix src/exe/, ft_pipes.c \
 				ft_redir.c \
 				ft_externals.c \

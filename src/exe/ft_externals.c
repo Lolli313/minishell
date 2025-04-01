@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 09:42:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 11:14:39 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ char	*check_external(t_env *env, char *command)
 		{
 			free_matrix(all_paths);
 			return (str1);
+		//	return(free_matrix(all_paths), free(command), str);
 		}
 		free(str1);
 		i++;
