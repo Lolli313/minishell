@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 10:37:28 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 11:43:48 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ TODO
 - execution function
 - mini struct
 - env | sort doesnt include exported variables?
+mini->exit_flag = 58; rm line when exitstatus is a go
 */
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_operator.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:39:17 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/28 17:40:30 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:24:34 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_type	get_operator_type(char *op, int len)
 
 t_token	*if_operator(t_token *token, char *input, int *i)
 {
-	char	op[2];
+	char	op[3];
 	int		op_len;
 
 	op_len = 1;
@@ -50,6 +50,7 @@ t_token	*if_operator(t_token *token, char *input, int *i)
 	{
 		op[1] = input[(*i)++];
 		op_len = 2;
+		op[2] = '\0';
 	}
 	token = add_node_token(token, ft_strdup(op), get_operator_type(op, op_len));
 	return (token);

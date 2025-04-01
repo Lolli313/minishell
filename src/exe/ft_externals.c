@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 11:14:39 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 11:30:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ char	*check_external(t_env *env, char *command)
 		free(str);
 		if (access(str1, X_OK) == 0)
 		{
-			free_matrix(all_paths);
-			return (str1);
-		//	return(free_matrix(all_paths), free(command), str);
+		//	free_matrix(all_paths);
+		//	free(command);
+		//	return (str1);
+			return(free_matrix(all_paths), free(command), str1);
 		}
 		free(str1);
 		i++;
@@ -57,7 +58,7 @@ char	*check_external(t_env *env, char *command)
 void	ft_handle_external(t_mini *mini, char **args, char **envp)
 {
 	pid_t	cpid;
-	char	*temp;
+	char 	*temp;
 	
 	temp = check_external(mini->env, args[0]);
 	if (!temp)
@@ -77,7 +78,6 @@ void	ft_handle_external(t_mini *mini, char **args, char **envp)
 		ft_handle_redirections(mini);
 		if (execve(temp, args, envp) == -1)
 		{
-			perror("execvp error");
 			free(temp);
 			exit(EXIT_FAILURE);
 		}

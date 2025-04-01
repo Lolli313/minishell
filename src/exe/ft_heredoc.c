@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/01 10:52:59 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 11:39:07 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,14 @@ void ft_handle_here_doc(t_mini *mini, t_re *redir, int index)
         line = readline("> ");
 		if (!line) // Handle EOF (CTRL+D)
         {
+			//signal handler
             perror("readline");
             break;
         }
         if (ft_strcmp(line, redir->str) == 0) // delimiter
         {
             free(line);
-			break;
+			return;
         }
         ft_putendl_fd(line, mini->hd_pipefd[index][1]); // Write to the write end of the pipe
         free(line);
