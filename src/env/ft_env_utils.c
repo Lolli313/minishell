@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/24 10:43:26 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:47:13 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,52 @@ void    ft_unset_key(t_env *env, char *key)
         lst = lst->next;
     }
     // error if key not found
+}
+
+char **ft_env_to_array(t_env *env)
+{
+    char **env_array;
+	char *temp;
+    t_env *cur;
+    int count;
+    int i;
+
+    count = 0;
+    cur = env;
+    while (cur)
+    {
+        count++;
+        cur = cur->next;
+    } // count
+    env_array = malloc(sizeof(char *) * (count + 1));
+    if (!env_array)
+    {
+        perror("malloc");
+        return (NULL);
+    }
+    i = 0;
+    cur = env;
+    while (cur)
+    {
+        if (cur->key && cur->value)
+        {
+            env_array[i] = ft_strjoin(cur->key, "=");
+			temp = env_array[i];
+			env_array[i] = ft_strjoin(temp, cur->value);
+			free (temp);
+            if (!env_array[i])
+            {
+                perror("malloc u dimwit");
+                // Free
+                while (i > 0)
+                    free(env_array[--i]);
+                free(env_array);
+                return (NULL);
+            }
+            i++;
+        }
+        cur = cur->next;
+    }
+    env_array[i] = NULL;
+    return (env_array);
 }

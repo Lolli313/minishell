@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 10:37:00 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 14:33:41 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void ft_allocate_pipes(t_mini *mini)
     }
 }
 
-void ft_fork_processes(t_mini *mini, char **envp)
+void ft_fork_processes(t_mini *mini)
 {
     int i;
     t_line *cmd;
@@ -107,14 +107,14 @@ void ft_fork_processes(t_mini *mini, char **envp)
         }
         if (mini->cpid[i] == 0) // Child process
         {
-            ft_execute_child(mini, cmd, envp, i);
+            ft_execute_child(mini, cmd, i);
         }
         cmd = cmd->next;
         i++;
     }
 }
 
-void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i)
+void ft_execute_child(t_mini *mini, t_line *cmd, int i)
 {
     char *full_path;
 
@@ -130,7 +130,7 @@ void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i)
     }
 	ft_close_all_pipes(mini);
     ft_handle_redirections(mini);
-    if (execve(full_path, cmd->command, envp) == -1)
+    if (execve(full_path, cmd->command, mini->env_array) == -1)
     {
         perror("execve");
         free(full_path);
@@ -138,7 +138,7 @@ void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i)
     }
 }
 
-void ft_handle_pipes(t_mini *mini, char **envp)
+void ft_handle_pipes(t_mini *mini)
 {
     int i;
 
@@ -150,14 +150,8 @@ void ft_handle_pipes(t_mini *mini, char **envp)
         perror("malloc");
         exit(1);
     }
-    ft_fork_processes(mini, envp);
-    i = 0;
-    while (i < mini->nbr_of_pipes)
-    {
-        close(mini->pipefd[i][0]);
-        close(mini->pipefd[i][1]);
-        i++;
-    }
+    ft_fork_processes(mini);
+	ft_close_all_pipes(mini);
     i = 0;
     while (i <= mini->nbr_of_pipes)
     {

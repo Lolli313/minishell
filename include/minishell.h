@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 11:43:48 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 14:59:06 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <dirent.h>
 # include <sys/wait.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <sys/ioctl.h>
 # include <stdbool.h>
 # include "../libft/libft.h"
@@ -104,6 +105,7 @@ typedef struct s_mini
 	int			fd_out;
 	int			stdin;
 	int			stdout;
+	char		**env_array;
     t_line		*line;
     t_type		type;
     t_token		*token;
@@ -169,6 +171,8 @@ bool	token_validity(t_mini *mini);
 
 t_token	*find_last_token(t_token *token);
 
+bool	echo_validity(char *str);
+
 
 // fmick
 // utils
@@ -188,9 +192,6 @@ int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
 
-// pipe managment/externals
-void	ft_handle_external(t_mini *mini, char **args, char **envp);
-void ft_handle_pipes(t_mini *mini, char **envp);
 
 // redirections
 void ft_handle_redirections(t_mini *mini);
@@ -213,16 +214,10 @@ int					ft_setenv(t_env *env, const char *key,
 void				ft_handle_sigint(int signal);
 int					ft_get_g_global(void);
 
-void	ft_execute_command(t_mini *mini, char **envp);
+
 int		ft_parse_input(t_mini *mini);
 void ft_cleanup_pipes(t_mini *mini);
 void ft_allocate_pipes(t_mini *mini);
-void ft_fork_processes(t_mini *mini, char **envp);
-
-// void ft_execute_child(t_mini *mini, t_line *cmd, int i);
-void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i);
-
-
 
 void ft_prepare_heredocs(t_mini *mini);
 void ft_redirect_heredoc_stdin(t_mini *mini);
@@ -230,18 +225,47 @@ void ft_cleanup_heredocs(t_mini *mini);
 void ft_allocate_heredoc_pipes(t_mini *mini);
 int ft_count_heredocs(t_re *redir);
 void    ft_exit(t_mini *mini, char **cmd);
-void ft_execute_single_command(t_mini *mini, char **envp);
 void ft_close_all_pipes(t_mini *mini);
+char **ft_env_to_array(t_env *env);
+
+
+void	ft_handle_external(t_mini *mini, char **args);
+void ft_handle_pipes(t_mini *mini);
+void ft_execute_child(t_mini *mini, t_line *cmd, int i);
+void ft_fork_processes(t_mini *mini);
+void	ft_execute_command(t_mini *mini);
+// void	ft_execute_command(t_mini *mini, char **envp);
+// void ft_fork_processes(t_mini *mini, char **envp);
+// void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i);
+// void	ft_handle_external(t_mini *mini, char **args, char **envp);
+// void ft_handle_pipes(t_mini *mini, char **envp);
 
 
 /*
 TODO
 - finish heredoc
-- - heredoc CTRL+D
-- execution function
+- - heredoc CTRL+D sig
+
+clean up
+- - execution
+- - pipes
+- - redirections
+- - mix pipes/heredocs
+
 - mini struct
-- env | sort doesnt include exported variables?
+- - pipe
+- - redirections
+
+- env
+- - export exact same adds to list -> export_validity function
+- - env | sort doesnt include exported variables? -> pipe issue
+- - make env list into an array ✅
+
 mini->exit_flag = 58; rm line when exitstatus is a go
+exit status;
+
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline.supp ./minishell
+
 */
 
 

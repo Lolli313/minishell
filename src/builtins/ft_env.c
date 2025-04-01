@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:14 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 08:23:42 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 11:59:26 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_env(t_env *env)
 	t_env	*lst;
 
 	lst = env;
-	if (!env)
+	if (!lst)
 		return (0);
 	while (lst)
 	{

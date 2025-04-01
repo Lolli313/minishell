@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/01 11:03:50 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 12:40:44 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,6 @@ t_line	*structurize_line(t_mini *mini)
 		current = current->next;
 		i++;
 	}
-	if (!(ft_strncmp(mini->line->command[0], "exit", 5))
-		&& exit_validity(mini->line) == false)
-		return (line_cleanup(mini), NULL);
 	return (mini->line);
 }
 

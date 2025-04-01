@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:19 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 08:18:41 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 15:00:01 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ft_pwd(t_env *env)
 	}
 	else
 	{
-		char buffer[PATH_MAX];
+		char buffer[4096];
         if (getcwd(buffer, sizeof(buffer)) != NULL)
         {
             printf("%s\n", buffer);

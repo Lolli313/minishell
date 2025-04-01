@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 11:30:05 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 14:35:23 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ char	*check_external(t_env *env, char *command)
 		free(str);
 		if (access(str1, X_OK) == 0)
 		{
-		//	free_matrix(all_paths);
+			free_matrix(all_paths);
 		//	free(command);
-		//	return (str1);
-			return(free_matrix(all_paths), free(command), str1);
+			return (str1);
+		//	return(free_matrix(all_paths), free(command), str1);
 		}
 		free(str1);
 		i++;
@@ -55,17 +55,12 @@ char	*check_external(t_env *env, char *command)
 	return (NULL);
 }
 
-void	ft_handle_external(t_mini *mini, char **args, char **envp)
+void	ft_handle_external(t_mini *mini, char **args)
 {
 	pid_t	cpid;
 	char 	*temp;
 	
 	temp = check_external(mini->env, args[0]);
-	if (!temp)
-	{
-		ft_putendl_fd("minishell: args[0]: command not found", 2);
-		return ;
-	}
 	cpid = fork();
     if (cpid < 0)
     {
@@ -76,7 +71,7 @@ void	ft_handle_external(t_mini *mini, char **args, char **envp)
 	if (cpid == 0)
 	{
 		ft_handle_redirections(mini);
-		if (execve(temp, args, envp) == -1)
+		if (execve(temp, args, mini->env_array) == -1)
 		{
 			free(temp);
 			exit(EXIT_FAILURE);

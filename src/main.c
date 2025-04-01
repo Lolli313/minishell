@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/01 11:11:42 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/01 14:38:07 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // TODO signals (CTRL + D and CTRL + \),
 // look into echo -n and how the syntax should be handled
 
-void	ft_execute_command(t_mini *mini, char **envp)
+void	ft_execute_command(t_mini *mini)
 {
 	if (mini->line->redirect)
 	{
@@ -33,7 +33,7 @@ void	ft_execute_command(t_mini *mini, char **envp)
 	{
 		ft_printf(R "Handling pipeline with %d pipes...\n" RESET,
 			mini->nbr_of_pipes);
-		ft_handle_pipes(mini, envp);
+		ft_handle_pipes(mini);
 	}
 	else
 	{
@@ -56,7 +56,7 @@ void	ft_execute_command(t_mini *mini, char **envp)
 					}
 					else
 					{
-						ft_handle_external(mini, mini->line->command, envp);
+						ft_handle_external(mini, mini->line->command);
 					}
 				}
 			}
@@ -98,6 +98,7 @@ int	main(int ac, char **av, char **envp)
 	mini = malloc(sizeof(t_mini));
 	mini->exit_flag = 1;
 	mini->env = ft_init_env(envp);
+	mini->env_array = ft_env_to_array(mini->env);
 	while (mini->exit_flag)
 	{
 		if (!ft_parse_input(mini))
@@ -111,7 +112,7 @@ int	main(int ac, char **av, char **envp)
 				line_cleanup(mini);
 				continue ;
 			}
-			ft_execute_command(mini, envp);
+			ft_execute_command(mini);
 			if (dup2(mini->stdout, STDOUT_FILENO) == -1)
 				perror("dup2 restore");
 			close(mini->stdout);

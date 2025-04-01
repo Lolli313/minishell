@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:12 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/30 06:47:06 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 12:22:40 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	ft_echo(char **args)
 	i = 1;
 	if (ft_nbr_of_args(args) > 1)
 	{
-		while (args[i] && ft_strncmp(args[i], "-n", 2) == 0)
+		while (args[i] && echo_validity(args[i]) == true)
 		{
 			nflag = 1;
 			i++;
