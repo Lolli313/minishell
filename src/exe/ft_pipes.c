@@ -3,22 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 14:50:57 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 10:37:00 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_close_all_pipes(int **pipefd, int nbr_of_pipes)
+void ft_close_all_pipes(t_mini *mini)
 {
-    int i = 0;
-    while (i < nbr_of_pipes)
+    int	i;
+	
+	i = 0;
+    while (i < mini->nbr_of_pipes)
     {
-        close(pipefd[i][0]);
-        close(pipefd[i][1]);
+        close(mini->pipefd[i][0]);
+        close(mini->pipefd[i][1]);
         i++;
     }
 }
@@ -115,7 +117,6 @@ void ft_fork_processes(t_mini *mini, char **envp)
 void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i)
 {
     char *full_path;
-    int j;
 
     full_path = check_external(mini->env, cmd->command[0]);
     if (i == 0) // First command
@@ -127,13 +128,7 @@ void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i)
         dup2(mini->pipefd[i - 1][0], STDIN_FILENO);
         dup2(mini->pipefd[i][1], STDOUT_FILENO);
     }
-    j = 0;
-    while (j < mini->nbr_of_pipes)
-    {
-        close(mini->pipefd[j][0]);
-        close(mini->pipefd[j][1]);
-        j++;
-    }
+	ft_close_all_pipes(mini);
     ft_handle_redirections(mini);
     if (execve(full_path, cmd->command, envp) == -1)
     {

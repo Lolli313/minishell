@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/31 15:38:55 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 10:52:59 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,18 @@ void ft_prepare_heredocs(t_mini *mini)
             while (1)
             {
                 line = readline("> ");
+				if (!line) // Handle EOF (CTRL+D)
+                {
+                    perror("readline");
+                    break;
+                }
                 if (ft_strcmp(line, redir->str) == 0) // delimiter
                 {
                     free(line);
                     break;
                 }
                 ft_putendl_fd(line, mini->hd_pipefd[i][1]); 
-                free(line);
+                free(line); 
             }
             close(mini->hd_pipefd[i][1]);
             i++;
@@ -56,16 +61,15 @@ void ft_handle_here_doc(t_mini *mini, t_re *redir, int index)
     while (1)
     {
         line = readline("> ");
-        
-        if (!line) // User pressed CTRL+D
+		if (!line) // Handle EOF (CTRL+D)
         {
-            ft_printf("minishell: warning: heredoc delimited by end-of-file (wanted `%s`)\n", redir->str);
+            perror("readline");
             break;
         }
-        if (ft_strcmp(line, redir->str) == 0) // Stop on delimiter
+        if (ft_strcmp(line, redir->str) == 0) // delimiter
         {
             free(line);
-            break;
+			break;
         }
         ft_putendl_fd(line, mini->hd_pipefd[index][1]); // Write to the write end of the pipe
         free(line);
@@ -153,4 +157,3 @@ int ft_count_heredocs(t_re *redir)
     }
     return (count);
 }
-

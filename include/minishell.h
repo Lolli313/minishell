@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 12:33:45 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 10:37:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,10 +215,11 @@ int					ft_get_g_global(void);
 
 void	ft_execute_command(t_mini *mini, char **envp);
 int		ft_parse_input(t_mini *mini);
-void ft_close_all_pipes(int **pipefd, int nbr_of_pipes);
 void ft_cleanup_pipes(t_mini *mini);
 void ft_allocate_pipes(t_mini *mini);
 void ft_fork_processes(t_mini *mini, char **envp);
+
+// void ft_execute_child(t_mini *mini, t_line *cmd, int i);
 void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i);
 
 
@@ -230,5 +231,18 @@ void ft_allocate_heredoc_pipes(t_mini *mini);
 int ft_count_heredocs(t_re *redir);
 void    ft_exit(t_mini *mini, char **cmd);
 void ft_execute_single_command(t_mini *mini, char **envp);
+void ft_close_all_pipes(t_mini *mini);
+
+
+/*
+TODO
+- finish heredoc
+- - heredoc CTRL+D
+- execution function
+- mini struct
+- env | sort doesnt include exported variables?
+*/
+
+
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:48:03 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 12:04:24 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 09:41:37 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,9 @@ static int ft_strisnum(const char *str)
 {
     int i = 0;
 
-    if (!str || !*str) // Handle NULL or empty strings
+    if (!str || !*str) 
         return (0);
-    if (str[i] == '-' || str[i] == '+') // Allow optional sign at the beginning
-        i++;
+    if (str[i] == '-' || str[i] == '+')
     while (str[i])
     {
         if (!ft_isdigit(str[i]))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 14:33:18 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/01 09:42:10 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	ft_handle_external(t_mini *mini, char **args, char **envp)
 		ft_putendl_fd("minishell: args[0]: command not found", 2);
 		return ;
 	}
-    // mini->line->command[0] = temp;
 	cpid = fork();
     if (cpid < 0)
     {
