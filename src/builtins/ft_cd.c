@@ -6,19 +6,11 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/31 08:14:57 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/06 14:37:08 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// relevant env
-// HOME=/home/Barmyh
-// PWD=/home/Barmyh/42-School/mini-shell
-// OLDPWD=/home/Barmyh/42-School
-// USER=Barmyh
-
-// update var or add a new one
 
 int	ft_update_value(t_env *env, char *key, char *value)
 {
@@ -34,69 +26,83 @@ int	ft_update_value(t_env *env, char *key, char *value)
 			lst->value = ft_strdup(value);
 			return (0);
 		}
+		if (!lst->next)
+			break;
 		lst = lst->next;
 	}
 	new_var = malloc(sizeof(t_env));
 	new_var->key = ft_strdup(key);
 	new_var->value = ft_strdup(value);
 	new_var->next = NULL;
-	lst->next = new_var;
+    if (lst)
+		lst->next = new_var;
+    else 
+		env = new_var;
 	return (0);
 }
 
-static void	ft_go_to_dir(t_env *env, int av)
+static void	ft_cd_error(char *path, int error)
 {
-	char	*pwd;
-	char	*oldpwd;
-	char	*newpwd;
-	int		i;
+	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	if (error == 0)
+		ft_putstr_fd("HOME not set\n", STDERR_FILENO);
+	else if (error == 1)
+		ft_putstr_fd("can't change directory\n", STDERR_FILENO);
+	else if (error == 2)
+		ft_putstr_fd("too many arguments\n", STDERR_FILENO);
+	else if (error == 3)
+		ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
+	return ;
+}
 
-	pwd = ft_strdup(ft_find_key(env, "PWD"));
-	oldpwd = ft_strdup(ft_find_key(env, "OLDPWD"));
-	// cd ".."
-	if (av == 0)
+static void	ft_update_pwd(t_env *env)
+{
+	char cwd[4096];
+
+	if (getcwd(cwd, sizeof(cwd)))
 	{
-		ft_update_value(env, "OLDPWD", pwd);
-		i = ft_strlen(pwd);
-		while (i > 0 && pwd[i] != '/')
-			i--;
-		if (i > 0)
-			pwd[i] = '\0';
-		newpwd = ft_strdup(pwd);
-		ft_update_value(env, "PWD", newpwd);
-		free(newpwd);
+		ft_update_value(env, "OLDPWD", ft_find_key(env, "PWD"));
+		ft_update_value(env, "PWD", cwd);
 	}
-	// cd "-"
-	else if (av == 1)
+}
+
+static void	ft_change_dir(t_env *env, char *path, int print_dir)
+{
+	if (chdir(path) == 0)
 	{
-		ft_update_value(env, "OLDPWD", pwd);
-		newpwd = ft_strdup(oldpwd);
-		ft_update_value(env, "PWD", newpwd);
-		free(newpwd);
+	if (print_dir == true)
+		ft_printf("%s\n", path);
+	ft_update_pwd(env);
 	}
-	free(pwd);
-	free(oldpwd);
+	else
+		ft_cd_error(NULL, 3);
 }
 
 void	ft_cd(char **av, t_env *env)
 {
-	char	*home;
+	char *target;
+	int print_dir = false;
 
-	home = ft_find_key(env, "HOME");
-	if (av[1] == NULL || ft_strncmp(av[1], "~", 2) == 0)
+	if (!av[1] || ft_strcmp(av[1], "~") == 0)
 	{
-		if (home)
-			ft_update_value(env, "PWD", home);
+		target = ft_find_key(env, "HOME");
+		if (!target)
+			ft_cd_error(NULL, 0);
 	}
-	else if (ft_strncmp(av[1], "..", 3) == 0)
-		ft_go_to_dir(env, 0);
-	else if (ft_strncmp(av[1], "-", 2) == 0)
-		ft_go_to_dir(env, 1);
-	else if (av[1][0] == '/')
-	 {
-		if (access(av[1], F_OK) == 0)
-			ft_update_value(env, "PWD", av[1]);
-	 }
+	else if (ft_strcmp(av[1], "-") == 0)
+	{
+		target = ft_find_key(env, "OLDPWD");
+		print_dir = true;
+		if (!target)
+			ft_cd_error("OLDPWD", 1);
+	}
+	else if (av[2] != NULL)
+	{
+		ft_cd_error(NULL, 2);
+		return ;
+	}
 	else
-		ft_update_value(env, "PWD", av[1]);
+		target = av[1];
+	ft_change_dir(env, target, print_dir);
 }

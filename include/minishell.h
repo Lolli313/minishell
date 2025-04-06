@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/06 11:50:15 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/06 13:25:14 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,72 +117,58 @@ typedef struct s_mini
 	t_extract	extract;
 }	t_mini;
 
-void	parse_string(t_mini *mini, char *line);
 
+// utils - not in use
+void	print_tokens(t_token *token);
+void	print_lines(t_line *line);
+
+//tokens
 void	token_relativity(t_token *token);
-
-t_line	*structurize_line(t_mini *mini);
-
+bool	token_validity(t_mini *mini);
+t_token	*tokenize_input(t_mini *mini, char *input);
+t_token	*find_last_token(t_token *token);
 t_token	*add_node_token(t_token *token, char *str, t_type type);
+size_t	count_pipes(t_token *token);
+t_line	*add_node_line(t_token *token);
+t_token	*find_pipe(t_token *token);
+size_t	calculate_number_of_commands(t_token *token);
+t_token	*find_command(t_token *token);
+t_token	*if_operator(t_token *token, char *input, int *i);
+t_token	*find_last_token(t_token *token);
 
+//parse
+void	parse_string(t_mini *mini, char *line);
+char	*handle_single_quote(char *org, char *sub, int *pos);
+char	*handle_double_quote(t_mini *mini, char *org, char *sub, int *pos);
+char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos);
 void	line_cleanup(t_mini *mini);
-
-void	free_env(t_env *env);
-
 void	free_many(char *str1, char *str2, char *str3, char *str4);
-
 bool	is_valid_char(char c, bool first);
-
 bool	export_validity(char *str);
+t_line	*structurize_line(t_mini *mini);
+bool	token_validity(t_mini *mini);
+bool	echo_validity(char *str);
+
+
 
 char	*check_external(t_env *env, char *command);
 
-void	handle_signals(void);
-
-char	*handle_single_quote(char *org, char *sub, int *pos);
-
-char	*handle_double_quote(t_mini *mini, char *org, char *sub, int *pos);
-
-char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos);
-
-size_t	count_pipes(t_token *token);
-
-t_line	*add_node_line(t_token *token);
-
-t_token	*find_pipe(t_token *token);
 
 bool	exit_validity(t_line *line);
 
-t_token	*tokenize_input(t_mini *mini, char *input);
-
-void	print_tokens(t_token *token);
-
-void	print_lines(t_line *line);
-
 int	is_operator_char(char c);
-
-size_t	calculate_number_of_commands(t_token *token);
-
-t_token	*find_command(t_token *token);
-
-t_token	*if_operator(t_token *token, char *input, int *i);
 
 char	*extract_word(t_extract *extract, char *input, int *pos);
 
 void	expand_variables(t_mini *mini);
 
-bool	token_validity(t_mini *mini);
-
-t_token	*find_last_token(t_token *token);
-
-bool	echo_validity(char *str);
 
 
 // fmick
 // utils
-void				ft_putstr_fd(char *str, int fd);
+//void				ft_putstr_fd(char *str, int fd);
 int					ft_strcmp(const char *s1, const char *s2);
-char				*ft_strdup(const char *s1);
+//char				*ft_strdup(const char *s1);
 
 // builtins
 int					ft_is_builtin(char **av);
@@ -198,12 +184,12 @@ void				ft_cd(char **av, t_env *env);
 
 
 // redirections
-void ft_handle_redirections(t_mini *mini);
+void 	ft_handle_redirections(t_mini *mini);
 void    ft_handle_input_redir(t_mini *mini, t_re *redir);
 void	ft_handle_output_redir(t_mini *mini, t_re *redir);
-void ft_handle_here_doc(t_mini *mini, t_re *redir, int index);
+void 	ft_handle_here_doc(t_mini *mini, t_re *redir, int index);
 
-// events
+// env
 void				ft_env_display(t_env *env);
 t_env				*ft_add_env_node(char *key, char *value);
 t_env				*ft_init_env(char **envp);
@@ -213,10 +199,12 @@ char    			*ft_update_key(t_env *env, char *key, char *new_value);
 void    			ft_unset_key(t_env *env, char *key);
 int					ft_setenv(t_env *env, const char *key,
 						const char *new_value, int overwrite);
+void	free_env(t_env *env);
 
 // signal
 void				ft_handle_sigint(int signal);
 int					ft_get_g_global(void);
+void				handle_signals(void);
 
 
 int		ft_parse_input(t_mini *mini);
