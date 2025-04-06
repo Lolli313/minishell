@@ -3,160 +3,133 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 14:33:41 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/06 11:06:35 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_close_all_pipes(t_mini *mini)
+void	ft_setup_input_redirection(t_mini *mini, t_line *current, int prev_fd)
 {
-    int	i;
-	
-	i = 0;
-    while (i < mini->nbr_of_pipes)
-    {
-        close(mini->pipefd[i][0]);
-        close(mini->pipefd[i][1]);
-        i++;
-    }
-}
-
-void ft_cleanup_pipes(t_mini *mini)
-{
-    int i;
-
-    i = 0;
-    if (mini->pipefd)
-    {
-        while (i < mini->nbr_of_pipes)
-        {
-            free(mini->pipefd[i]);
-            i++;
-        }
-        free(mini->pipefd);
-        mini->pipefd = NULL;
-    }
-    if (mini->cpid)
-    {
-        free(mini->cpid);
-        mini->cpid = NULL;
-    }
-}
-
-static int	ft_count_pipes(t_line *cmd)
-{
-	int		i;
-	t_line *tmp;
-
-	i = -1;
-	tmp = cmd;
-	while(tmp)
+	if (prev_fd != -1)
 	{
-		i++;
-		tmp = tmp->next;
+        if (dup2(prev_fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2");
+            exit(EXIT_FAILURE);
+        }
+		close(prev_fd);
 	}
-	return (i);
+	if (current->redirect && current->redirect->heredoc_fd != -1)
+	{
+		if (current->redirect->type == LIMITER)
+		{
+        	if (dup2(current->redirect->heredoc_fd, STDIN_FILENO) == -1)
+        	{
+        	    perror("dup2 heredoc_fd");
+        	    exit(EXIT_FAILURE);
+        	}
+		}
+		else
+			ft_handle_redirections(mini);
+		close(current->redirect->heredoc_fd);
+		current->redirect->heredoc_fd = -1;
+	}
 }
 
-void ft_allocate_pipes(t_mini *mini)
+void    execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2])
 {
-    int i;
-
-    i = 0;
-    mini->pipefd = malloc(sizeof(int *) * mini->nbr_of_pipes);
-    while (i < mini->nbr_of_pipes)
+    if (prev_fd != -1)
     {
-        mini->pipefd[i] = malloc(sizeof(int) * 2);
-        if (!mini->pipefd[i])
+        if (dup2(prev_fd, STDIN_FILENO) == -1)
         {
-            perror("malloc");
-            exit(1);
+            perror("dup2");
+            exit(EXIT_FAILURE);
         }
-        if (pipe(mini->pipefd[i]) == -1)
+        close(prev_fd);
+    }
+	if (current->redirect && current->redirect->heredoc_fd != -1)
+    {
+		if (current->redirect->type == LIMITER)
+		{
+        	if (dup2(current->redirect->heredoc_fd, STDIN_FILENO) == -1)
+        	{
+        	    perror("dup2 heredoc_fd");
+        	    exit(EXIT_FAILURE);
+        	}
+		}
+		else
+			ft_handle_redirections(mini);
+        close(current->redirect->heredoc_fd);
+        current->redirect->heredoc_fd = -1; // Mark as used
+    }
+    if (current->next)
+    {
+        close(pipe_fds[0]); 
+        if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
+        {
+            perror("dup2 pipe_fd -> STDOUT");
+            exit(EXIT_FAILURE);
+        }
+        close(pipe_fds[1]);
+    }
+    mini->line = current;
+	ft_handle_redirections(mini);
+    if (ft_is_builtin(current->command))
+        ft_handle_builtin(mini);
+    else
+        ft_handle_external(mini, current->command);
+    exit(EXIT_SUCCESS);
+}
+
+// Helper function for the parent process logic.
+void    handle_parent(t_line *current, int *prev_fd, int pipe_fds[2])
+{
+    if (*prev_fd != -1)
+        close(*prev_fd);
+    if (current->next)
+        close(pipe_fds[1]);
+    if (current->next)
+        *prev_fd = pipe_fds[0];
+    else
+        *prev_fd = -1;
+}
+
+
+
+void    ft_execute_pipeline(t_mini *mini)
+{
+    t_line *current = mini->line;
+    int pipe_fds[2];
+    int prev_fd = -1;
+    pid_t pid;
+
+    while (current)
+    {
+        ft_pipe_heredoc(mini, current);
+        if (current->next && pipe(pipe_fds) == -1)
         {
             perror("pipe");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
-        i++;
-    }
-}
-
-void ft_fork_processes(t_mini *mini)
-{
-    int i;
-    t_line *cmd;
-
-    i = 0;
-    cmd = mini->line;
-    while (i <= mini->nbr_of_pipes)
-    {
-        if (!cmd)
-        {
-            perror("Command is NULL during iteration");
-            exit(1);
-        }
-        mini->cpid[i] = fork();
-        if (mini->cpid[i] < 0)
+        pid = fork();
+        if (pid == -1)
         {
             perror("fork");
-            exit(1);
+            exit(EXIT_FAILURE);
         }
-        if (mini->cpid[i] == 0) // Child process
+        if (pid == 0)
+            execute_child(mini, current, prev_fd, pipe_fds);
+        else // Parent process.
         {
-            ft_execute_child(mini, cmd, i);
+            handle_parent(current, &prev_fd, pipe_fds);
+            waitpid(pid, NULL, 0);
         }
-        cmd = cmd->next;
-        i++;
+        current = current->next;
     }
-}
-
-void ft_execute_child(t_mini *mini, t_line *cmd, int i)
-{
-    char *full_path;
-
-    full_path = check_external(mini->env, cmd->command[0]);
-    if (i == 0) // First command
-        dup2(mini->pipefd[i][1], STDOUT_FILENO);
-    else if (i == mini->nbr_of_pipes) // Last command
-        dup2(mini->pipefd[i - 1][0], STDIN_FILENO);
-    else // Middle command
-    {
-        dup2(mini->pipefd[i - 1][0], STDIN_FILENO);
-        dup2(mini->pipefd[i][1], STDOUT_FILENO);
-    }
-	ft_close_all_pipes(mini);
-    ft_handle_redirections(mini);
-    if (execve(full_path, cmd->command, mini->env_array) == -1)
-    {
-        perror("execve");
-        free(full_path);
-        exit(1);
-    }
-}
-
-void ft_handle_pipes(t_mini *mini)
-{
-    int i;
-
-    mini->nbr_of_pipes = ft_count_pipes(mini->line);
-    ft_allocate_pipes(mini);
-    mini->cpid = malloc(sizeof(pid_t) * (mini->nbr_of_pipes + 1));
-    if (!mini->cpid)
-    {
-        perror("malloc");
-        exit(1);
-    }
-    ft_fork_processes(mini);
-	ft_close_all_pipes(mini);
-    i = 0;
-    while (i <= mini->nbr_of_pipes)
-    {
-        waitpid(mini->cpid[i], NULL, 0);
-        i++;
-    }
-    ft_cleanup_pipes(mini);
+    if (prev_fd != -1)
+        close(prev_fd);
 }

@@ -3,158 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/01 11:39:07 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/06 11:00:11 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_prepare_heredocs(t_mini *mini)
-{
-    t_re *redir;
-    int i;
-    char *line;
-
-    i = 0;
-    redir = mini->line->redirect;
-    while (redir)
-    {
-        if (redir->type == LIMITER)
-        {
-            printf("Preparing heredoc: pipe index = %d\n", i);
-            while (1)
-            {
-                line = readline("> ");
-				if (!line) // Handle EOF (CTRL+D)
-                {
-                    perror("readline");
-                    break;
-                }
-                if (ft_strcmp(line, redir->str) == 0) // delimiter
-                {
-                    free(line);
-                    break;
-                }
-                ft_putendl_fd(line, mini->hd_pipefd[i][1]); 
-                free(line); 
-            }
-            close(mini->hd_pipefd[i][1]);
-            i++;
-        }
-        redir = redir->next;
-    }
-}
-
-void ft_handle_here_doc(t_mini *mini, t_re *redir, int index)
+void ft_heredoc_child(t_re *redir, int *pipefd)
 {
     char *line;
 
-    if (pipe(mini->hd_pipefd[index]) == -1)
-    {
-        perror("pipe");
-        return;
-    }
-
+    close(pipefd[0]); 
     while (1)
     {
-        line = readline("> ");
-		if (!line) // Handle EOF (CTRL+D)
-        {
-			//signal handler
-            perror("readline");
-            break;
-        }
-        if (ft_strcmp(line, redir->str) == 0) // delimiter
+		line = readline("> ");
+        if (!line || strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
         {
             free(line);
-			return;
+            break;
         }
-        ft_putendl_fd(line, mini->hd_pipefd[index][1]); // Write to the write end of the pipe
+        write(pipefd[1], line, ft_strlen(line));
+        write(pipefd[1], "\n", 1); 
         free(line);
     }
-
-    close(mini->hd_pipefd[index][1]);
+	close(pipefd[1]);
 }
 
-void ft_redirect_heredoc_stdin(t_mini *mini)
+void ft_handle_heredoc(t_mini *mini, t_re *redir)
 {
-    int last_pipe;
+    int pipefd[2];
+	pid_t pid;
 
-    if (mini->hd_count > 0)
+	(void)mini;
+    if (pipe(pipefd) == -1)
     {
-        last_pipe = mini->hd_count - 1;
-        printf("Redirecting heredoc: last_pipe = %d, fd = %d\n", last_pipe, mini->hd_pipefd[last_pipe][0]);
-        if (dup2(mini->hd_pipefd[last_pipe][0], STDIN_FILENO) == -1)
-        {
-            perror("dup2");
-            return;
-        }
-        close(mini->hd_pipefd[last_pipe][0]);
+        perror("pipe");
+        exit(EXIT_FAILURE);
     }
+
+	pid = fork();
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		ft_heredoc_child(redir, pipefd);
+		close(pipefd[1]);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+        redir->heredoc_fd = pipefd[0];
+        close(pipefd[1]);
+        waitpid(pid, NULL, 0);
+	}
 }
 
-void ft_allocate_heredoc_pipes(t_mini *mini)
+void    ft_pipe_heredoc(t_mini *mini, t_line *current)
 {
-    int i;
-
-    mini->hd_pipefd = malloc(sizeof(int *) * mini->hd_count);
-    if (!mini->hd_pipefd)
+    if (current->redirect)
     {
-        perror("malloc");
-        exit(1);
-    }
-    i = 0;
-    while (i < mini->hd_count)
-    {
-        mini->hd_pipefd[i] = malloc(sizeof(int) * 2);
-        if (!mini->hd_pipefd[i])
+        t_re *redir = current->redirect;
+        while (redir)
         {
-            perror("malloc");
-            exit(1);
+            if (redir->type == LIMITER) // Heredoc
+            {
+                ft_handle_heredoc(mini, redir);
+				if (redir->heredoc_fd == -1)
+				{
+					perror("Heredoc FD error");
+					exit(EXIT_FAILURE);
+				}
+				if (current->redirect->heredoc_fd == -1)
+                		current->redirect->heredoc_fd = redir->heredoc_fd;
+            	ft_printf("Assigning heredoc_fd %d to command: %s\n", redir->heredoc_fd, current->command[0]);
+            }
+            redir = redir->next;
         }
-        if (pipe(mini->hd_pipefd[i]) == -1)
-        {
-            perror("pipe");
-            exit(1);
-        }
-        printf("Allocated pipe: index = %d, read_fd = %d, write_fd = %d\n", i, mini->hd_pipefd[i][0], mini->hd_pipefd[i][1]);
-        i++;
     }
-}
-
-void ft_cleanup_heredocs(t_mini *mini)
-{
-    int i;
-
-    if (mini->hd_pipefd)
-    {
-        i = 0;
-        while (i < mini->hd_count)
-        {
-            close(mini->hd_pipefd[i][0]); // Close read end
-            close(mini->hd_pipefd[i][1]);
-            free(mini->hd_pipefd[i]);
-            i++;
-        }
-        free(mini->hd_pipefd);
-        mini->hd_pipefd = NULL;
-    }
-    mini->hd_count = 0;
-}
-
-int ft_count_heredocs(t_re *redir)
-{
-    int count;
-
-    count = 0;
-    while (redir)
-    {
-        if (redir->type == LIMITER)
-            count++;
-        redir = redir->next;
-    }
-    return (count);
 }

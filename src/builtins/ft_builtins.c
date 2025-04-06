@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/03/31 11:58:49 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/06 11:14:19 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,12 @@ int	ft_is_builtin(char **av)
 // builtins execution
 void	ft_handle_builtin(t_mini *mini)
 {
-	int     is_builtin;
     t_env   *env;
 	char **cmd;
 
 	cmd = mini->line->command;
     env = mini->env;
-	is_builtin = ft_is_builtin(cmd);
-    if (is_builtin == 0)
-    	{
-			ft_printf(R "Error: Command not found\n" RESET);
-			return;
-		}
+	ft_handle_redirections(mini);
     if (ft_strncmp(cmd[0], "pwd", 3) == 0)
 	    ft_pwd(env);
 	else if (ft_strncmp(cmd[0], "cd", 2) == 0)

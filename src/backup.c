@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   all_in_one.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 14:03:25 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 15:04:47 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/06 08:58:45 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,127 @@ void	handle_signals(void)
 {
 	signal(SIGINT, &ft_handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	expand_variables(t_mini *mini)
+{
+	t_token	*current;
+	int		i;
+
+	current = mini->token;
+	while (current)
+	{
+		i = 0;
+		while (current->str[i])
+		{
+			if (current->str[i] == '\'')
+				current->str = handle_single_quote(current->str, current->str
+						+ i, &i);
+			else if (current->str[i] == '\"')
+				current->str = handle_double_quote(mini, current->str,
+						current->str + i, &i);
+			else if (current->str[i] == '$')
+				current->str = handle_dollar_sign(mini, current->str,
+						current->str + i, &i);
+			else
+				i++;
+		}
+		current = current->next;
+	}
+}
+/*
+void	print_tokens(t_token *token)
+{
+	t_token	*current;
+
+	current = token;
+	while (current)
+	{
+		ft_printf("%s is of type %d on the index %d\n", current->str,
+			current->type, current->index);
+		current = current->next;
+	}
+}
+
+void	print_lines(t_line *line)
+{
+	t_line	*current;
+	t_re	*temp_re;
+	int		i;
+
+	current = line;
+	while (current)
+	{
+		i = 0;
+		ft_printf("COMMAND: ");
+		while (current->command && current->command[i])
+			ft_printf("%s ", current->command[i++]);
+		i = 0;
+		ft_printf("\nREDIRECTS: ");
+		temp_re = current->redirect;
+		while (temp_re)
+		{
+			ft_printf("%s ", temp_re->str);
+			ft_printf("is type %d, ", temp_re->type);
+			ft_printf("\n");
+			temp_re = temp_re->next;
+		}
+		ft_printf("\n");
+		current = current->next;
+	}
+}*/
+
+t_line	*structurize_line(t_mini *mini)
+{
+	t_line	*current;
+	t_token	*next_pipe;
+	size_t	pipes;
+	size_t	i;
+
+	pipes = count_pipes(mini->token);
+	mini->nbr_of_pipes = pipes;
+	i = 0;
+	mini->line = add_node_line(mini->token);
+	current = mini->line;
+	next_pipe = mini->token;
+	while (i < pipes)
+	{
+		next_pipe = find_pipe(next_pipe);
+		current->next = add_node_line(next_pipe);
+		current = current->next;
+		i++;
+	}
+	return (mini->line);
+}
+
+void	parse_string(t_mini *mini, char *line)
+{
+	if (ft_strncmp(line, "\0", 1) == 0)
+		return ;
+	mini->token = NULL;
+	mini->line = NULL;
+	mini->token = tokenize_input(mini, line);
+	if (mini->token == NULL)
+		return ;
+	//print_tokens(mini->token);
+	mini->line = structurize_line(mini);
+	if (mini->line == NULL)
+		return ;
+	//print_lines(mini->line);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] || s2[i])
+	{
+		if ((unsigned char) s1[i] != (unsigned char) s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		i++;
+	}
+	return (0);
 }
 
 t_token	*find_last_token(t_token *token)
@@ -555,6 +676,59 @@ void	free_redirect(t_re *redirect)
 	}
 }
 
+int	ft_env_exists(t_env *env, char *key, char *value)
+{
+	t_env	*lst;
+
+	lst = env;
+	while (lst)
+	{
+		if (ft_strcmp(lst->key, key) == 0)
+		{
+			if (ft_strcmp(lst->value, value) != 0)
+			{
+				free(lst->value);
+				lst->value = ft_strdup(value);
+				return (1);
+			}
+			return (0); // key found with same value
+		}
+		lst = lst->next;
+	}
+	return (0);
+}
+
+// locates the variable and eiter adds it to the end of the
+// linked list of env variables or updates the value of an
+// existing varuable /handles no arguments
+int	ft_export(t_env *env, char **str)
+{
+    char	**temp;
+    t_env	*last;
+    int		i;
+
+    i = 1;
+    while (str[i])
+    {
+        temp = ft_split(str[i], '=');
+        if (!temp[0] || !export_validity(temp[0]))
+            ft_putstr_fd(str[i], STDERR_FILENO);
+        else
+        {
+            if (ft_env_exists(env, temp[0], temp[1] ? temp[1] : "") == 0)
+            {
+                last = env;
+                while (last->next)
+                    last = last->next;
+                last->next = ft_add_env_node(temp[0], temp[1] ? temp[1] : "");
+            }
+        }
+        free_matrix(temp);
+        i++;
+    }
+    return (0);
+}
+
 void	line_cleanup(t_mini *mini)
 {
 	t_token	*token;
@@ -588,6 +762,50 @@ bool	is_valid_char(char c, bool first)
 	if (first == true)
 		return (ft_isalpha(c) || c == '_');
 	return (ft_isalnum(c) || c == '_');
+}
+
+int	ft_is_builtin(char **av)
+{
+	if (ft_strncmp(av[0], "pwd", 4) == 0)
+		return (1);
+	if (ft_strncmp(av[0], "cd", 3) == 0)
+		return (1);
+	if (ft_strncmp(av[0], "export", 7) == 0)
+		return (1);
+	if (ft_strncmp(av[0], "unset", 6) == 0)
+		return (1);
+	if (ft_strncmp(av[0], "env", 4) == 0)
+		return (1);
+	if (ft_strncmp(av[0], "echo", 5) == 0)
+		return (1);
+	if (ft_strncmp(av[0], "exit", 5) == 0)
+		return (1);
+	return 0;
+}
+
+// builtins execution
+void	ft_handle_builtin(t_mini *mini)
+{
+    t_env   *env;
+	char **cmd;
+
+	ft_handle_redirections(mini);
+	cmd = mini->line->command;
+    env = mini->env;
+    if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+	    ft_pwd(env);
+	else if (ft_strncmp(cmd[0], "cd", 2) == 0)
+	    ft_cd(cmd, env);
+	else if (ft_strncmp(cmd[0], "export", 6) == 0)
+	    ft_export(env, cmd);
+	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
+	    ft_unset(mini, cmd);
+	else if (ft_strncmp(cmd[0], "env", 3) == 0)
+	    ft_env(env);
+	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
+	    ft_echo(cmd);
+	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
+	    ft_exit(mini, cmd);
 }
 
 bool	exit_validity(t_line *line)
@@ -1243,4 +1461,348 @@ void	ft_handle_external(t_mini *mini, char **args)
         waitpid(cpid, NULL, 0);
 	}
 	free(temp);
+}
+
+
+void ft_handle_redirections(t_mini *mini)
+{
+    t_re *redir = mini->line->redirect;
+	
+    redir = mini->line->redirect;
+    while (redir)
+    {
+        if (redir->type == INFILE)
+            ft_handle_input_redir(mini, redir);
+        else if (redir->type == OUTFILE || redir->type == APPEND_OUTFILE)
+            ft_handle_output_redir(mini, redir);
+        redir = redir->next;
+    }
+}
+
+void    ft_handle_input_redir(t_mini *mini, t_re *redir)
+{
+    if (!redir->str)
+    {
+        perror("Redirection is NULL");
+        exit(1);
+    }
+	if (redir->type == INFILE)
+	{
+    	mini->fd_in = open(redir->str, O_RDONLY);
+    	if (dup2(mini->fd_in, STDIN_FILENO) == -1)
+    	{
+    	    perror("dup2");
+    	    close(mini->fd_in);
+    	    exit(1);
+    	}
+	}
+}
+
+void    ft_handle_output_redir(t_mini *mini, t_re *redir)
+{
+    if (redir->type == OUTFILE)
+    {
+        mini->fd_out = open(redir->str, O_CREAT | O_WRONLY | O_TRUNC, 0700);
+        if (mini->fd_out == -1)
+        {
+            perror("Fail");
+            exit(1);
+        }
+    }
+    else if (redir->type == APPEND_OUTFILE)
+    {
+        mini->fd_out = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 0700);
+        if (mini->fd_out == -1)
+        {
+            perror("Fail");
+            exit(1);
+        }
+    }
+    if (dup2(mini->fd_out, STDOUT_FILENO) == -1)
+    {
+        perror("dup2 output redirection\n");
+        close(mini->fd_out);
+        exit(1);
+    }
+    close(mini->fd_out);
+}
+
+void ft_heredoc_child(t_re *redir, int *pipefd)
+{
+    char *line;
+
+    close(pipefd[0]); 
+    while (1)
+    {
+		line = readline("> ");
+        if (!line || strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
+        {
+            free(line);
+            break;
+        }
+        write(pipefd[1], line, ft_strlen(line));
+        write(pipefd[1], "\n", 1); 
+        free(line);
+    }
+	close(pipefd[1]);
+}
+
+void ft_handle_heredoc(t_mini *mini, t_re *redir)
+{
+    int pipefd[2];
+	pid_t pid;
+
+	(void)mini;
+    if (pipe(pipefd) == -1)
+    {
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+
+	pid = fork();
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		ft_heredoc_child(redir, pipefd);
+		close(pipefd[1]);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+        redir->heredoc_fd = pipefd[0];
+        ft_printf("Assigning heredoc_fd Before Reset: %d\n", redir->heredoc_fd);
+        
+        close(pipefd[1]);
+        waitpid(pid, NULL, 0);
+        ft_printf("Assigning heredoc_fd After Reset: %d\n", redir->heredoc_fd);
+	}
+}
+
+void ft_pipe_heredoc(t_mini *mini, t_line *current)
+{
+    if (current->redirect)
+    {
+        t_re *redir = current->redirect;
+        while (redir)
+        {
+            if (redir->type == LIMITER) // Heredoc
+            {
+                ft_handle_heredoc(mini, redir);
+				if (redir->heredoc_fd == -1)
+				{
+					perror("Heredoc FD error");
+					exit(EXIT_FAILURE);
+				}
+				if (current->redirect->heredoc_fd == -1)
+                		current->redirect->heredoc_fd = redir->heredoc_fd;
+            	ft_printf("Assigning heredoc_fd %d to command: %s\n", redir->heredoc_fd, current->command[0]);
+            }
+            redir = redir->next;
+        }
+    }
+}
+
+
+// Helper function for the child process logic.
+static void execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2])
+{
+    if (prev_fd != -1)
+    {
+        if (dup2(prev_fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2");
+            exit(EXIT_FAILURE);
+        }
+        close(prev_fd);
+    }
+//	if (current->redirect)
+//		ft_handle_redirections(mini);
+	if (current->redirect && current->redirect->heredoc_fd != -1)
+    {
+		if (current->redirect->type == LIMITER)
+		{
+        	if (dup2(current->redirect->heredoc_fd, STDIN_FILENO) == -1)
+        	{
+        	    perror("dup2 heredoc_fd");
+        	    exit(EXIT_FAILURE);
+        	}
+		}
+		else
+			ft_handle_redirections(mini);
+        close(current->redirect->heredoc_fd);
+        current->redirect->heredoc_fd = -1; // Mark as used
+    }
+    if (current->next)
+    {
+        close(pipe_fds[0]); 
+        if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
+        {
+            perror("dup2 pipe_fd -> STDOUT");
+            exit(EXIT_FAILURE);
+        }
+        close(pipe_fds[1]);
+    }
+    mini->line = current;
+	ft_handle_redirections(mini);
+    if (ft_is_builtin(current->command))
+        ft_handle_builtin(mini);
+    else
+        ft_handle_external(mini, current->command);
+    exit(EXIT_SUCCESS);
+}
+
+// Helper function for the parent process logic.
+static void handle_parent(t_line *current, int *prev_fd, int pipe_fds[2])
+{
+    if (*prev_fd != -1)
+        close(*prev_fd);
+    if (current->next)
+        close(pipe_fds[1]);
+    *prev_fd = current->next ? pipe_fds[0] : -1; // Save current pipe's read end.
+}
+
+
+void ft_execute_pipeline(t_mini *mini)
+{
+    t_line *current = mini->line;
+    int pipe_fds[2];
+    int prev_fd = -1;
+    pid_t pid;
+
+    while (current)
+    {
+        ft_pipe_heredoc(mini, current);
+        if (current->next && pipe(pipe_fds) == -1)
+        {
+            perror("pipe");
+            exit(EXIT_FAILURE);
+        }
+
+        pid = fork();
+        if (pid == -1)
+        {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+
+        if (pid == 0)
+            execute_child(mini, current, prev_fd, pipe_fds);
+        else // Parent process.
+        {
+            handle_parent(current, &prev_fd, pipe_fds);
+            waitpid(pid, NULL, 0);
+        }
+        current = current->next;
+    }
+    if (prev_fd != -1)
+        close(prev_fd);
+}
+
+
+
+void ft_execute_command(t_mini *mini)
+{
+	mini->stdin = dup(STDIN_FILENO);
+	mini->stdout = dup(STDOUT_FILENO);
+	mini->path = check_external(mini->env, mini->line->command[0]);
+
+	if (mini->nbr_of_pipes > 0)
+		ft_execute_pipeline(mini);
+	else
+	{
+		if (mini->line->redirect && mini->line->redirect->type == LIMITER)
+        {
+            ft_pipe_heredoc(mini, mini->line); // Process the heredoc
+            if (mini->line->redirect->heredoc_fd != -1)
+            {
+                if (dup2(mini->line->redirect->heredoc_fd, STDIN_FILENO) == -1)
+                {
+                    perror("dup2 heredoc_fd -> STDIN");
+                    close(mini->line->redirect->heredoc_fd);
+                    exit(EXIT_FAILURE);
+                }
+                close(mini->line->redirect->heredoc_fd); // Close after dup2
+                mini->line->redirect->heredoc_fd = -1; // Mark as used
+            }
+        }
+    	if (ft_is_builtin(mini->line->command))
+		{
+			ft_printf(B "Executing builtin: %s\n" RESET, mini->line->command[0]);
+    	    ft_handle_builtin(mini);
+		}
+		else
+			ft_handle_external(mini, mini->line->command);
+	}
+    if (dup2(mini->stdin, STDIN_FILENO) == -1)
+    {
+        perror("dup2 STDIN");
+        exit(EXIT_FAILURE);
+    }
+
+    if (dup2(mini->stdout, STDOUT_FILENO) == -1)
+    {
+        perror("dup2 STDOUT");
+        exit(EXIT_FAILURE);
+    }
+	close(mini->stdin);
+    close(mini->stdout);
+	free(mini->path);
+	mini->path = NULL;
+}
+
+int	ft_parse_input(t_mini *mini)
+{
+	char	*input;
+
+	mini->interactive = isatty(STDIN_FILENO);
+	if (mini->interactive)
+		input = readline(G "😭 minishell$ " RESET);
+	else
+		input = get_next_line(STDIN_FILENO); // Read input non-interactively
+	if (!input)
+	{
+		if (mini->interactive)
+			ft_printf("exit\n");
+		return (0); // Signal to exit the shell
+	}
+	ft_printf(B "Received input: %s\n" RESET, input);
+	parse_string(mini, input);
+	if (*input)
+		add_history(input);
+	free(input);
+	return (1); // Signal to continue the shell
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	t_mini	*mini;
+
+	handle_signals();
+	(void)ac;
+	(void)av;
+	mini = malloc(sizeof(t_mini));
+	mini->exit_flag = 1;
+	mini->env = ft_init_env(envp);
+	mini->env_array = ft_env_to_array(mini->env);
+	while (mini->exit_flag)
+	{
+		if (!ft_parse_input(mini))
+			break ;
+		if (mini->line)
+		{
+			mini->stdout = dup(STDOUT_FILENO); // Save the original STDOUT
+			if (mini->stdout == -1)
+			{
+				perror("dup");
+				line_cleanup(mini);
+				continue ;
+			}
+			ft_execute_command(mini);
+			close(mini->stdout);
+			line_cleanup(mini);
+		}
+	}
+	free_env(mini->env);
+	free(mini);
+	return (42);
 }

@@ -3,66 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/01 15:09:31 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/06 09:41:37 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// unsure how to deal with 'ABC=hola' as input
-// do we add that to the env variables or no
-
-// TODO signals (CTRL + D and CTRL + \),
-// look into echo -n and how the syntax should be handled
-
-void	ft_execute_command(t_mini *mini)
+void ft_execute_command(t_mini *mini)
 {
-	if (mini->line->redirect)
-	{
-		mini->hd_count = ft_count_heredocs(mini->line->redirect);
-		if (mini->hd_count > 0)
-		{
-			ft_allocate_heredoc_pipes(mini);
-			ft_prepare_heredocs(mini);
-		}
-	}
+	mini->stdin = dup(STDIN_FILENO);
+	mini->stdout = dup(STDOUT_FILENO);
+	mini->path = check_external(mini->env, mini->line->command[0]);
+
 	if (mini->nbr_of_pipes > 0)
-	{
-		ft_printf(R "Handling pipeline with %d pipes...\n" RESET,
-			mini->nbr_of_pipes);
-		ft_handle_pipes(mini);
-	}
+		ft_execute_pipeline(mini);
 	else
 	{
-		// Single command execution
-		if (mini->line->command && mini->line->command[0])
+		if (mini->line->redirect && mini->line->redirect->type == LIMITER)
+        {
+            ft_pipe_heredoc(mini, mini->line); // Process the heredoc
+            if (mini->line->redirect->heredoc_fd != -1)
+            {
+                if (dup2(mini->line->redirect->heredoc_fd, STDIN_FILENO) == -1)
+                {
+                    perror("dup2 heredoc_fd -> STDIN");
+                    close(mini->line->redirect->heredoc_fd);
+                    exit(EXIT_FAILURE);
+                }
+                close(mini->line->redirect->heredoc_fd); // Close after dup2
+                mini->line->redirect->heredoc_fd = -1; // Mark as used
+            }
+        }
+    	if (ft_is_builtin(mini->line->command))
 		{
-			ft_handle_redirections(mini);
-			if (ft_is_builtin(mini->line->command))
-			{
-				ft_handle_builtin(mini);
-			}
-			else
-			{
-				if (mini->line->command && mini->line->command[0])
-				{
-					ft_handle_redirections(mini);
-					if (ft_is_builtin(mini->line->command))
-					{
-						ft_handle_builtin(mini);
-					}
-					else
-					{
-						ft_handle_external(mini, mini->line->command);
-					}
-				}
-			}
+			ft_printf(B "Executing builtin: %s\n" RESET, mini->line->command[0]);
+    	    ft_handle_builtin(mini);
 		}
+		else
+			ft_handle_external(mini, mini->line->command);
 	}
-	ft_cleanup_heredocs(mini);
+    if (dup2(mini->stdin, STDIN_FILENO) == -1)
+    {
+        perror("dup2 STDIN");
+        exit(EXIT_FAILURE);
+    }
+
+    if (dup2(mini->stdout, STDOUT_FILENO) == -1)
+    {
+        perror("dup2 STDOUT");
+        exit(EXIT_FAILURE);
+    }
+	close(mini->stdin);
+    close(mini->stdout);
+	free(mini->path);
+	mini->path = NULL;
 }
 
 int	ft_parse_input(t_mini *mini)
@@ -113,8 +110,6 @@ int	main(int ac, char **av, char **envp)
 				continue ;
 			}
 			ft_execute_command(mini);
-			if (dup2(mini->stdout, STDOUT_FILENO) == -1)
-				perror("dup2 restore");
 			close(mini->stdout);
 			line_cleanup(mini);
 		}

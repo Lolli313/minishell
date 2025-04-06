@@ -3,45 +3,46 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
+#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/04/01 11:09:39 by fmick            ###   ########.fr        #
+#    Updated: 2025/04/06 11:27:41 by Barmyh           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME 		=	minishell
 CFLAGS		=	-g -Wall -Wextra -Werror -fpie
-SRC 		=	$(addprefix src/env/, ft_env.c \
-				ft_env_utils.c) \
-				$(addprefix src/builtins/, ft_cd.c \
-				ft_echo.c \
-				ft_pwd.c \
-				ft_export.c \
-				ft_env.c \
-				ft_unset.c \
-				ft_exit.c \
-				ft_builtins.c) \
-				$(addprefix src/, main.c \
-				ft_utils_1.c \
-				ft_signals.c \
-				cleanup.c \
-				parse.c \
-				check_operator.c \
-				check_validity.c \
-				count_functions.c \
-				extract_word.c \
-				find_functions.c \
-				handle_dollar.c \
-				handle_quotes.c \
-				structurize_line.c \
-				token_relativity.c \
-				tokenizer.c \
-				print_functions.c) \
-				$(addprefix src/exe/, ft_pipes.c \
-				ft_redir.c \
-				ft_externals.c \
-				ft_heredoc.c) \
+SRC 		=	$(addprefix src/builtins/, ft_builtins.c \
+						ft_cd.c \
+						ft_echo.c \
+						ft_env.c \
+						ft_exit.c \
+						ft_export.c \
+						ft_pwd.c \
+						ft_unset.c) \
+				$(addprefix src/env/, ft_env.c \
+						ft_env_utils.c) \
+				$(addprefix src/exe/, ft_externals.c \
+						ft_heredoc.c \
+						ft_pipes_utils.c \
+						ft_pipes.c \
+						ft_redir.c) \
+				$(addprefix src/parser/, check_operator.c \
+						check_validity.c \
+						cleanup.c \
+						count_functions.c \
+						extract_word.c \
+						find_functions.c \
+						ft_signals.c \
+						ft_utils_1.c \
+						handle_dollar.c \
+						handle_quotes.c \
+						parse.c \
+						structurize_line.c \
+						token_relativity.c \
+						tokenizer.c) \
+				$(addprefix src/, main.c) \
+
 
 LIBS 		= 	-lreadline -lhistory
 LIBFTDIR 	= 	libft/

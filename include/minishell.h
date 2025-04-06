@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 15:30:30 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/06 11:50:15 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,11 @@ typedef enum e_type
 typedef struct s_re
 {
 	t_type		type;
+	int			heredoc_fd;
 	char		*str;
 	struct s_re	*next;
 }	t_re;
+
 
 typedef struct s_line
 {
@@ -94,23 +96,19 @@ typedef struct s_mini
     int			exit_flag;
 	int			exit_status;
 	bool		interactive;
-    char		*infile;
-    char		*outfile;
 
-	// pipes
 	int			**pipefd;
+	int			prev_fd;
 	pid_t		*cpid;
 	int			nbr_of_pipes;
-	
-	// heredocs needed ?
-	int			hd_count;
-	int			**hd_pipefd;
 
-	int			fd_in;
-	int			fd_out;
+	int		fd_in;
+	int		fd_out;		
 	int			stdin;
 	int			stdout;
+
 	char		**env_array;
+	char		*path;
 
     t_line		*line;
     t_type		type;
@@ -225,42 +223,58 @@ int		ft_parse_input(t_mini *mini);
 void ft_cleanup_pipes(t_mini *mini);
 void ft_allocate_pipes(t_mini *mini);
 
-void ft_prepare_heredocs(t_mini *mini);
-void ft_redirect_heredoc_stdin(t_mini *mini);
-void ft_cleanup_heredocs(t_mini *mini);
-void ft_allocate_heredoc_pipes(t_mini *mini);
-int ft_count_heredocs(t_re *redir);
+
 void    ft_exit(t_mini *mini, char **cmd);
-void ft_close_all_pipes(t_mini *mini);
 char **ft_env_to_array(t_env *env);
 
 
 void	ft_handle_external(t_mini *mini, char **args);
-void ft_handle_pipes(t_mini *mini);
-void ft_execute_child(t_mini *mini, t_line *cmd, int i);
-void ft_fork_processes(t_mini *mini);
 void	ft_execute_command(t_mini *mini);
-// void	ft_execute_command(t_mini *mini, char **envp);
-// void ft_fork_processes(t_mini *mini, char **envp);
-// void ft_execute_child(t_mini *mini, t_line *cmd, char **envp, int i);
-// void	ft_handle_external(t_mini *mini, char **args, char **envp);
-// void ft_handle_pipes(t_mini *mini, char **envp);
+
+// int ft_handle_heredoc(t_mini *mini, t_re *redir);
+void ft_handle_heredoc(t_mini *mini, t_re *redir);
+void ft_heredoc_child(t_re *redir, int *pipefd);
+void ft_close_heredoc_fds(t_mini *mini);
+void ft_execute_pipeline(t_mini *mini);
+void ft_preprocess_heredocs(t_mini *mini);
+
+
+
+void ft_allocate_pipes(t_mini *mini);
+void ft_wait_for_children(t_mini *mini);
+void ft_handle_prev_fd(int prev_fd);
+
+void ft_handle_pipes(t_mini *mini);
+void ft_fork_processes(t_mini *mini);
+void ft_allocate_pipes(t_mini *mini);
+void ft_cleanup_pipes(t_mini *mini);
+void ft_close_all_pipes(t_mini *mini, int index);
+void    ft_pipe_heredoc(t_mini *mini, t_line *current);
+
+
+void	close_pipe_fds(t_mini *mini, int skip_index);
+bool	create_pipes(t_mini *mini);
+bool	set_pipe_fds(t_mini *mini, int index);
+void ft_handle_parent(t_line *current, int *prev_fd, int pipe_fds[2]);
+void ft_execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
+void	ft_redir_output(t_line *current, int pipe_fds[2]);
+void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
 
 
 /*
 TODO
-- finish heredoc
-- - heredoc CTRL+D sig
+- finish heredoc ✅
+- - heredoc CTRL+D sig 
 
 clean up
-- - execution
-- - pipes
-- - redirections
-- - mix pipes/heredocs
+- - execution ✅
+- - pipes ✅
+- - redirections ✅
+- - mix pipes/heredocs ✅
 
 - mini struct
-- - pipe
-- - redirections
+- - pipe ✅
+- - redirections ✅
 
 - env
 - - export exact same adds to list -> export_validity function
@@ -279,4 +293,4 @@ valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressi
 
 
 
-#endif
+# endif
