@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/06 13:25:14 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 07:26:28 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,7 @@ void ft_cleanup_pipes(t_mini *mini);
 void ft_close_all_pipes(t_mini *mini, int index);
 void    ft_pipe_heredoc(t_mini *mini, t_line *current);
 
-
+void ft_restore_std_fds(t_mini *mini);
 void	close_pipe_fds(t_mini *mini, int skip_index);
 bool	create_pipes(t_mini *mini);
 bool	set_pipe_fds(t_mini *mini, int index);
@@ -247,7 +247,7 @@ void ft_handle_parent(t_line *current, int *prev_fd, int pipe_fds[2]);
 void ft_execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
 void	ft_redir_output(t_line *current, int pipe_fds[2]);
 void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
-
+void ft_execute_heredoc(t_mini *mini);
 
 /*
 TODO

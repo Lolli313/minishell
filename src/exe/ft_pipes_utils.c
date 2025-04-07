@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 11:26:39 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/06 11:27:13 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 07:22:43 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,20 @@ void    ft_execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fd
     else
         ft_handle_external(mini, current->command);
     exit(EXIT_SUCCESS);
+}
+
+void ft_restore_std_fds(t_mini *mini)
+{
+    if (dup2(mini->stdin, STDIN_FILENO) == -1)
+    {
+        perror("dup2 STDIN");
+        exit(EXIT_FAILURE);
+    }
+    if (dup2(mini->stdout, STDOUT_FILENO) == -1)
+    {
+        perror("dup2 STDOUT");
+        exit(EXIT_FAILURE);
+    }
+    close(mini->stdin);
+    close(mini->stdout);
 }

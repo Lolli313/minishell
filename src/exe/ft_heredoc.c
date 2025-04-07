@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/06 11:00:11 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 07:32:10 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,27 @@ void    ft_pipe_heredoc(t_mini *mini, t_line *current)
 				}
 				if (current->redirect->heredoc_fd == -1)
                 		current->redirect->heredoc_fd = redir->heredoc_fd;
-            	ft_printf("Assigning heredoc_fd %d to command: %s\n", redir->heredoc_fd, current->command[0]);
             }
             redir = redir->next;
+        }
+    }
+}
+
+void ft_execute_heredoc(t_mini *mini)
+{
+    if (mini->line->redirect && mini->line->redirect->type == LIMITER)
+    {
+        ft_pipe_heredoc(mini, mini->line); 
+        if (mini->line->redirect->heredoc_fd != -1)
+        {
+            if (dup2(mini->line->redirect->heredoc_fd, STDIN_FILENO) == -1)
+            {
+                perror("dup2 heredoc_fd -> STDIN");
+                close(mini->line->redirect->heredoc_fd);
+                exit(EXIT_FAILURE);
+            }
+            close(mini->line->redirect->heredoc_fd); // Close after dup2
+            mini->line->redirect->heredoc_fd = -1; // Mark used
         }
     }
 }

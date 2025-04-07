@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/06 09:41:37 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 08:02:32 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,42 +22,15 @@ void ft_execute_command(t_mini *mini)
 		ft_execute_pipeline(mini);
 	else
 	{
-		if (mini->line->redirect && mini->line->redirect->type == LIMITER)
-        {
-            ft_pipe_heredoc(mini, mini->line); // Process the heredoc
-            if (mini->line->redirect->heredoc_fd != -1)
-            {
-                if (dup2(mini->line->redirect->heredoc_fd, STDIN_FILENO) == -1)
-                {
-                    perror("dup2 heredoc_fd -> STDIN");
-                    close(mini->line->redirect->heredoc_fd);
-                    exit(EXIT_FAILURE);
-                }
-                close(mini->line->redirect->heredoc_fd); // Close after dup2
-                mini->line->redirect->heredoc_fd = -1; // Mark as used
-            }
-        }
+		ft_execute_heredoc(mini);
     	if (ft_is_builtin(mini->line->command))
-		{
-			ft_printf(B "Executing builtin: %s\n" RESET, mini->line->command[0]);
     	    ft_handle_builtin(mini);
-		}
 		else
 			ft_handle_external(mini, mini->line->command);
 	}
-    if (dup2(mini->stdin, STDIN_FILENO) == -1)
-    {
-        perror("dup2 STDIN");
-        exit(EXIT_FAILURE);
-    }
-
-    if (dup2(mini->stdout, STDOUT_FILENO) == -1)
-    {
-        perror("dup2 STDOUT");
-        exit(EXIT_FAILURE);
-    }
-	close(mini->stdin);
-    close(mini->stdout);
+	dup2(mini->stdin, STDIN_FILENO);
+	dup2(mini->stdout, STDOUT_FILENO);
+	ft_restore_std_fds(mini);
 	free(mini->path);
 	mini->path = NULL;
 }
@@ -70,19 +43,18 @@ int	ft_parse_input(t_mini *mini)
 	if (mini->interactive)
 		input = readline(G "😭 minishell$ " RESET);
 	else
-		input = get_next_line(STDIN_FILENO); // Read input non-interactively
+		input = get_next_line(STDIN_FILENO); //non-interactive
 	if (!input)
 	{
 		if (mini->interactive)
 			ft_printf("exit\n");
-		return (0); // Signal to exit the shell
+		return (0); //exit 
 	}
-	ft_printf(B "Received input: %s\n" RESET, input);
 	parse_string(mini, input);
 	if (*input)
 		add_history(input);
 	free(input);
-	return (1); // Signal to continue the shell
+	return (1); //continue
 }
 
 int	main(int ac, char **av, char **envp)
@@ -102,13 +74,6 @@ int	main(int ac, char **av, char **envp)
 			break ;
 		if (mini->line)
 		{
-			mini->stdout = dup(STDOUT_FILENO); // Save the original STDOUT
-			if (mini->stdout == -1)
-			{
-				perror("dup");
-				line_cleanup(mini);
-				continue ;
-			}
 			ft_execute_command(mini);
 			close(mini->stdout);
 			line_cleanup(mini);
