@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/07 07:26:28 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 08:43:21 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void	ft_execute_command(t_mini *mini);
 
 // int ft_handle_heredoc(t_mini *mini, t_re *redir);
 void ft_handle_heredoc(t_mini *mini, t_re *redir);
-void ft_heredoc_child(t_re *redir, int *pipefd);
+void ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd);
 void ft_close_heredoc_fds(t_mini *mini);
 void ft_execute_pipeline(t_mini *mini);
 void ft_preprocess_heredocs(t_mini *mini);

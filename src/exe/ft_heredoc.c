@@ -6,15 +6,18 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/07 07:32:10 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 08:56:26 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_heredoc_child(t_re *redir, int *pipefd)
+void ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 {
     char *line;
+    char *read_line;
+    int  i;
+
 
     close(pipefd[0]); 
     while (1)
@@ -25,9 +28,20 @@ void ft_heredoc_child(t_re *redir, int *pipefd)
             free(line);
             break;
         }
-        write(pipefd[1], line, ft_strlen(line));
+        i = 0;
+        read_line = line;
+        while (read_line && read_line[i])
+        {
+            if (read_line[i] == '$')
+                read_line = handle_dollar_sign(mini, read_line, &read_line[i], &i);
+            else
+                i++;
+        }
+        write(pipefd[1], read_line, ft_strlen(read_line));
         write(pipefd[1], "\n", 1); 
-        free(line);
+    //    if (read_line != line)
+    //       free (read_line);
+     //   free(line);
     }
 	close(pipefd[1]);
 }
@@ -48,7 +62,7 @@ void ft_handle_heredoc(t_mini *mini, t_re *redir)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
-		ft_heredoc_child(redir, pipefd);
+		ft_heredoc_child(mini, redir, pipefd);
 		close(pipefd[1]);
 		exit(EXIT_SUCCESS);
 	}
