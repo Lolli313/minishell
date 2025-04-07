@@ -66,7 +66,6 @@ void    ft_unset_key(t_env *env, char *key)
     lst = env;
     prev = NULL;
 
-    // Search for the node with the matching key
     while (lst)
     {
         if (ft_strcmp(lst->key, key) == 0)
@@ -83,7 +82,7 @@ void    ft_unset_key(t_env *env, char *key)
         prev = lst;
         lst = lst->next;
     }
-    // error if key not found
+    perror("Key not found");
 }
 
 char **ft_env_to_array(t_env *env)
@@ -120,7 +119,6 @@ char **ft_env_to_array(t_env *env)
             if (!env_array[i])
             {
                 perror("malloc u dimwit");
-                // Free
                 while (i > 0)
                     free(env_array[--i]);
                 free(env_array);

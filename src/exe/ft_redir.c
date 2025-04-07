@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/02 06:17:24 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 15:09:58 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 void ft_handle_redirections(t_mini *mini)
 {
     t_re *redir = mini->line->redirect;
+	
+    redir = mini->line->redirect;
     while (redir)
     {
         if (redir->type == INFILE)
@@ -25,8 +27,6 @@ void ft_handle_redirections(t_mini *mini)
             ft_handle_output_redir(mini, redir);
         redir = redir->next;
     }
-   // if (mini->hd_count > 0)
-     //   ft_redirect_heredoc_stdin(mini);
 }
 
 void    ft_handle_input_redir(t_mini *mini, t_re *redir)

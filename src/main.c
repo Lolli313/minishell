@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/07 08:02:32 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/07 15:23:01 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void ft_execute_command(t_mini *mini)
 		else
 			ft_handle_external(mini, mini->line->command);
 	}
-	dup2(mini->stdin, STDIN_FILENO);
-	dup2(mini->stdout, STDOUT_FILENO);
 	ft_restore_std_fds(mini);
 	free(mini->path);
 	mini->path = NULL;
