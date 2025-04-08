@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 15:27:08 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 20:11:11 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,27 @@ void	ft_handle_redirections(t_mini *mini)
 
 void	ft_handle_input_redir(t_mini *mini, t_re *redir)
 {
-	if (!redir->str)
-	{
-		perror("Redirection is NULL");
-		exit(1);
-	}
+	ft_close(mini->fd_in);
 	mini->fd_in = open(redir->str, O_RDONLY);
 	if (mini->fd_in == -1)
 	{
-		perror("Fail");
-		exit(1);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(redir->str, 2);
+		ft_putendl_fd(": No such file or directory", 2);
+		return ;
 	}
 	if (dup2(mini->fd_in, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
-		close(mini->fd_in);
+		ft_close(mini->fd_in);
 		exit (1);
 	}
-	close(mini->fd_in);
+	ft_close(mini->fd_in);
 }
 
 void	ft_handle_output_redir(t_mini *mini, t_re *redir)
 {
+	ft_close(mini->fd_out);
 	if (redir->type == OUTFILE)
 	{
 		mini->fd_out = open(redir->str, O_CREAT | O_WRONLY | O_TRUNC, 0700);
@@ -73,8 +72,9 @@ void	ft_handle_output_redir(t_mini *mini, t_re *redir)
 	if (dup2(mini->fd_out, STDOUT_FILENO) == -1)
 	{
 		perror("dup2 output redirection\n");
-		close(mini->fd_out);
+		ft_close(mini->fd_out);
 		exit(1);
 	}
-	close(mini->fd_out);
+	ft_close(mini->fd_out);
+	mini->fd_out = -1;
 }

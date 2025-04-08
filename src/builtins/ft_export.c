@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 13:19:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 20:12:09 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,10 @@ int	ft_export(t_env *env, char **str)
 	i = 1;
 	while (str[i])
 	{
+		if (strchr(str[i], '=') == NULL)
+		{
+
+		}
 		temp = ft_split(str[i], '=');
 		if (!temp[0] || !export_validity(temp[0]))
 			ft_putstr_fd(str[i], STDERR_FILENO);

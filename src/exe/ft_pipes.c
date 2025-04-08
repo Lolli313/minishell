@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 15:39:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 20:03:24 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,26 @@
 void	ft_handle_parent(t_line *current, int *prev_fd, int pipe_fds[2])
 {
 	if (*prev_fd != -1)
-		close(*prev_fd);
-	if (current->next)
-		close(pipe_fds[1]);
+	{
+		ft_close(*prev_fd);
+		*prev_fd = -1;  // Mark it as closed
+	}
+
 	if (current->next)
 	{
-		close(pipe_fds[1]);
-		*prev_fd = pipe_fds[0];
+		if (pipe_fds[1] != -1)
+		{
+			ft_close(pipe_fds[1]);  // Only close if it's a pipeline
+			pipe_fds[1] = -1;  // Prevent double close
+		}
+		*prev_fd = pipe_fds[0];  // Save read end for next command
 	}
 	else
 	{
-		*prev_fd = -1;
+		*prev_fd = -1;  // No next command, no need to store fd
 	}
 }
+
 
 void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd,
 		int pipe_fds[2])
@@ -55,21 +62,22 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd,
 void	ft_execute_pipeline(t_mini *mini)
 {
 	t_line	*current;
-	int		pipe_fds[2];
+	int		pipefd[2];
 	int		prev_fd;
 
 	current = mini->line;
 	prev_fd = -1;
+
 	while (current)
 	{
 		ft_pipe_heredoc(mini, current);
-		if (current->next && pipe(pipe_fds) == -1)
+		if (current->next && pipe(pipefd) == -1)
 			exit(EXIT_FAILURE);
-		ft_fork_and_exe(mini, current, prev_fd, pipe_fds);
+		ft_fork_and_exe(mini, current, prev_fd, pipefd);
 		if (current->next)
 		{
-			close(pipe_fds[1]);
-			prev_fd = pipe_fds[0];
+			ft_close(pipefd[1]);
+			prev_fd = pipefd[0];
 		}
 		else
 			prev_fd = -1;
@@ -81,6 +89,11 @@ void	ft_execute_pipeline(t_mini *mini)
 		wait(NULL);
 		current = current->next;
 	}
-	if (prev_fd != -1)
-		close(prev_fd);
+	ft_close(prev_fd);
+	//if (prev_fd != STDIN_FILENO && prev_fd != -1)
+	//{
+	//	ft_close(prev_fd);
+	//	prev_fd = -1;
+	//}
+		
 }

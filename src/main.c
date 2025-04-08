@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/08 15:41:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 20:20:03 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,20 @@ int	ft_error_msg(t_mini *mini)
 	return (mini->exit_status);
 }
 
-void	ft_execute_command(t_mini *mini)
+void	ft_mini_init(t_mini *mini)
 {
 	mini->stdin = dup(STDIN_FILENO);
 	mini->stdout = dup(STDOUT_FILENO);
+	mini->fd_in = -1;
+	mini->fd_out = -1;
+	mini->exit_flag = 1;
+//	mini->pid = -1;
+}
+
+void	ft_execute_command(t_mini *mini)
+{
 	mini->path = check_external(mini->env, mini->line->command[0]);
-//	ft_error_msg(mini);
+	ft_error_msg(mini);
 	if (mini->nbr_of_pipes > 0)
 		ft_execute_pipeline(mini);
 	else
@@ -79,25 +87,26 @@ int	main(int ac, char **av, char **envp)
 {
 	t_mini	*mini;
 
-	handle_signals();
 	(void)ac;
 	(void)av;
 	mini = malloc(sizeof(t_mini));
-	mini->exit_flag = 1;
+	ft_mini_init(mini);
 	mini->env = ft_init_env(envp);
 	while (mini->exit_flag)
 	{
+		handle_signals();
 		if (!ft_parse_input(mini))
 			break ;
 		if (mini->line)
 		{
 			ft_execute_command(mini);
-			close(mini->stdout);
 			//free_matrix(mini->env_array);
+			mini->stdin = dup(STDIN_FILENO);
+			mini->stdout = dup(STDOUT_FILENO);
 			line_cleanup(mini);
 		}
 	}
 	free_env(mini->env);
 	free(mini);
-	return (mini->exit_status);
+	return (0);
 }

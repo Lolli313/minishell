@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 14:00:28 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 18:57:52 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ typedef struct s_mini
     t_type		type;
     t_token		*token;
     t_env		*env;
+	t_env		*env_export;
 	t_extract	extract;
 }	t_mini;
 
@@ -226,7 +227,8 @@ void ft_close_heredoc_fds(t_mini *mini);
 void ft_execute_pipeline(t_mini *mini);
 void ft_preprocess_heredocs(t_mini *mini);
 
-
+void	ft_close(int fd);
+void	ft_mini_init(t_mini *mini);
 
 void ft_allocate_pipes(t_mini *mini);
 void ft_wait_for_children(t_mini *mini);

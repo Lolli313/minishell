@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 15:39:33 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 19:58:44 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 	char	*read_line;
 	int		i;
 
-	close(pipefd[0]);
+	ft_close(pipefd[0]);
 	while (1)
 	{
 		line = readline("> ");
@@ -40,7 +40,7 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		write(pipefd[1], read_line, ft_strlen(read_line));
 		write(pipefd[1], "\n", 1);
 	}
-	close(pipefd[1]);
+//	close(pipefd[1]);
 }
 
 void	ft_handle_heredoc(t_mini *mini, t_re *redir)
@@ -65,7 +65,7 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 	else
 	{
 		redir->heredoc_fd = pipefd[0];
-		close(pipefd[1]);
+		ft_close(pipefd[1]);
 		waitpid(pid, NULL, 0);
 	}
 }
@@ -108,8 +108,10 @@ void	ft_execute_heredoc(t_mini *mini)
 				close(mini->line->redirect->heredoc_fd);
 				exit(EXIT_FAILURE);
 			}
-			close(mini->line->redirect->heredoc_fd);
+			ft_close(mini->line->redirect->heredoc_fd);
 			mini->line->redirect->heredoc_fd = -1;
 		}
+    	ft_close(mini->line->redirect->heredoc_fd);
+    	mini->line->redirect->heredoc_fd = -1;
 	}
 }
