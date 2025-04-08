@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:12 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 12:22:40 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 08:45:11 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,15 @@ static int	ft_nbr_of_args(char **args)
 	int	i;
 
 	i = 0;
-	while(args[i])
+	while (args[i])
 		i++;
 	return (i);
 }
-// ft_echo(["echo", "hello", "world"]);
-// Expected output: "hello world"
-// handles option -n to print the arguments
-// without a \n at the end
+
 int	ft_echo(char **args)
 {
 	int	nflag;
-	int i;
+	int	i;
 
 	nflag = 0;
 	i = 1;
@@ -50,6 +47,6 @@ int	ft_echo(char **args)
 		}
 	}
 	if (nflag == 0)
-		write (1, "\n", 1);
+		write(1, "\n", 1);
 	return (0);
 }

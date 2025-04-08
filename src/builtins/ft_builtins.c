@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/06 11:14:19 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/08 08:41:15 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,30 +29,30 @@ int	ft_is_builtin(char **av)
 		return (1);
 	if (ft_strncmp(av[0], "exit", 5) == 0)
 		return (1);
-	return 0;
+	return (0);
 }
 
 // builtins execution
 void	ft_handle_builtin(t_mini *mini)
 {
-    t_env   *env;
-	char **cmd;
+	t_env	*env;
+	char	**cmd;
 
 	cmd = mini->line->command;
-    env = mini->env;
+	env = mini->env;
 	ft_handle_redirections(mini);
-    if (ft_strncmp(cmd[0], "pwd", 3) == 0)
-	    ft_pwd(env);
+	if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+		ft_pwd(env);
 	else if (ft_strncmp(cmd[0], "cd", 2) == 0)
-	    ft_cd(cmd, env);
+		ft_cd(cmd, env);
 	else if (ft_strncmp(cmd[0], "export", 6) == 0)
-	    ft_export(env, cmd);
+		ft_export(env, cmd);
 	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
-	    ft_unset(mini, cmd);
+		ft_unset(mini, cmd);
 	else if (ft_strncmp(cmd[0], "env", 3) == 0)
-	    ft_env(env);
+		ft_env(env);
 	else if (ft_strncmp(cmd[0], "echo", 4) == 0)
-	    ft_echo(cmd);
+		ft_echo(cmd);
 	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
-	    ft_exit(mini, cmd);
+		ft_exit(mini, cmd);
 }

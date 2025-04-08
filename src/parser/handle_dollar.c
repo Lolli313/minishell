@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:00:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/28 18:02:53 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/08 09:13:06 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*handle_exit_code(t_mini *mini, char *before, char *org, int *pos)
 	char	*temp;
 	int		len;
 
-	result = ft_itoa(mini->exit_flag);
+	result = ft_itoa(mini->exit_status);
 	len = ft_strlen(result);
 	temp = ft_strjoin(before, result);
 	free(result);
@@ -79,7 +79,6 @@ char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos)
 	char	*temp3;
 	int		len;
 
-	mini->exit_flag = 58;
 	temp1 = ft_substr(org, 0, *pos);
 	if (sub[1] == '?')
 		return (handle_exit_code(mini, temp1, org, pos));

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 10:36:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 08:46:36 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_env_display(t_env *env)
 	t_env	*lst;
 	char	*tmp;
 	char	*joined;
-	
+
 	lst = env;
 	while (lst)
 	{
@@ -52,7 +52,7 @@ t_env	*ft_add_env_node(char *key, char *value)
 		free(env->key);
 		free(env->value);
 		free(env);
-		return NULL;
+		return (NULL);
 	}
 	return (env);
 }

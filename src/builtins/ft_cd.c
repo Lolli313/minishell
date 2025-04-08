@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/06 14:41:53 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/08 08:45:02 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ int	ft_update_value(t_env *env, char *key, char *value)
 			return (0);
 		}
 		if (!lst->next)
-			break;
+			break ;
 		lst = lst->next;
 	}
 	new_var = malloc(sizeof(t_env));
 	new_var->key = ft_strdup(key);
 	new_var->value = ft_strdup(value);
 	new_var->next = NULL;
-    if (lst)
+	if (lst)
 		lst->next = new_var;
-    else 
+	else
 		env = new_var;
 	return (0);
 }
@@ -58,7 +58,7 @@ static void	ft_cd_error(char *path, int error)
 
 static void	ft_update_pwd(t_env *env)
 {
-	char cwd[4096];
+	char	cwd[4096];
 
 	if (getcwd(cwd, sizeof(cwd)))
 	{
@@ -71,9 +71,9 @@ static void	ft_change_dir(t_env *env, char *path, int print_dir)
 {
 	if (chdir(path) == 0)
 	{
-	if (print_dir == true)
-		ft_printf("%s\n", path);
-	ft_update_pwd(env);
+		if (print_dir == true)
+			ft_printf("%s\n", path);
+		ft_update_pwd(env);
 	}
 	else
 		ft_cd_error(NULL, 3);
@@ -81,9 +81,10 @@ static void	ft_change_dir(t_env *env, char *path, int print_dir)
 
 void	ft_cd(char **av, t_env *env)
 {
-	char *target;
-	int print_dir = false;
+	char	*target;
+	int		print_dir;
 
+	print_dir = false;
 	if (!av[1] || ft_strcmp(av[1], "~") == 0)
 	{
 		target = ft_find_key(env, "HOME");

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:14 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/01 11:59:26 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 08:45:23 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_env(t_env *env)
 	while (lst)
 	{
 		if (lst->value)
-			printf("%s=%s\n", lst->key, lst->value);
+			ft_printf("%s=%s\n", lst->key, lst->value);
 		lst = lst->next;
 	}
 	return (0);

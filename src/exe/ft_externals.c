@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/07 15:10:05 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/08 08:56:42 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*check_external(t_env *env, char *command)
 	char	*str;
 	char	*str1;
 	int		i;
-	
+
 	if (ft_strncmp(command, "/", 1) == 0)
 		return (check_absolute_command(command));
 	temp = ft_getenv(env, "PATH");
@@ -42,7 +42,7 @@ char	*check_external(t_env *env, char *command)
 		str1 = ft_strjoin(str, command);
 		free(str);
 		if (access(str1, X_OK) == 0)
-			return(free_matrix(all_paths), str1);
+			return (free_matrix(all_paths), str1);
 		free(str1);
 		i++;
 	}
@@ -53,16 +53,16 @@ char	*check_external(t_env *env, char *command)
 void	ft_handle_external(t_mini *mini, char **args)
 {
 	pid_t	cpid;
-	char 	*temp;
-	
+	char	*temp;
+
 	temp = check_external(mini->env, args[0]);
 	cpid = fork();
-    if (cpid < 0)
-    {
-        perror("fork");
-        free(temp);
-        exit(1);
-    }
+	if (cpid < 0)
+	{
+		perror("fork");
+		free(temp);
+		exit(1);
+	}
 	if (cpid == 0)
 	{
 		ft_handle_redirections(mini);
@@ -72,9 +72,9 @@ void	ft_handle_external(t_mini *mini, char **args)
 			exit(EXIT_FAILURE);
 		}
 	}
-	else // parent
+	else
 	{
-        waitpid(cpid, NULL, 0);
+		waitpid(cpid, NULL, 0);
 	}
 	free(temp);
 }
