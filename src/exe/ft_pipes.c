@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 08:59:41 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 15:39:10 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ void	ft_handle_parent(t_line *current, int *prev_fd, int pipe_fds[2])
 		*prev_fd = pipe_fds[0];
 	}
 	else
+	{
 		*prev_fd = -1;
+	}
 }
 
 void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd,
@@ -40,11 +42,13 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd,
 		exit(EXIT_FAILURE);
 	}
 	if (pid == 0)
+	{
 		ft_execute_child(mini, current, prev_fd, pipe_fds);
+	}
 	else
 	{
 		ft_handle_parent(current, &prev_fd, pipe_fds);
-		waitpid(pid, NULL, 0);
+//		waitpid(pid, NULL, 0);
 	}
 }
 
@@ -69,6 +73,12 @@ void	ft_execute_pipeline(t_mini *mini)
 		}
 		else
 			prev_fd = -1;
+		current = current->next;
+	}
+	current = mini->line;
+	while (current)
+	{
+		wait(NULL);
 		current = current->next;
 	}
 	if (prev_fd != -1)

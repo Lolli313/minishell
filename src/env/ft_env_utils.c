@@ -6,25 +6,11 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 08:56:02 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 12:03:31 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*ft_getenv(t_env *env, char *key)
-{
-	t_env	*current;
-
-	current = env;
-	while (current)
-	{
-		if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
-			return (ft_strdup(current->value));
-		current = current->next;
-	}
-	return (ft_strdup(""));
-}
 
 char	*ft_find_key(t_env *env, char *key)
 {
@@ -117,7 +103,7 @@ char	**ft_env_to_array(t_env *env)
 			free(temp);
 			if (!env_array[i])
 			{
-				perror("malloc u dimwit");
+				perror("malloc");
 				while (i > 0)
 					free(env_array[--i]);
 				free(env_array);

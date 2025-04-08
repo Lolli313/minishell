@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 11:26:39 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 08:46:51 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 15:42:01 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_redir_input(t_mini *mini, t_line *current, int prev_fd)
 {
-	if (prev_fd != -1)
+	if (prev_fd >= 0)
 	{
 		if (dup2(prev_fd, STDIN_FILENO) == -1)
 		{
@@ -23,7 +23,7 @@ void	ft_redir_input(t_mini *mini, t_line *current, int prev_fd)
 		}
 		close(prev_fd);
 	}
-	if (current->redirect && current->redirect->heredoc_fd != -1)
+	if (current->redirect && current->redirect->heredoc_fd >= 0)
 	{
 		if (current->redirect->type == LIMITER)
 		{

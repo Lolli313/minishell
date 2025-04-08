@@ -6,13 +6,26 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 08:46:36 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 14:26:04 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Prints all environment variables stored in a linked list in the format
+char	*ft_getenv(t_env *env, char *key)
+{
+	t_env	*current;
+
+	current = env;
+	while (current)
+	{
+		if (ft_strncmp(key, current->key, ft_strlen(key) + 1) == 0)
+			return (ft_strdup(current->value));
+		current = current->next;
+	}
+	return (ft_strdup(""));
+}
+
 void	ft_env_display(t_env *env)
 {
 	t_env	*lst;
@@ -68,6 +81,11 @@ t_env	*ft_init_env(char **envp)
 	env = NULL;
 	while (envp[i])
 	{
+		/*
+		if (strchr(tmp, '=') == NULL)
+		{
+			// then put it in export list and not env
+		}*/
 		tmp = ft_split(envp[i], '=');
 		if (!tmp)
 			return (NULL);

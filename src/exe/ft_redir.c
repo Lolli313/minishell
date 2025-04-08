@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 08:47:06 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 15:27:08 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	ft_handle_redirections(t_mini *mini)
 {
 	t_re	*redir;
 
-	redir = mini->line->redirect;
 	redir = mini->line->redirect;
 	while (redir)
 	{
@@ -37,11 +36,16 @@ void	ft_handle_input_redir(t_mini *mini, t_re *redir)
 		exit(1);
 	}
 	mini->fd_in = open(redir->str, O_RDONLY);
+	if (mini->fd_in == -1)
+	{
+		perror("Fail");
+		exit(1);
+	}
 	if (dup2(mini->fd_in, STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		close(mini->fd_in);
-		return ;
+		exit (1);
 	}
 	close(mini->fd_in);
 }

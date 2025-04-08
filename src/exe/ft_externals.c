@@ -6,19 +6,11 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 08:56:42 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/08 14:36:49 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*check_absolute_command(char *command)
-{
-	if (access(command, X_OK) == 0)
-		return (command);
-	else
-		return (NULL);
-}
 
 char	*check_external(t_env *env, char *command)
 {
@@ -28,12 +20,10 @@ char	*check_external(t_env *env, char *command)
 	char	*str1;
 	int		i;
 
-	if (ft_strncmp(command, "/", 1) == 0)
-		return (check_absolute_command(command));
+	if (access(command, X_OK) == 0)
+		return (command);
 	temp = ft_getenv(env, "PATH");
-	if (ft_strncmp(temp, "PATH=", 5) == 0)
-		temp += 5;
-	all_paths = ft_split(temp + 5, ':');
+	all_paths = ft_split(temp, ':');
 	free(temp);
 	i = 0;
 	while (all_paths[i])
@@ -54,7 +44,9 @@ void	ft_handle_external(t_mini *mini, char **args)
 {
 	pid_t	cpid;
 	char	*temp;
+	char	**envp;
 
+	envp = ft_env_to_array(mini->env);
 	temp = check_external(mini->env, args[0]);
 	cpid = fork();
 	if (cpid < 0)
@@ -66,7 +58,7 @@ void	ft_handle_external(t_mini *mini, char **args)
 	if (cpid == 0)
 	{
 		ft_handle_redirections(mini);
-		if (execve(temp, args, mini->env_array) == -1)
+		if (execve(temp, args, envp) == -1)
 		{
 			free(temp);
 			exit(EXIT_FAILURE);

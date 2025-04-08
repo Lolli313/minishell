@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/07 08:43:21 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/08 14:00:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,9 +97,9 @@ typedef struct s_mini
 	int			exit_status;
 	bool		interactive;
 
-	int			**pipefd;
+//	int			**pipefd;
+//	pid_t		*cpid;
 	int			prev_fd;
-	pid_t		*cpid;
 	int			nbr_of_pipes;
 
 	int		fd_in;
@@ -248,6 +248,7 @@ void ft_execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2
 void	ft_redir_output(t_line *current, int pipe_fds[2]);
 void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
 void ft_execute_heredoc(t_mini *mini);
+int	ft_error_msg(t_mini *mini);
 
 /*
 TODO
