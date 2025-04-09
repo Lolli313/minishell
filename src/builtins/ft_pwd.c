@@ -6,11 +6,11 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:19 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 06:36:01 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/09 10:02:40 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell.h"	
 
 int	ft_pwd(t_env *env)
 {
