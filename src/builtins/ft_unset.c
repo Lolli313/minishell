@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 08:46:18 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/09 06:48:57 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ int	ft_unset(t_mini *mini, char **av)
 			ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 		}
 		else
+		{
 			ft_unset_key(mini->env, av[i]);
+			ft_unset_key(mini->export_env, av[i]);
+		}
 		i++;
 	}
 	return (0);

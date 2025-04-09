@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 14:26:04 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/09 09:36:56 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,6 @@ t_env	*ft_init_env(char **envp)
 	env = NULL;
 	while (envp[i])
 	{
-		/*
-		if (strchr(tmp, '=') == NULL)
-		{
-			// then put it in export list and not env
-		}*/
 		tmp = ft_split(envp[i], '=');
 		if (!tmp)
 			return (NULL);

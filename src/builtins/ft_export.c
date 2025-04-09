@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 20:12:09 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/09 09:36:47 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,39 +34,127 @@ int	ft_env_exists(t_env *env, char *key, char *value)
 	return (0);
 }
 
-int	ft_export(t_env *env, char **str)
+t_env	*ft_init_export_env_(char **envp)
 {
-	char	**temp;
-	t_env	*last;
+	char	**tmp;
 	int		i;
-	char	*value;
+	t_env	*last;
+	t_env	*export_env;
 
-	i = 1;
-	while (str[i])
+	i = 0;
+	export_env = NULL;
+	while (envp[i])
 	{
-		if (strchr(str[i], '=') == NULL)
-		{
-
-		}
-		temp = ft_split(str[i], '=');
-		if (!temp[0] || !export_validity(temp[0]))
-			ft_putstr_fd(str[i], STDERR_FILENO);
+		tmp = ft_split(envp[i], '=');
+		if (!tmp)
+			return (NULL);
+		if (export_env == NULL)
+			export_env = ft_add_env_node(tmp[0], tmp[1]);
 		else
 		{
-			if (temp[1])
-				value = temp[1];
-			else
-				value = "";
-			if (ft_env_exists(env, temp[0], value) == 0)
-			{
-				last = env;
-				while (last->next)
-					last = last->next;
-				last->next = ft_add_env_node(temp[0], value);
-			}
-			free_matrix(temp);
-			i++;
+			last = export_env;
+			while (last->next)
+				last = last->next;
+			last->next = ft_add_env_node(tmp[0], tmp[1]);
 		}
+		free_matrix(tmp);
+		i++;
 	}
-	return (0);
+	return (export_env);
+}
+
+int	ft_export_env(t_mini *mini, char **str)
+{
+	if (!str[1]) 
+	{
+		t_env *cur = mini->export_env;
+		while (cur)
+		{
+			if (cur->value == NULL || cur->value[0] == '\0')
+				printf("export %s\n", cur->key);
+			else
+				printf("export %s=\"%s\"\n", cur->key, cur->value);
+
+			cur = cur->next;
+		}
+		return (0);
+	}
+	return (1);
+}
+
+static void	ft_export_no_value(t_mini *mini, char *key)
+{
+    t_env	*last;
+
+    if (!ft_find_key(mini->export_env, key))
+    {
+        last = mini->export_env;
+        while (last && last->next)
+            last = last->next;
+        if (last)
+            last->next = ft_add_env_node(key, NULL);
+        else
+            mini->export_env = ft_add_env_node(key, NULL);
+    }
+}
+
+static void	ft_add_env_export(t_mini *mini, char *key, char *value)
+{
+    t_env	*last;
+
+    if (ft_env_exists(mini->env, key, value) == 0)
+    {
+        last = mini->env;
+        while (last->next)
+            last = last->next;
+        last->next = ft_add_env_node(key, value);
+    }
+    if (!ft_find_key(mini->export_env, key))
+    {
+        last = mini->export_env;
+        while (last && last->next)
+            last = last->next;
+        if (last)
+            last->next = ft_add_env_node(key, value);
+        else
+            mini->export_env = ft_add_env_node(key, value);
+    }
+}
+
+static void	ft_has_equal(t_mini *mini, char *str)
+{
+    char	**temp;
+    char	*value;
+
+    temp = ft_split(str, '=');
+    if (!temp[0] || !export_validity(temp[0]))
+        ft_putstr_fd(str, STDERR_FILENO);
+    else
+    {
+		if (temp[1])
+			value = temp[1];
+		else
+			value = "";
+        ft_add_env_export(mini, temp[0], value);
+    }
+    free_matrix(temp);
+}
+
+int	ft_export(t_mini *mini, char **str)
+{
+    int	i;
+
+    if (!str[1])
+        return (ft_export_env(mini, str));
+
+    i = 1;
+    while (str[i])
+    {
+        if (!ft_strchr(str[i], '='))
+            ft_export_no_value(mini, str[i]);
+        else
+            ft_has_equal(mini, str[i]);
+        i++;
+    }
+    return (0);
 }

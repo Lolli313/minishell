@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 18:57:52 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/09 08:49:43 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ typedef struct s_mini
     t_type		type;
     t_token		*token;
     t_env		*env;
-	t_env		*env_export;
+	t_env		*export_env;
 	t_extract	extract;
 }	t_mini;
 
@@ -136,6 +136,8 @@ size_t	calculate_number_of_commands(t_token *token);
 t_token	*find_command(t_token *token);
 t_token	*if_operator(t_token *token, char *input, int *i);
 t_token	*find_last_token(t_token *token);
+
+
 
 //parse
 void	parse_string(t_mini *mini, char *line);
@@ -178,7 +180,7 @@ int					ft_pwd(t_env *env);
 int					ft_echo(char **av);
 int					ft_env(t_env *env);
 int					ft_unset(t_mini *mini, char **av);
-int					ft_export(t_env *env, char **str);
+int					ft_export(t_mini *mini, char **str);
 int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
 void				ft_cd(char **av, t_env *env);
@@ -206,7 +208,6 @@ void	free_env(t_env *env);
 void				ft_handle_sigint(int signal);
 int					ft_get_g_global(void);
 void				handle_signals(void);
-
 
 int		ft_parse_input(t_mini *mini);
 void ft_cleanup_pipes(t_mini *mini);
@@ -251,6 +252,9 @@ void	ft_redir_output(t_line *current, int pipe_fds[2]);
 void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
 void ft_execute_heredoc(t_mini *mini);
 int	ft_error_msg(t_mini *mini);
+
+t_env	*ft_init_export_env_(char **envp);
+int	ft_export_env(t_mini *mini, char **str);
 
 /*
 TODO

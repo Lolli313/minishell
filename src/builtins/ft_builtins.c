@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 19:09:58 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/09 08:13:11 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_handle_builtin(t_mini *mini)
 	else if (ft_strncmp(cmd[0], "cd", 2) == 0)
 		ft_cd(cmd, env);
 	else if (ft_strncmp(cmd[0], "export", 6) == 0)
-		ft_export(env, cmd);
+		ft_export(mini, cmd);
 	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 		ft_unset(mini, cmd);
 	else if (ft_strncmp(cmd[0], "env", 3) == 0)

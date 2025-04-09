@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/08 20:20:03 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/09 07:01:43 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	main(int ac, char **av, char **envp)
 	mini = malloc(sizeof(t_mini));
 	ft_mini_init(mini);
 	mini->env = ft_init_env(envp);
+	mini->export_env = ft_init_export_env_(envp);
 	while (mini->exit_flag)
 	{
 		handle_signals();
