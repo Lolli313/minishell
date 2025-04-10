@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/10 16:13:46 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 18:31:29 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ void ft_execute_child(t_mini *mini, t_line *current);
 void	ft_redir_output(t_line *current, int pipe_fds[2]);
 void	ft_fork_and_exe(t_mini *mini, t_line *current);
 void ft_execute_heredoc(t_mini *mini);
-int	ft_error_msg(t_mini *mini);
+void	ft_error_msg(t_mini *mini);
 
 t_env	*ft_init_export_env_(char **envp);
 int	ft_export_env(t_mini *mini, char **str);

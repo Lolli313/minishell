@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/10 16:30:13 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 18:31:25 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,47 @@ the child process created to execute it returns a status of 127.
 If a command is found but is not executable, the return status
 is 126. In case of incorrect usagem the return status is 258.*/
 
-int	ft_error_msg(t_mini *mini)
+
+void	ft_error_msg(t_mini *mini)
 {
-	if (!mini->path && !(ft_is_builtin(mini->line->command)))
+	DIR	*dir;
+
+	dir = opendir(mini->line->command[0]);
+	ft_putstr_fd("minishell: ", STDERR);
+    ft_putstr_fd(mini->line->command[0], STDERR);
+	if (ft_strchr(mini->line->command[0], '/') == NULL)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(mini->line->command[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
+		ft_putstr_fd(": command not found\n", STDERR);
 		mini->exit_status = 127;
 	}
-	return (mini->exit_status);
+    else if (access(mini->line->command[0], F_OK) != 0)
+    {
+        ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+        mini->exit_status = 127;
+    }
+    else if (dir != NULL)
+    {
+        ft_putendl_fd(": Is a directory", STDERR_FILENO);
+        mini->exit_status = 126;
+    }
+    else if (access(mini->line->command[0], X_OK) != 0)
+    {
+        ft_putendl_fd(": Permission denied", STDERR_FILENO);
+        mini->exit_status = 126;
+    }
+    else
+    {
+        ft_putendl_fd(": Unknown error", STDERR_FILENO);
+        mini->exit_status = 1;
+    }
+	if (dir)
+		closedir(dir);
 }
 
 void	ft_mini_init(t_mini *mini)
 {
-	mini->stdin = dup(STDIN_FILENO);
-	mini->stdout = dup(STDOUT_FILENO);
+	mini->stdin = dup(STDIN);
+	mini->stdout = dup(STDOUT);
 	mini->fd_in = -1;
 	mini->fd_out = -1;
 	mini->pipe_in = -1;
@@ -49,7 +74,8 @@ void	ft_execute_command(t_mini *mini)
 {
 //	close_all(mini);
 	mini->path = check_external(mini->env, mini->line->command[0]);
-	ft_error_msg(mini);
+	if (!ft_is_builtin(mini->line->command) && !mini->path)
+		ft_error_msg(mini);
 	if (mini->nbr_of_pipes > 0)
 	{
 	//	printf("Executing pipeline with %d pipes\n", mini->nbr_of_pipes);

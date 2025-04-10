@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/10 15:16:01 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 18:31:20 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,19 @@ char	**ft_env_to_array(t_env *env)
 	cur = env;
 	while (cur)
 	{
-		if (cur->key && cur->value)
+		if (cur->key)
 		{
-			env_array[i] = ft_strjoin(cur->key, "=");
-			temp = env_array[i];
-			env_array[i] = ft_strjoin(temp, cur->value);
-			free(temp);
+			if (cur->value)
+			{
+				env_array[i] = ft_strjoin(cur->key, "=");
+				temp = env_array[i];
+				env_array[i] = ft_strjoin(temp, cur->value);
+				free(temp);
+			}
+			else
+			{
+				env_array[i] = ft_strjoin(cur->key, "=");
+			}
 			if (!env_array[i])
 			{
 				perror("malloc");
