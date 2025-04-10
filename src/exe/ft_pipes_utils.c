@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 11:26:39 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 20:12:09 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 13:21:30 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,30 @@ void	ft_redir_output(t_line *current, int pipe_fds[2])
 	}
 }
 
-void	ft_execute_child(t_mini *mini, t_line *current, int prev_fd,
-		int pipe_fds[2])
+void	ft_execute_child(t_mini *mini, t_line *current)
 {
-	ft_redir_input(mini, current, prev_fd);
-	ft_redir_output(current, pipe_fds);
+	if (mini->pipe_in >= 0)
+	{
+		ft_safe_dup2(mini->pipe_in, STDIN);
+		ft_close(mini->pipe_in);
+		mini->pipe_in = -1;
+	}
+	if (current->next)
+	{
+		ft_close(mini->pipe_in);
+		ft_safe_dup2(mini->pipe_out, STDOUT);
+		ft_close(mini->pipe_out);
+		mini->pipe_out = -1;
+	}
+	if (current->redirect && current->redirect->heredoc_fd != STDIN)
+	{
+		if (current->redirect->type == LIMITER)
+			ft_safe_dup2(current->redirect->heredoc_fd, STDIN);
+		else
+			ft_handle_redirections(mini);
+		ft_close(current->redirect->heredoc_fd);
+		current->redirect->heredoc_fd = -1;
+	}
 	mini->line = current;
 	ft_handle_redirections(mini);
 	if (ft_is_builtin(current->command))
@@ -70,31 +89,25 @@ void	ft_execute_child(t_mini *mini, t_line *current, int prev_fd,
 
 void	ft_restore_std_fds(t_mini *mini)
 {
-	if (mini->stdin != STDIN_FILENO && mini->stdin >= 0)
-	{
-		if (dup2(mini->stdin, STDIN_FILENO) == -1)
-		{
-			perror("dup2 STDIN");
-			exit(EXIT_FAILURE);
-		}
-		ft_close(mini->stdin);
-		mini->stdin = -1;
-	}
-	if (mini->stdout != STDOUT_FILENO && mini->stdout >= 0)
-	{
-		if (dup2(mini->stdout, STDOUT_FILENO) == -1)
-		{
-			perror("dup2 STDOUT");
-			exit(EXIT_FAILURE);
-		}
-		ft_close(mini->stdout);
-		mini->stdout = -1;
-	}
+	ft_safe_dup2(mini->stdin, STDIN);
+	ft_safe_dup2(mini->stdout, STDOUT);
 }
 
 void	ft_close(int fd)
 {
-	if (fd > 0)
+	if (fd >= 0)
+	{
 		close(fd);
+	}
+}
+
+void	ft_safe_dup2(int oldfd, int newfd)
+{
+	if (dup2(oldfd, newfd) == -1)
+	{
+		perror("dup2 failed");
+		ft_close(oldfd);
+		exit(EXIT_FAILURE);
+	}
 }
 

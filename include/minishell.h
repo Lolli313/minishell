@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 08:49:43 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 16:13:46 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,11 @@
 # define Y "\033[1;33m"
 # define B "\033[1;34m"
 # define RESET "\033[0m"
+
+
+# define STDIN 0
+# define STDOUT 1
+# define STDERR 2
 
 typedef enum e_type
 {
@@ -97,15 +102,15 @@ typedef struct s_mini
 	int			exit_status;
 	bool		interactive;
 
-//	int			**pipefd;
-//	pid_t		*cpid;
-	int			prev_fd;
-	int			nbr_of_pipes;
 
-	int		fd_in;
-	int		fd_out;		
+	int			nbr_of_pipes;
+	int			fd_in;
+	int			fd_out;
+	int			pipe_in;
+	int			pipe_out;	
 	int			stdin;
 	int			stdout;
+	int			pid;
 
 	char		**env_array;
 	char		*path;
@@ -183,7 +188,7 @@ int					ft_unset(t_mini *mini, char **av);
 int					ft_export(t_mini *mini, char **str);
 int					ft_env_exists(t_env *env, char *key, char *value);
 int					ft_update_value(t_env *env, char *key, char *value);
-void				ft_cd(char **av, t_env *env);
+int					ft_cd(char **av, t_env *env);
 
 
 // redirections
@@ -246,15 +251,18 @@ void ft_restore_std_fds(t_mini *mini);
 void	close_pipe_fds(t_mini *mini, int skip_index);
 bool	create_pipes(t_mini *mini);
 bool	set_pipe_fds(t_mini *mini, int index);
-void ft_handle_parent(t_line *current, int *prev_fd, int pipe_fds[2]);
-void ft_execute_child(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
+void ft_handle_parent(t_mini *mini, t_line *current);
+void ft_execute_child(t_mini *mini, t_line *current);
 void	ft_redir_output(t_line *current, int pipe_fds[2]);
-void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd, int pipe_fds[2]);
+void	ft_fork_and_exe(t_mini *mini, t_line *current);
 void ft_execute_heredoc(t_mini *mini);
 int	ft_error_msg(t_mini *mini);
 
 t_env	*ft_init_export_env_(char **envp);
 int	ft_export_env(t_mini *mini, char **str);
+
+void	ft_safe_dup2(int oldfd, int newfd);
+void	ft_close(int fd);
 
 /*
 TODO

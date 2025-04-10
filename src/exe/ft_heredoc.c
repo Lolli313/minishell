@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 19:58:44 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 08:05:41 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		write(pipefd[1], read_line, ft_strlen(read_line));
 		write(pipefd[1], "\n", 1);
 	}
-//	close(pipefd[1]);
 }
 
 void	ft_handle_heredoc(t_mini *mini, t_re *redir)

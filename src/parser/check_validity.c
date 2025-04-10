@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_validity.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/01 13:59:49 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/10 15:44:05 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,6 @@ bool	exit_validity(t_line *line)
 	return (true);
 }
 
-//	loop through echo's arguments and check if each one is valid (aka -n).
-//	the first one that is not valid,
-//	the rest after that one should be printed (ex. "echo -n Hola -n")
-//	should write "Hola -n")
-
 bool	echo_validity(char *str)
 {
 	int		i;
@@ -73,41 +68,21 @@ bool	echo_validity(char *str)
 	return (true);
 }
 
-// loop through export's arguments and check if each one is valid 
-// (the ones that are not valid, aka return false,
-// write an error message and continue to the next argument)
-
 bool	export_validity(char *str)
 {
-	int		i;
-	bool	first;
-	char	*key;
+    int	i;
 
-	i = 0;
-	first = true;
-	key = strdup(str);
-	while (str[i])
-	{
-		if (is_valid_char(key[i], first) == false)
-		{
-			ft_printf("NO GOOD\n");
-			free(key);
-			return (false);
-		}
-		if (first == true)
-			first = false;
-		i++;
-	}
-	free(key);
-	return (true);
+    if (!str || !ft_isalpha(str[0]))
+        return (false);
+    i = 1;
+    while (str[i])
+    {
+        if (!ft_isalnum(str[i]) && str[i] != '_')
+            return (false);
+        i++;
+    }
+    return (true);
 }
-/*
-bool	builtin_validity(t_line *line)
-{
-	if (!ft_strncmp(line->command[0], "exit", 5))
-		return (exit_validity(line));
-	return (true);
-}*/
 
 bool	token_validity(t_mini *mini)
 {

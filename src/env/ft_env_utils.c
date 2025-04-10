@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/08 12:03:31 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/10 15:16:01 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	ft_unset_key(t_env *env, char *key)
 		prev = lst;
 		lst = lst->next;
 	}
-	perror("Key not found");
 }
 
 char	**ft_env_to_array(t_env *env)

@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 11:02:18 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 16:15:39 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,23 @@ int	ft_update_value(t_env *env, char *key, char *value)
 	return (0);
 }
 
-static void	ft_cd_error(char *path, int error)
+static int	ft_cd_error(char *path, int error)
 {
-	ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-	ft_putstr_fd(path, STDERR_FILENO);
+	ft_putstr_fd("minishell: cd: ", STDERR);
+    if (path)
+    {
+        ft_putstr_fd(path, STDERR);
+        ft_putstr_fd(": ", STDERR);
+    }
 	if (error == 0)
-		ft_putstr_fd("HOME not set\n", STDERR_FILENO);
+		ft_putstr_fd("HOME not set\n", STDERR);
 	else if (error == 1)
-		ft_putstr_fd("can't change directory\n", STDERR_FILENO);
+		ft_putstr_fd("can't change directory\n", STDERR);
 	else if (error == 2)
-		ft_putstr_fd("too many arguments\n", STDERR_FILENO);
+		ft_putstr_fd("too many arguments\n", STDERR);
 	else if (error == 3)
-		ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
-	return ;
+		ft_putstr_fd("No such file or directory\n", STDERR);
+	return (1);
 }
 
 static void	ft_update_pwd(t_env *env, char *newpath)
@@ -104,7 +108,7 @@ static char *ft_get_newpwd(t_env *env, char *path)
 	return (newpwd);
 }
 
-static void	ft_change_dir(t_env *env, char *path, int print_dir)
+static int	ft_change_dir(t_env *env, char *path, int print_dir)
 {
 	char	*newpwd;
 
@@ -115,12 +119,13 @@ static void	ft_change_dir(t_env *env, char *path, int print_dir)
 			ft_printf("%s\n", newpwd);
 		ft_update_pwd(env, newpwd);
 		free(newpwd);
+		return (0);
 	}
 	else
-		ft_cd_error(path, 3);
+		return(ft_cd_error(path, 3));
 }
 
-void	ft_cd(char **av, t_env *env)
+int	ft_cd(char **av, t_env *env)
 {
 	char	*target;
 	int		print_dir;
@@ -130,21 +135,20 @@ void	ft_cd(char **av, t_env *env)
 	{
 		target = ft_find_key(env, "HOME");
 		if (!target)
-			ft_cd_error(NULL, 0);
+			return (ft_cd_error(NULL, 0)); 
 	}
 	else if (ft_strcmp(av[1], "-") == 0)
 	{
 		target = ft_find_key(env, "OLDPWD");
 		print_dir = true;
 		if (!target)
-			ft_cd_error("OLDPWD", 1);
+			return (ft_cd_error("OLDPWD", 1));
 	}
 	else if (av[2] != NULL)
 	{
-		ft_cd_error(NULL, 2);
-		return ;
+		return(ft_cd_error(NULL, 2));
 	}
 	else
 		target = av[1];
-	ft_change_dir(env, target, print_dir);
+	return (ft_change_dir(env, target, print_dir));
 }

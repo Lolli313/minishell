@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/09 07:01:43 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 16:30:13 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,37 @@ void	ft_mini_init(t_mini *mini)
 	mini->stdout = dup(STDOUT_FILENO);
 	mini->fd_in = -1;
 	mini->fd_out = -1;
+	mini->pipe_in = -1;
+	mini->pipe_out = -1;
+	mini->exit_status = 0;
 	mini->exit_flag = 1;
 //	mini->pid = -1;
 }
 
 void	ft_execute_command(t_mini *mini)
 {
+//	close_all(mini);
 	mini->path = check_external(mini->env, mini->line->command[0]);
 	ft_error_msg(mini);
 	if (mini->nbr_of_pipes > 0)
+	{
+	//	printf("Executing pipeline with %d pipes\n", mini->nbr_of_pipes);
 		ft_execute_pipeline(mini);
+	}
 	else
 	{
+	//	printf("Executing command: %s\n", mini->line->command[0]);
 		ft_execute_heredoc(mini);
+		ft_handle_redirections(mini);
 		if (ft_is_builtin(mini->line->command))
 			ft_handle_builtin(mini);
 		else
 			ft_handle_external(mini, mini->line->command);
 	}
+	ft_close(mini->pipe_in);
+	ft_close(mini->pipe_out);
+	mini->pipe_in = -1;
+	mini->pipe_out = -1;
 	ft_restore_std_fds(mini);
 	free(mini->path);
 	mini->path = NULL;
@@ -65,11 +78,12 @@ int	ft_parse_input(t_mini *mini)
 {
 	char	*input;
 
-	mini->interactive = isatty(STDIN_FILENO);
+	mini->interactive = 1;
+	//mini->interactive = isatty(STDIN);
 	if (mini->interactive)
 		input = readline(G "😭 minishell$ " RESET);
 	else
-		input = get_next_line(STDIN_FILENO);
+		input = get_next_line(STDIN);
 	if (!input)
 	{
 		if (mini->interactive)
@@ -89,6 +103,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+	int 	exit;
 	mini = malloc(sizeof(t_mini));
 	ft_mini_init(mini);
 	mini->env = ft_init_env(envp);
@@ -99,15 +114,14 @@ int	main(int ac, char **av, char **envp)
 		if (!ft_parse_input(mini))
 			break ;
 		if (mini->line)
-		{
 			ft_execute_command(mini);
-			//free_matrix(mini->env_array);
-			mini->stdin = dup(STDIN_FILENO);
-			mini->stdout = dup(STDOUT_FILENO);
-			line_cleanup(mini);
-		}
+		line_cleanup(mini);
 	}
+	exit = mini->exit_status;
+	ft_close(mini->stdin);
+	ft_close(mini->stdout);
 	free_env(mini->env);
+	free_env(mini->export_env);
 	free(mini);
-	return (0);
+	return (exit);
 }

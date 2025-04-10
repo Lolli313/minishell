@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 17:47:58 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 15:13:42 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,15 @@ void	ft_handle_external(t_mini *mini, char **args)
 	if (cpid < 0)
 	{
 		perror("fork");
+		free_matrix(envp);
 		free(temp);
 		exit(1);
 	}
 	if (cpid == 0)
 	{
-		ft_handle_redirections(mini);
 		if (execve(temp, args, envp) == -1)
 		{
+			free_matrix(envp);
 			free(temp);
 			exit(EXIT_FAILURE);
 		}
@@ -68,5 +69,6 @@ void	ft_handle_external(t_mini *mini, char **args)
 	{
 		waitpid(cpid, NULL, 0);
 	}
+	free_matrix(envp);
 	free(temp);
 }

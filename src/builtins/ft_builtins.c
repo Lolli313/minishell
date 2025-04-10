@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/09 08:13:11 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 16:12:57 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,10 @@ void	ft_handle_builtin(t_mini *mini)
 
 	cmd = mini->line->command;
 	env = mini->env;
-	ft_handle_redirections(mini);
 	if (ft_strncmp(cmd[0], "pwd", 3) == 0)
 		ft_pwd(env);
 	else if (ft_strncmp(cmd[0], "cd", 2) == 0)
-		ft_cd(cmd, env);
+		mini->exit_status = ft_cd(cmd, env);
 	else if (ft_strncmp(cmd[0], "export", 6) == 0)
 		ft_export(mini, cmd);
 	else if (ft_strncmp(cmd[0], "unset", 5) == 0)

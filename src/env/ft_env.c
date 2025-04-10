@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 09:36:56 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 11:44:30 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_env_display(t_env *env)
 		}
 		lst = lst->next;
 	}
-	lst->next = NULL;
+//	lst->next = NULL;
 }
 
 t_env	*ft_add_env_node(char *key, char *value)

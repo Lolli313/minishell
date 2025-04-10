@@ -6,19 +6,18 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 06:48:57 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 14:59:32 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// env variables
-// handles "_" notcate the variable specified and then deletes it
-// from the linked list of  being able to unset
 int	ft_unset(t_mini *mini, char **av)
 {
 	int	i;
+	int error;
 
+	error = 0;
 	i = 1;
 	if (!av[i])
 		return (0);
@@ -26,9 +25,10 @@ int	ft_unset(t_mini *mini, char **av)
 	{
 		if (!export_validity(av[i]))
 		{
-			ft_putstr_fd("minishell: unset: ", STDERR_FILENO);
-			ft_putstr_fd(av[i], STDERR_FILENO);
-			ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
+			ft_putstr_fd("minishell: unset: ", STDERR);
+			ft_putstr_fd(av[i], STDERR);
+			ft_putendl_fd("': not a valid identifier", STDERR);
+			error = 1;
 		}
 		else
 		{
@@ -37,5 +37,6 @@ int	ft_unset(t_mini *mini, char **av)
 		}
 		i++;
 	}
+	mini->exit_status = error;
 	return (0);
 }

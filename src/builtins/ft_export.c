@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 09:36:47 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 15:58:01 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,14 +121,20 @@ static void	ft_add_env_export(t_mini *mini, char *key, char *value)
     }
 }
 
-static void	ft_has_equal(t_mini *mini, char *str)
+static int	ft_has_equal(t_mini *mini, char *str)
 {
     char	**temp;
     char	*value;
 
     temp = ft_split(str, '=');
     if (!temp[0] || !export_validity(temp[0]))
+	{
+		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
         ft_putstr_fd(str, STDERR_FILENO);
+        ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+        free_matrix(temp);
+        return (1);
+	}
     else
     {
 		if (temp[1])
@@ -138,23 +144,39 @@ static void	ft_has_equal(t_mini *mini, char *str)
         ft_add_env_export(mini, temp[0], value);
     }
     free_matrix(temp);
+	return (0);
 }
 
 int	ft_export(t_mini *mini, char **str)
 {
     int	i;
+	int error;
 
+	error = 0;
     if (!str[1])
         return (ft_export_env(mini, str));
-
-    i = 1;
+    i = 0;
     while (str[i])
     {
-        if (!ft_strchr(str[i], '='))
-            ft_export_no_value(mini, str[i]);
-        else
-            ft_has_equal(mini, str[i]);
+		if (ft_strchr(str[i], '='))
+		{
+			if (ft_has_equal(mini, str[i]))
+				error = 1;
+		}
+		else
+		{
+		if (!export_validity(str[i]))
+        {
+            ft_putstr_fd("minishell: export: `", STDERR_FILENO);
+            ft_putstr_fd(str[i], STDERR_FILENO);
+            ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+			error = 1;
+        }
+			else
+				ft_export_no_value(mini, str[i]);
+		}
         i++;
     }
+	mini->exit_status = error;
     return (0);
 }

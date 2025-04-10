@@ -6,39 +6,24 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/08 20:03:24 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 13:34:17 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // Helper function for the parent process logic.
-void	ft_handle_parent(t_line *current, int *prev_fd, int pipe_fds[2])
+void	ft_handle_parent(t_mini *mini, t_line *current)
 {
-	if (*prev_fd != -1)
-	{
-		ft_close(*prev_fd);
-		*prev_fd = -1;  // Mark it as closed
-	}
-
-	if (current->next)
-	{
-		if (pipe_fds[1] != -1)
-		{
-			ft_close(pipe_fds[1]);  // Only close if it's a pipeline
-			pipe_fds[1] = -1;  // Prevent double close
-		}
-		*prev_fd = pipe_fds[0];  // Save read end for next command
-	}
-	else
-	{
-		*prev_fd = -1;  // No next command, no need to store fd
-	}
+	(void)current;
+	if (mini->pipe_in > 0)
+    {
+        ft_close(mini->pipe_in);
+        mini->pipe_in = -1;
+    }
 }
 
-
-void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd,
-		int pipe_fds[2])
+void	ft_fork_and_exe(t_mini *mini, t_line *current)
 {
 	pid_t	pid;
 
@@ -50,50 +35,39 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, int prev_fd,
 	}
 	if (pid == 0)
 	{
-		ft_execute_child(mini, current, prev_fd, pipe_fds);
+		ft_execute_child(mini, current);
 	}
 	else
 	{
-		ft_handle_parent(current, &prev_fd, pipe_fds);
-//		waitpid(pid, NULL, 0);
+	//	ft_handle_parent(mini, current);
+		waitpid(pid, NULL, 0);
 	}
 }
 
 void	ft_execute_pipeline(t_mini *mini)
 {
 	t_line	*current;
-	int		pipefd[2];
-	int		prev_fd;
+	int pipefd[2];
 
 	current = mini->line;
-	prev_fd = -1;
-
 	while (current)
-	{
-		ft_pipe_heredoc(mini, current);
-		if (current->next && pipe(pipefd) == -1)
-			exit(EXIT_FAILURE);
-		ft_fork_and_exe(mini, current, prev_fd, pipefd);
-		if (current->next)
-		{
+    {
+		if (current->redirect && current->redirect->type == LIMITER)
+			ft_pipe_heredoc(mini, current);
+        if (current->next)
+        {
+            if (pipe(pipefd) == -1)
+                exit(EXIT_FAILURE);
+            mini->pipe_out = pipefd[1];
+            ft_fork_and_exe(mini, current);
 			ft_close(pipefd[1]);
-			prev_fd = pipefd[0];
-		}
-		else
-			prev_fd = -1;
-		current = current->next;
-	}
-	current = mini->line;
-	while (current)
-	{
-		wait(NULL);
-		current = current->next;
-	}
-	ft_close(prev_fd);
-	//if (prev_fd != STDIN_FILENO && prev_fd != -1)
-	//{
-	//	ft_close(prev_fd);
-	//	prev_fd = -1;
-	//}
-		
+            mini->pipe_in = pipefd[0];
+        }
+        else
+        {
+            mini->pipe_out = -1;
+            ft_fork_and_exe(mini, current);
+        }
+        current = current->next;
+    }
 }
