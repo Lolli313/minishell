@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:54:49 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/28 17:59:03 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:20:51 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*check_double_quote_variable(t_mini *mini, char *org, int *pos)
 	while (temp2[len])
 	{
 		if (temp2[len] == '$')
-			temp2 = handle_dollar_sign(mini, org, org + len, &len);
+			temp2 = handle_dollar_sign(mini, temp2, temp2 + len, &len);
 		else
 			len++;
 	}

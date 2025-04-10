@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 11:02:18 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/10 16:14:02 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ static char *ft_get_newpwd(t_env *env, char *path)
 	char	*newpwd;
 
 	pwd = ft_find_key(env, "PWD");
+	newpwd = NULL;
 	if (!pwd)
 		pwd = "";
 
