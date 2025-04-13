@@ -1,1 +1,10 @@
-Barmyh
+include
+libft
+Makefile
+minishell
+minishell_tester
+obj
+readline.supp
+src
+test_files
+test.txt

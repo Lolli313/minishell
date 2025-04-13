@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/10 18:31:29 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/12 15:46:56 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ typedef struct s_line
 {
 	char		**command;
 	t_re		*redirect;
+	pid_t		*pid;
+	int			pid_count;
 	struct s_line	*next;
 }	t_line;
 
@@ -110,7 +112,7 @@ typedef struct s_mini
 	int			pipe_out;	
 	int			stdin;
 	int			stdout;
-	int			pid;
+	int		    skibidi;
 
 	char		**env_array;
 	char		*path;
@@ -223,7 +225,7 @@ void    ft_exit(t_mini *mini, char **cmd);
 char **ft_env_to_array(t_env *env);
 
 
-void	ft_handle_external(t_mini *mini, char **args);
+int	ft_handle_external(t_mini *mini, char **args);
 void	ft_execute_command(t_mini *mini);
 
 // int ft_handle_heredoc(t_mini *mini, t_re *redir);

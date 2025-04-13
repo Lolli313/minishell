@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/10 16:48:46 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/12 07:51:43 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 // handle builtin commands (boolean expression, return true1 or false0)
 int	ft_is_builtin(char **av)
 {
-	if (ft_strncmp(av[0], "pwd", 4) == 0)
+	if (ft_strncmp(av[0], "pwd", 3) == 0)
 		return (1);
-	if (ft_strncmp(av[0], "cd", 3) == 0)
+	if (ft_strncmp(av[0], "cd", 2) == 0)
 		return (1);
-	if (ft_strncmp(av[0], "export", 7) == 0)
+	if (ft_strncmp(av[0], "export", 6) == 0)
 		return (1);
-	if (ft_strncmp(av[0], "unset", 6) == 0)
+	if (ft_strncmp(av[0], "unset", 5) == 0)
 		return (1);
-	if (ft_strncmp(av[0], "env", 4) == 0)
+	if (ft_strncmp(av[0], "env", 3) == 0)
 		return (1);
-	if (ft_strncmp(av[0], "echo", 5) == 0)
+	if (ft_strncmp(av[0], "echo", 4) == 0)
 		return (1);
-	if (ft_strncmp(av[0], "exit", 5) == 0)
+	if (ft_strncmp(av[0], "exit", 4) == 0)
 		return (1);
 	return (0);
 }

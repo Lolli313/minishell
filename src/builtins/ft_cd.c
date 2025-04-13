@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/10 16:49:07 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/13 17:59:37 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static char *ft_get_newpwd(t_env *env, char *path)
 			newpwd = ft_strdup("/");
 	}
 	else
-		ft_handle_relative(pwd, path);
+		newpwd = ft_handle_relative(pwd, path);
 	return (newpwd);
 }
 

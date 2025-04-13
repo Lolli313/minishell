@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/10 18:31:22 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/12 14:39:35 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,19 @@ char	*check_external(t_env *env, char *command)
 		free(str1);
 		i++;
 	}
+	//free(command);
 	free_matrix(all_paths);
 	return (NULL);
 }
 
-void	ft_handle_external(t_mini *mini, char **args)
+int	ft_handle_external(t_mini *mini, char **args)
 {
 	pid_t	cpid;
 	char	*temp;
 	char	**envp;
 
 	envp = ft_env_to_array(mini->env);
-	temp = check_external(mini->env, args[0]);
+	temp = check_external(mini->env, mini->line->command[0]);
 	cpid = fork();
 	if (cpid < 0)
 	{
@@ -66,9 +67,10 @@ void	ft_handle_external(t_mini *mini, char **args)
 		}
 	}
 	else
-	{
 		waitpid(cpid, NULL, 0);
-	}
 	free_matrix(envp);
 	free(temp);
+	return (0);
 }
+
+

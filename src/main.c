@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/10 18:31:25 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/13 17:52:34 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,41 +20,53 @@ the child process created to execute it returns a status of 127.
 If a command is found but is not executable, the return status
 is 126. In case of incorrect usagem the return status is 258.*/
 
+#include "minishell.h"
+
+/*
+static int ft_permission_error(t_mini *mini, char *path, char **command)
+{
+	if (access(path, F_OK) == -1)
+	{
+		ft_print_error(mini, command[0], "No such file or directory", 127);
+		return (1);
+	}
+	if (access(path, X_OK) == -1)
+	{
+		ft_print_error(mini, command[0], "Permission denied", 126);
+		return (1);
+	}
+}*/
+
+static void	ft_print_error(t_mini *mini, char *line, char *message, int exit_status)
+{
+    ft_putstr_fd("minishell: ", STDERR);
+    if (line)
+    {
+        ft_putstr_fd(line, STDERR);
+        ft_putstr_fd(": ", STDERR);
+    }
+    ft_putendl_fd(message, STDERR);
+    mini->exit_status = exit_status;
+    mini->skibidi = 1;
+}
 
 void	ft_error_msg(t_mini *mini)
 {
-	DIR	*dir;
+    DIR	*dir;
 
-	dir = opendir(mini->line->command[0]);
-	ft_putstr_fd("minishell: ", STDERR);
-    ft_putstr_fd(mini->line->command[0], STDERR);
-	if (ft_strchr(mini->line->command[0], '/') == NULL)
-	{
-		ft_putstr_fd(": command not found\n", STDERR);
-		mini->exit_status = 127;
-	}
+    dir = opendir(mini->line->command[0]);
+    if (ft_strchr(mini->line->command[0], '/') == NULL)
+        ft_print_error(mini, mini->line->command[0], "command not found", 127);
     else if (access(mini->line->command[0], F_OK) != 0)
-    {
-        ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-        mini->exit_status = 127;
-    }
+        ft_print_error(mini, mini->line->command[0], "No such file or directory", 127);
     else if (dir != NULL)
-    {
-        ft_putendl_fd(": Is a directory", STDERR_FILENO);
-        mini->exit_status = 126;
-    }
+        ft_print_error(mini, mini->line->command[0], "Is a directory", 126);
     else if (access(mini->line->command[0], X_OK) != 0)
-    {
-        ft_putendl_fd(": Permission denied", STDERR_FILENO);
-        mini->exit_status = 126;
-    }
+        ft_print_error(mini, mini->line->command[0], "Permission denied", 126);
     else
-    {
-        ft_putendl_fd(": Unknown error", STDERR_FILENO);
-        mini->exit_status = 1;
-    }
-	if (dir)
-		closedir(dir);
+        ft_print_error(mini, mini->line->command[0], "Unknown error", 1);
+    if (dir)
+        closedir(dir);
 }
 
 void	ft_mini_init(t_mini *mini)
@@ -67,37 +79,37 @@ void	ft_mini_init(t_mini *mini)
 	mini->pipe_out = -1;
 	mini->exit_status = 0;
 	mini->exit_flag = 1;
+	mini->skibidi = 0;
 //	mini->pid = -1;
+}
+
+static void ft_single_command(t_mini *mini)
+{
+	ft_execute_heredoc(mini);
+	ft_handle_redirections(mini);
+	if (ft_is_builtin(mini->line->command))
+		ft_handle_builtin(mini);
+	else
+		ft_handle_external(mini, mini->line->command);
 }
 
 void	ft_execute_command(t_mini *mini)
 {
-//	close_all(mini);
-	mini->path = check_external(mini->env, mini->line->command[0]);
-	if (!ft_is_builtin(mini->line->command) && !mini->path)
-		ft_error_msg(mini);
-	if (mini->nbr_of_pipes > 0)
+	mini->skibidi = 0;
+	if (mini->skibidi == 1)
 	{
-	//	printf("Executing pipeline with %d pipes\n", mini->nbr_of_pipes);
-		ft_execute_pipeline(mini);
+		return ;
 	}
+	if (mini->nbr_of_pipes == 0)
+		ft_single_command(mini);
 	else
-	{
-	//	printf("Executing command: %s\n", mini->line->command[0]);
-		ft_execute_heredoc(mini);
-		ft_handle_redirections(mini);
-		if (ft_is_builtin(mini->line->command))
-			ft_handle_builtin(mini);
-		else
-			ft_handle_external(mini, mini->line->command);
-	}
+		ft_execute_pipeline(mini);
+
 	ft_close(mini->pipe_in);
 	ft_close(mini->pipe_out);
 	mini->pipe_in = -1;
 	mini->pipe_out = -1;
 	ft_restore_std_fds(mini);
-	free(mini->path);
-	mini->path = NULL;
 }
 
 int	ft_parse_input(t_mini *mini)
