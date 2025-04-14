@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/14 14:19:16 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/14 15:11:25 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,19 @@ static int	ft_permission_error(t_mini *mini, char *path, char **command)
 		ft_print_error(mini, command[0], "Permission denied", 126);
 		return (1);
 	}
-}*/
+}
+	
+if (strlen(handledollarsign) == 0
+	if (av[1])
+		i++;
+	else 
+		return
+		mini->exit_status = 1;
+else
+	mini->exitstatus = 126;
+	error $PWD is a directory
+
+*/
 static void	ft_print_error(t_mini *mini, char *line, char *message,
 		int exit_status)
 {
@@ -76,6 +88,7 @@ void	ft_mini_init(t_mini *mini)
 	mini->fd_out = -1;
 	mini->pipe_in = -1;
 	mini->pipe_out = -1;
+	mini->fd = -1;
 	mini->exit_status = 0;
 	mini->exit_flag = 1;
 	mini->skibidi = 0;
@@ -151,6 +164,7 @@ int	main(int ac, char **av, char **envp)
 		line_cleanup(mini);
 	}
 	exit = mini->exit_status;
+	rl_clear_history();
 	ft_close(mini->stdin);
 	ft_close(mini->stdout);
 	free_env(mini->env);

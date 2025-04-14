@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/14 14:34:40 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/14 15:02:33 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	ft_execute_child(t_mini *mini, t_line *current)
 		ft_close(mini->pipe_in);
 		mini->pipe_in = -1;
 	}
+	ft_close(mini->fd);
 	if (mini->pipe_out >= 0)
 	{
 		ft_safe_dup2(mini->pipe_out, STDOUT);
@@ -115,6 +116,7 @@ void	ft_execute_pipeline(t_mini *mini)
 			if (pipe(pipefd) == -1)
 				exit(EXIT_FAILURE);
 			mini->pipe_out = pipefd[1];
+			mini->fd = pipefd[0];
 			ft_fork_and_exe(mini, current, pids, i++);
 			ft_close(pipefd[1]);
 			if (mini->pipe_in >= 0)
