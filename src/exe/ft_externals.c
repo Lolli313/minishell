@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/12 14:39:35 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 11:53:35 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*check_external(t_env *env, char *command)
+char	*check_external(t_mini *mini, t_env *env, char *command)
 {
 	char	**all_paths;
 	char	*temp;
@@ -21,7 +21,7 @@ char	*check_external(t_env *env, char *command)
 	int		i;
 
 	if (access(command, X_OK) == 0)
-		return (command);
+		return (ft_strdup(command));
 	temp = ft_getenv(env, "PATH");
 	all_paths = ft_split(temp, ':');
 	free(temp);
@@ -36,7 +36,7 @@ char	*check_external(t_env *env, char *command)
 		free(str1);
 		i++;
 	}
-	//free(command);
+	ft_error_msg(mini);
 	free_matrix(all_paths);
 	return (NULL);
 }
@@ -46,9 +46,12 @@ int	ft_handle_external(t_mini *mini, char **args)
 	pid_t	cpid;
 	char	*temp;
 	char	**envp;
+	int 	status;
 
 	envp = ft_env_to_array(mini->env);
-	temp = check_external(mini->env, mini->line->command[0]);
+	temp = check_external(mini, mini->env, mini->line->command[0]);
+	if (mini->skibidi == 1)
+		return (mini->exit_status);
 	cpid = fork();
 	if (cpid < 0)
 	{
@@ -63,14 +66,20 @@ int	ft_handle_external(t_mini *mini, char **args)
 		{
 			free_matrix(envp);
 			free(temp);
-			exit(EXIT_FAILURE);
+			exit(127);
 		}
 	}
 	else
-		waitpid(cpid, NULL, 0);
+	{
+		waitpid(cpid, &status, 0);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			return (128 + WTERMSIG(status));
+		return (1);
+
+	}
 	free_matrix(envp);
 	free(temp);
 	return (0);
 }
-
-

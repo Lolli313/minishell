@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/12 16:41:36 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 11:42:00 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,12 @@ void	ft_handle_redirections(t_mini *mini)
 	redir = mini->line->redirect;
 	while (redir)
 	{
+		if (mini->skibidi == 1)
+			break;
 		if (redir->type == INFILE)
-		{
 			ft_handle_input_redir(mini, redir);
-			ft_close(mini->fd_in);
-			mini->fd_in = -1;
-		}
 		else if ((redir->type == OUTFILE || redir->type == APPEND_OUTFILE))
-		{
 			ft_handle_output_redir(mini, redir);
-			ft_close(mini->fd_out);
-			mini->fd_out = -1;
-		}
 		redir = redir->next;
 	}
 }

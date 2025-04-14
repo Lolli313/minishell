@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/10 15:58:01 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 11:05:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,9 +150,7 @@ static int	ft_has_equal(t_mini *mini, char *str)
 int	ft_export(t_mini *mini, char **str)
 {
     int	i;
-	int error;
 
-	error = 0;
     if (!str[1])
         return (ft_export_env(mini, str));
     i = 0;
@@ -161,22 +159,21 @@ int	ft_export(t_mini *mini, char **str)
 		if (ft_strchr(str[i], '='))
 		{
 			if (ft_has_equal(mini, str[i]))
-				error = 1;
+				mini->exit_status = 1;
 		}
 		else
 		{
 		if (!export_validity(str[i]))
         {
-            ft_putstr_fd("minishell: export: `", STDERR_FILENO);
-            ft_putstr_fd(str[i], STDERR_FILENO);
-            ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-			error = 1;
+            ft_putstr_fd("minishell: export: `", STDERR);
+            ft_putstr_fd(str[i], STDERR);
+            ft_putstr_fd("': not a valid identifier\n", STDERR);
+			mini->exit_status = 1;
         }
 			else
 				ft_export_no_value(mini, str[i]);
 		}
         i++;
     }
-	mini->exit_status = error;
-    return (0);
+    return (mini->exit_status);
 }

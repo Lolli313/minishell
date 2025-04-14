@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/13 17:52:34 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 12:01:45 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ is 126. In case of incorrect usagem the return status is 258.*/
 #include "minishell.h"
 
 /*
-static int ft_permission_error(t_mini *mini, char *path, char **command)
+static int	ft_permission_error(t_mini *mini, char *path, char **command)
 {
 	if (access(path, F_OK) == -1)
 	{
@@ -36,37 +36,36 @@ static int ft_permission_error(t_mini *mini, char *path, char **command)
 		return (1);
 	}
 }*/
-
-static void	ft_print_error(t_mini *mini, char *line, char *message, int exit_status)
+static void	ft_print_error(t_mini *mini, char *line, char *message,
+		int exit_status)
 {
-    ft_putstr_fd("minishell: ", STDERR);
-    if (line)
-    {
-        ft_putstr_fd(line, STDERR);
-        ft_putstr_fd(": ", STDERR);
-    }
-    ft_putendl_fd(message, STDERR);
-    mini->exit_status = exit_status;
-    mini->skibidi = 1;
+	ft_putstr_fd("minishell: ", STDERR);
+	if (line)
+	{
+		ft_putstr_fd(line, STDERR);
+		ft_putstr_fd(": ", STDERR);
+	}
+	ft_putendl_fd(message, STDERR);
+	mini->exit_status = exit_status;
+	mini->skibidi = 1;
 }
 
 void	ft_error_msg(t_mini *mini)
 {
-    DIR	*dir;
+	DIR	*dir;
 
-    dir = opendir(mini->line->command[0]);
-    if (ft_strchr(mini->line->command[0], '/') == NULL)
-        ft_print_error(mini, mini->line->command[0], "command not found", 127);
-    else if (access(mini->line->command[0], F_OK) != 0)
-        ft_print_error(mini, mini->line->command[0], "No such file or directory", 127);
-    else if (dir != NULL)
-        ft_print_error(mini, mini->line->command[0], "Is a directory", 126);
-    else if (access(mini->line->command[0], X_OK) != 0)
-        ft_print_error(mini, mini->line->command[0], "Permission denied", 126);
-    else
-        ft_print_error(mini, mini->line->command[0], "Unknown error", 1);
-    if (dir)
-        closedir(dir);
+	dir = opendir(mini->line->command[0]);
+	if (dir != NULL)
+		ft_print_error(mini, mini->line->command[0], "Is a directory", 126);
+	else if (!ft_strchr(mini->line->command[0], '/'))
+		ft_print_error(mini, mini->line->command[0], "command not found", 127);
+	else if (access(mini->line->command[0], F_OK) != 0)
+		ft_print_error(mini, mini->line->command[0],
+			"No such file or directory", 127);
+	else if (access(mini->line->command[0], X_OK) != 0)
+		ft_print_error(mini, mini->line->command[0], "Permission denied", 126);
+	if (dir)
+		closedir(dir);
 }
 
 void	ft_mini_init(t_mini *mini)
@@ -80,11 +79,11 @@ void	ft_mini_init(t_mini *mini)
 	mini->exit_status = 0;
 	mini->exit_flag = 1;
 	mini->skibidi = 0;
-//	mini->pid = -1;
 }
 
-static void ft_single_command(t_mini *mini)
+void	ft_single_command(t_mini *mini)
 {
+//	ft_error_msg(mini);
 	ft_execute_heredoc(mini);
 	ft_handle_redirections(mini);
 	if (ft_is_builtin(mini->line->command))
@@ -95,16 +94,12 @@ static void ft_single_command(t_mini *mini)
 
 void	ft_execute_command(t_mini *mini)
 {
-	mini->skibidi = 0;
-	if (mini->skibidi == 1)
-	{
-		return ;
-	}
 	if (mini->nbr_of_pipes == 0)
 		ft_single_command(mini);
 	else
 		ft_execute_pipeline(mini);
-
+	ft_close(mini->fd_in);
+	ft_close(mini->fd_out);
 	ft_close(mini->pipe_in);
 	ft_close(mini->pipe_out);
 	mini->pipe_in = -1;
@@ -117,7 +112,7 @@ int	ft_parse_input(t_mini *mini)
 	char	*input;
 
 	mini->interactive = 1;
-	//mini->interactive = isatty(STDIN);
+	// mini->interactive = isatty(STDIN);
 	if (mini->interactive)
 		input = readline(G "😭 minishell$ " RESET);
 	else
@@ -138,10 +133,10 @@ int	ft_parse_input(t_mini *mini)
 int	main(int ac, char **av, char **envp)
 {
 	t_mini	*mini;
+	int		exit;
 
 	(void)ac;
 	(void)av;
-	int 	exit;
 	mini = malloc(sizeof(t_mini));
 	ft_mini_init(mini);
 	mini->env = ft_init_env(envp);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/13 17:59:37 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 09:06:27 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ int	ft_update_value(t_env *env, char *key, char *value)
 static int	ft_cd_error(char *path, int error)
 {
 	ft_putstr_fd("minishell: cd: ", STDERR);
-    if (path)
-    {
-        ft_putstr_fd(path, STDERR);
-        ft_putstr_fd(": ", STDERR);
-    }
+	if (path)
+	{
+		ft_putstr_fd(path, STDERR);
+		ft_putstr_fd(": ", STDERR);
+	}
 	if (error == 0)
 		ft_putstr_fd("HOME not set\n", STDERR);
 	else if (error == 1)
@@ -84,21 +84,21 @@ static char	*ft_handle_relative(char *pwd, char *path)
 	return (newpwd);
 }
 
-static char *ft_get_newpwd(t_env *env, char *path)
+static char	*ft_get_newpwd(t_env *env, char *path)
 {
 	char	*pwd;
 	char	*newpwd;
+	char	*last_slash;
 
 	pwd = ft_find_key(env, "PWD");
 	newpwd = NULL;
 	if (!pwd)
 		pwd = "";
-
 	if (path[0] == '/')
 		newpwd = ft_strdup(path);
 	else if (ft_strcmp(path, "..") == 0)
 	{
-		char *last_slash = ft_strrchr(pwd, '/');
+		last_slash = ft_strrchr(pwd, '/');
 		if (last_slash && last_slash != pwd)
 			newpwd = ft_substr(pwd, 0, last_slash - pwd);
 		else
@@ -123,7 +123,7 @@ static int	ft_change_dir(t_env *env, char *path, int print_dir)
 		return (0);
 	}
 	else
-		return(ft_cd_error(path, 3));
+		return (ft_cd_error(path, 3));
 }
 
 int	ft_cd(char **av, t_env *env)
@@ -136,7 +136,7 @@ int	ft_cd(char **av, t_env *env)
 	{
 		target = ft_find_key(env, "HOME");
 		if (!target)
-			return (ft_cd_error(NULL, 0)); 
+			return (ft_cd_error(NULL, 0));
 	}
 	else if (ft_strcmp(av[1], "-") == 0)
 	{
@@ -147,7 +147,7 @@ int	ft_cd(char **av, t_env *env)
 	}
 	else if (av[2] != NULL)
 	{
-		return(ft_cd_error(NULL, 2));
+		return (ft_cd_error(NULL, 2));
 	}
 	else
 		target = av[1];

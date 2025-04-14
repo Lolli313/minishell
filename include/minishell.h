@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/12 15:46:56 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 12:17:59 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,8 +161,8 @@ bool	echo_validity(char *str);
 
 
 
-char	*check_external(t_env *env, char *command);
-
+char	*check_external(t_mini *mini, t_env *env, char *command);
+void	ft_handle_sigpipe(int signal);
 
 bool	exit_validity(t_line *line);
 
@@ -256,7 +256,7 @@ bool	set_pipe_fds(t_mini *mini, int index);
 void ft_handle_parent(t_mini *mini, t_line *current);
 void ft_execute_child(t_mini *mini, t_line *current);
 void	ft_redir_output(t_line *current, int pipe_fds[2]);
-void	ft_fork_and_exe(t_mini *mini, t_line *current);
+void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i);
 void ft_execute_heredoc(t_mini *mini);
 void	ft_error_msg(t_mini *mini);
 
@@ -265,6 +265,7 @@ int	ft_export_env(t_mini *mini, char **str);
 
 void	ft_safe_dup2(int oldfd, int newfd);
 void	ft_close(int fd);
+void	ft_single_command(t_mini *mini);
 
 /*
 TODO

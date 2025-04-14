@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/10 08:05:41 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 11:42:50 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 
 void	ft_execute_heredoc(t_mini *mini)
 {
+	//mini->line->redirect->heredoc_fd = -1;
 	if (mini->line->redirect && mini->line->redirect->type == LIMITER)
 	{
 		ft_pipe_heredoc(mini, mini->line);

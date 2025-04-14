@@ -3,16 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/03/26 11:55:07 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:17:53 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int	g_global = 0;
+
+void	ft_handle_sigpipe(int signal)
+{
+	if (SIGPIPE == signal)
+	{
+		ft_putendl_fd("Broken pipe\n", 2);
+		exit (1);
+	}
+}
 
 void	ft_handle_sigint(int signal)
 {
