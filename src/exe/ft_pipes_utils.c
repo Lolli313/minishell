@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 11:26:39 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/12 15:48:48 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/14 14:14:41 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ void	ft_safe_dup2(int oldfd, int newfd)
 	if (dup2(oldfd, newfd) == -1)
 	{
 		perror("dup2 failed");
-		ft_close(oldfd);
+		 if (oldfd >= 0)
+			ft_close(oldfd);
 		exit(EXIT_FAILURE);
 	}
 }
-

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/14 12:17:59 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/14 14:30:32 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,6 @@ bool	echo_validity(char *str);
 
 
 char	*check_external(t_mini *mini, t_env *env, char *command);
-void	ft_handle_sigpipe(int signal);
 
 bool	exit_validity(t_line *line);
 

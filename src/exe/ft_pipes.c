@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/14 12:22:39 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/14 14:34:40 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@ void	ft_execute_child(t_mini *mini, t_line *current)
 		ft_close(mini->pipe_in);
 		mini->pipe_in = -1;
 	}
-	if (current->next)
+	if (mini->pipe_out >= 0)
 	{
-		//ft_close(mini->pipe_in);
 		ft_safe_dup2(mini->pipe_out, STDOUT);
 		ft_close(mini->pipe_out);
 		mini->pipe_out = -1;
@@ -55,7 +54,6 @@ void	ft_execute_child(t_mini *mini, t_line *current)
 	{
 		ft_close(mini->pipe_in);
 	}
-	signal(SIGPIPE, &ft_handle_sigpipe);
 	exit(EXIT_SUCCESS);
 }
 
@@ -71,6 +69,8 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	}
 	else if (pid == 0)
 	{
+		ft_close(mini->stdin);
+		ft_close(mini->stdout);
 		ft_execute_child(mini, current);
 	}
 	else
@@ -91,13 +91,12 @@ static int ft_wait(t_mini *mini, pid_t *pids, int i)
 	{
         waitpid(pids[j], &status, 0);
 		if (WIFEXITED(status))
-			mini->exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-			mini->exit_status = 128 + WTERMSIG(status);
+			mini->exit_status = status;
 		j++;
 	}
 	return (mini->exit_status);
 }
+
 
 void	ft_execute_pipeline(t_mini *mini)
 {
@@ -118,6 +117,11 @@ void	ft_execute_pipeline(t_mini *mini)
 			mini->pipe_out = pipefd[1];
 			ft_fork_and_exe(mini, current, pids, i++);
 			ft_close(pipefd[1]);
+			if (mini->pipe_in >= 0)
+			{
+				ft_close(mini->pipe_in);
+				mini->pipe_in = -1;
+			}
 			mini->pipe_in = pipefd[0];
 		}
 		else
@@ -128,6 +132,9 @@ void	ft_execute_pipeline(t_mini *mini)
 		current = current->next;
 	}
 	if (mini->pipe_in >= 0)
+	{
 		ft_close(mini->pipe_in);
+		mini->pipe_in = -1;
+	}
 	ft_wait(mini, pids, i);
 }
