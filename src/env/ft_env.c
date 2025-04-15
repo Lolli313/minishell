@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/10 11:44:30 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/15 13:48:29 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ t_env	*ft_init_env(char **envp)
 		tmp = ft_split(envp[i], '=');
 		if (!tmp)
 			return (NULL);
+		if (tmp[2])
+		{
+			tmp[1] = ft_strjoin(tmp[1], "=");
+			tmp[1] = ft_strjoin(tmp[1], tmp[2]);
+		}
 		if (env == NULL)
 			env = ft_add_env_node(tmp[0], tmp[1]);
 		else

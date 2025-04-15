@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/14 14:30:32 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/15 13:47:06 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ typedef struct s_mini
 	int			pipe_out;	
 	int			stdin;
 	int			stdout;
+	int			fd;
 	int		    skibidi;
 
 	char		**env_array;
@@ -268,34 +269,11 @@ void	ft_single_command(t_mini *mini);
 
 /*
 TODO
-- finish heredoc ✅
-- - heredoc CTRL+D sig 
-
-clean up
-- - execution ✅
-- - pipes ✅
-- - redirections ✅
-- - mix pipes/heredocs ✅
-
-- mini struct
-- - pipe ✅
-- - redirections ✅
-
-- env
-- - export exact same adds to list -> export_validity function
-- - env | sort doesnt include exported variables? -> pipe issue
-- - make env list into an array ✅
-
-mini->exit_flag = 58; rm line when exitstatus is a go
-exit status;
--56 for ex does 256 - 56 = 200
-- 257 will have exut 1 (%256) 
-- exit wjvwejbvjh always 2
-
-valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=readline.supp ./minishell
-
+-- exit flags/status
+-- env add node ignore every = after first one
+-- symbolic link (leaving)
+-- expansions with
 */
-
 
 
 # endif

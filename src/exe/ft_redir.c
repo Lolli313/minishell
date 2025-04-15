@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/14 15:13:34 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/15 12:57:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,18 @@ void	ft_handle_input_redir(t_mini *mini, t_re *redir)
 	mini->fd_in = open(redir->str, O_RDONLY);
 	if (mini->fd_in == -1)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(redir->str, 2);
-		ft_putendl_fd(": No such file or directory", 2);
+		if (mini->fd_in == -1 && access(mini->line->command[0], F_OK) != 0)
+        {
+			ft_putstr_fd("minishell: ", STDERR);
+        	ft_putstr_fd(redir->str, STDERR);
+        	ft_putendl_fd(": No such file or directory", STDERR);
+		}
+		else
+		{
+			ft_putstr_fd("minishell: ", STDERR);
+			ft_putstr_fd(redir->str, STDERR);
+			ft_putendl_fd(": Permission denied", STDERR);
+		}
 		mini->exit_status = 1;
 		mini->skibidi = 1;
 		return ;
@@ -55,9 +64,18 @@ void	ft_handle_output_redir(t_mini *mini, t_re *redir)
 		mini->fd_out = open(redir->str, O_WRONLY | O_CREAT | O_APPEND, 00700);
 	if (mini->fd_out == -1)
 	{
-        ft_putstr_fd("minishell: ", STDERR);
-        ft_putstr_fd(redir->str, STDERR);
-        ft_putendl_fd(": No such file or directory", STDERR);
+		if (mini->fd_out == -1 && access(mini->line->command[0], X_OK) != 0)
+        {
+			ft_putstr_fd("minishell: ", STDERR);
+			ft_putstr_fd(redir->str, STDERR);
+			ft_putendl_fd(": Permission denied", STDERR);
+		}
+		else
+		{
+			ft_putstr_fd("minishell: ", STDERR);
+        	ft_putstr_fd(redir->str, STDERR);
+        	ft_putendl_fd(": No such file or directory", STDERR);
+		}
         mini->exit_status = 1;
 		mini->skibidi = 1;
         return ;

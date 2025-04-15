@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/14 15:11:25 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/15 14:20:34 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,6 @@ is 126. In case of incorrect usagem the return status is 258.*/
 
 #include "minishell.h"
 
-/*
-static int	ft_permission_error(t_mini *mini, char *path, char **command)
-{
-	if (access(path, F_OK) == -1)
-	{
-		ft_print_error(mini, command[0], "No such file or directory", 127);
-		return (1);
-	}
-	if (access(path, X_OK) == -1)
-	{
-		ft_print_error(mini, command[0], "Permission denied", 126);
-		return (1);
-	}
-}
-	
-if (strlen(handledollarsign) == 0
-	if (av[1])
-		i++;
-	else 
-		return
-		mini->exit_status = 1;
-else
-	mini->exitstatus = 126;
-	error $PWD is a directory
-
-*/
 static void	ft_print_error(t_mini *mini, char *line, char *message,
 		int exit_status)
 {
@@ -68,7 +42,10 @@ void	ft_error_msg(t_mini *mini)
 
 	dir = opendir(mini->line->command[0]);
 	if (dir != NULL)
+	{
+		closedir(dir);
 		ft_print_error(mini, mini->line->command[0], "Is a directory", 126);
+	}
 	else if (!ft_strchr(mini->line->command[0], '/'))
 		ft_print_error(mini, mini->line->command[0], "command not found", 127);
 	else if (access(mini->line->command[0], F_OK) != 0)
@@ -76,8 +53,6 @@ void	ft_error_msg(t_mini *mini)
 			"No such file or directory", 127);
 	else if (access(mini->line->command[0], X_OK) != 0)
 		ft_print_error(mini, mini->line->command[0], "Permission denied", 126);
-	if (dir)
-		closedir(dir);
 }
 
 void	ft_mini_init(t_mini *mini)
@@ -96,7 +71,6 @@ void	ft_mini_init(t_mini *mini)
 
 void	ft_single_command(t_mini *mini)
 {
-//	ft_error_msg(mini);
 	ft_execute_heredoc(mini);
 	ft_handle_redirections(mini);
 	if (ft_is_builtin(mini->line->command))

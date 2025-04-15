@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/14 11:53:35 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/15 14:04:02 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 		}
 	}
 	else
-	{
 		waitpid(cpid, &status, 0);
-		if (WIFEXITED(status))
-			return (WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			return (128 + WTERMSIG(status));
-		return (1);
-
-	}
 	free_matrix(envp);
 	free(temp);
 	return (0);
