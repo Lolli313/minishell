@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/16 09:34:04 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/16 11:25:55 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,17 @@ If a command is found but is not executable, the return status
 is 126. In case of incorrect usagem the return status is 258.*/
 
 #include "minishell.h"
+
+
+void 	ft_error_syntax(t_mini *mini, char *token)
+{
+	ft_putstr_fd("minishell: ", STDERR);
+	ft_putstr_fd("syntax error near unexpected token ", STDERR);
+    ft_putstr_fd("`", STDERR);
+    ft_putstr_fd(token, STDERR);
+    ft_putstr_fd("'\n", STDERR);
+	mini->exit_status = 2;
+}
 
 static void	ft_print_error(t_mini *mini, char *line, char *message,
 		int exit_status)

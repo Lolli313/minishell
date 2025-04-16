@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/10 15:44:05 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/16 11:34:00 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,11 @@ bool	token_validity(t_mini *mini)
 	{
 		if (current->next == NULL)
 		{
-			if (current->type == PIPE || current->type == RE_INPUT
-				|| current->type == RE_OUTPUT || current->type == RE_APPEND
-				|| current->type == HERE_DOC)
-				return (ft_printf("Error: invalid syntax\n"), false);
+			if (current->type == RE_INPUT || current->type == RE_OUTPUT
+                || current->type == RE_APPEND || current->type == HERE_DOC)
+                return (ft_error_syntax(mini, "newline"), false);
+            else if (current->type == PIPE)
+                return (ft_error_syntax(mini, current->str), false);
 		}
 		else if ((current->type == PIPE && (current->next->type == PIPE
 					|| current->index == 0)) || (current->type == RE_INPUT
@@ -105,7 +106,12 @@ bool	token_validity(t_mini *mini)
 			|| (current->type == RE_APPEND
 				&& current->next->type != APPEND_OUTFILE)
 			|| (current->type == HERE_DOC && current->next->type != LIMITER))
-			return (ft_printf("Error: invalid syntax\n"), false);
+		{
+			if (current->type == PIPE && current->index == 0)
+				return (ft_error_syntax(mini, current->str), false);
+			else
+				return (ft_error_syntax(mini, current->next->str), false);
+		}
 		current = current->next;
 	}
 	return (true);

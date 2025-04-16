@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/16 09:37:44 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/16 11:26:06 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,8 @@ void	ft_safe_dup2(int oldfd, int newfd);
 void	ft_close(int fd);
 void	ft_single_command(t_mini *mini);
 char	**ft_split_env(char *str);
+
+void 	ft_error_syntax(t_mini *mini, char *token);
 
 /*
 TODO
