@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:50:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/07 09:04:51 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/16 10:35:29 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_token	*find_command(t_token *token)
 	current = token;
 	while (current)
 	{
-		if (current->type == COMMAND)
+		if (current->type == COMMAND || current->type == ARGUMENT)
 			return (current);
 		current = current->next;
 	}

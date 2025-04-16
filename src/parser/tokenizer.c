@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer1.c                                       :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:42:09 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/28 17:43:59 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/16 10:22:04 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 	t_token	*new_node;
 	t_token	*last;
 
+	if (!str)
+		return (token);
 	new_node = malloc(sizeof(t_token));
 	if (!new_node)
 		return (0);
@@ -46,6 +48,40 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 	new_node->previous = last;
 	last->next = new_node;
 	return (token);
+}
+
+static void	remove_empty_tokens(t_mini *mini)
+{
+	t_token *curr = mini->token;
+	t_token *prev = NULL;
+	t_token *next;
+
+	while (curr)
+	{
+		next = curr->next;
+		if (!curr->str || !*curr->str)
+		{
+			if (prev)
+				prev->next = next;
+			else
+				mini->token = next;
+
+			if (next)
+				next->previous = prev;
+			free(curr->str);
+			free(curr);
+		}
+		else
+			prev = curr;
+		curr = next;
+	}
+	curr = mini->token;
+    int idx = 0;
+    while (curr)
+    {
+        curr->index = idx++;
+        curr = curr->next;
+    }
 }
 
 t_token	*tokenize_input(t_mini *mini, char *input)
@@ -72,6 +108,7 @@ t_token	*tokenize_input(t_mini *mini, char *input)
 		return (line_cleanup(mini), NULL);
 	token_relativity(mini->token);
 	expand_variables(mini);
+	remove_empty_tokens(mini);
 	if (token_validity(mini) == false)
 		return (line_cleanup(mini), NULL);
 	return (mini->token);

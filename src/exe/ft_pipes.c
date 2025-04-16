@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/14 15:02:33 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/16 07:06:06 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	ft_execute_child(t_mini *mini, t_line *current)
 	}
 	mini->line = current;
 	ft_handle_redirections(mini);
+	if (mini->skibidi == 1)
+		exit(mini->exit_status);
 	if (ft_is_builtin(current->command))
 	{
 		ft_handle_builtin(mini);
@@ -91,8 +93,10 @@ static int ft_wait(t_mini *mini, pid_t *pids, int i)
 	while (j < i)
 	{
         waitpid(pids[j], &status, 0);
-		if (WIFEXITED(status))
-			mini->exit_status = status;
+        if (WIFEXITED(status))
+            mini->exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+            mini->exit_status = 128 + WTERMSIG(status);
 		j++;
 	}
 	return (mini->exit_status);

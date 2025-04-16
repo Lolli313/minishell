@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/10 12:10:52 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/16 10:22:37 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_line	*structurize_line(t_mini *mini)
 	}
 	return (mini->line);
 }
+
 
 void	parse_string(t_mini *mini, char *line)
 {

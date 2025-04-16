@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/15 14:20:34 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/16 09:34:04 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,26 @@ static void	ft_print_error(t_mini *mini, char *line, char *message,
 	}
 	ft_putendl_fd(message, STDERR);
 	mini->exit_status = exit_status;
-	mini->skibidi = 1;
 }
 
 void	ft_error_msg(t_mini *mini)
 {
 	DIR	*dir;
+	char *cmd = mini->line->command[0];
 
-	dir = opendir(mini->line->command[0]);
-	if (dir != NULL)
+	if (!*cmd)
+		return;
+	if (!ft_strchr(cmd, '/'))
+		ft_print_error(mini, cmd, "command not found", 127);
+	else if ((dir = opendir(cmd)) != NULL)
 	{
 		closedir(dir);
-		ft_print_error(mini, mini->line->command[0], "Is a directory", 126);
+		ft_print_error(mini, cmd, "Is a directory", 126);
 	}
-	else if (!ft_strchr(mini->line->command[0], '/'))
-		ft_print_error(mini, mini->line->command[0], "command not found", 127);
-	else if (access(mini->line->command[0], F_OK) != 0)
-		ft_print_error(mini, mini->line->command[0],
-			"No such file or directory", 127);
-	else if (access(mini->line->command[0], X_OK) != 0)
-		ft_print_error(mini, mini->line->command[0], "Permission denied", 126);
+	else if (access(cmd, F_OK) != 0)
+		ft_print_error(mini, cmd, "No such file or directory", 127);
+	else if (access(cmd, X_OK) != 0)
+		ft_print_error(mini, cmd, "Permission denied", 126);
 }
 
 void	ft_mini_init(t_mini *mini)
@@ -77,6 +77,8 @@ void	ft_single_command(t_mini *mini)
 		ft_handle_builtin(mini);
 	else
 		ft_handle_external(mini, mini->line->command);
+	if (mini->skibidi == 1)
+		mini->exit_status = 1;
 }
 
 void	ft_execute_command(t_mini *mini)

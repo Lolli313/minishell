@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/15 13:47:06 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/16 09:37:44 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,10 +126,6 @@ typedef struct s_mini
 	t_extract	extract;
 }	t_mini;
 
-
-// utils - not in use
-void	print_tokens(t_token *token);
-void	print_lines(t_line *line);
 
 //tokens
 void	token_relativity(t_token *token);
@@ -266,6 +262,7 @@ int	ft_export_env(t_mini *mini, char **str);
 void	ft_safe_dup2(int oldfd, int newfd);
 void	ft_close(int fd);
 void	ft_single_command(t_mini *mini);
+char	**ft_split_env(char *str);
 
 /*
 TODO

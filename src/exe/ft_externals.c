@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/15 14:04:02 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/16 10:08:23 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ char	*check_external(t_mini *mini, t_env *env, char *command)
 	char	*str1;
 	int		i;
 
+	(void)mini;
 	if (access(command, X_OK) == 0)
 		return (ft_strdup(command));
 	temp = ft_getenv(env, "PATH");
@@ -36,7 +37,6 @@ char	*check_external(t_mini *mini, t_env *env, char *command)
 		free(str1);
 		i++;
 	}
-	ft_error_msg(mini);
 	free_matrix(all_paths);
 	return (NULL);
 }
@@ -64,13 +64,20 @@ int	ft_handle_external(t_mini *mini, char **args)
 	{
 		if (execve(temp, args, envp) == -1)
 		{
+			ft_error_msg(mini);
 			free_matrix(envp);
 			free(temp);
-			exit(127);
+			exit(mini->exit_status);
 		}
 	}
 	else
+	{
 		waitpid(cpid, &status, 0);
+		if (WIFEXITED(status))
+			mini->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			mini->exit_status = 128 + WTERMSIG(status);
+	}
 	free_matrix(envp);
 	free(temp);
 	return (0);

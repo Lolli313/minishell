@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/15 13:47:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/16 07:50:34 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_env	*ft_init_export_env_(char **envp)
 	export_env = NULL;
 	while (envp[i])
 	{
-		tmp = ft_split(envp[i], '=');
+		tmp = ft_split_env(envp[i]);
 		if (!tmp)
 			return (NULL);
 		if (export_env == NULL)
@@ -126,7 +126,7 @@ static int	ft_has_equal(t_mini *mini, char *str)
     char	**temp;
     char	*value;
 
-    temp = ft_split(str, '=');
+    temp = ft_split_env(str);
     if (!temp[0] || !export_validity(temp[0]))
 	{
 		ft_putstr_fd("minishell: export: `", STDERR_FILENO);
