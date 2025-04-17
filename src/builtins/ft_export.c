@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 11:03:08 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/17 14:38:47 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	ft_export(t_mini *mini, char **str)
 
 	if (!str[1])
 		return (ft_export_env(mini, str));
-	i = 0;
+	i = 1;
 	while (str[i])
 	{
 		if (ft_strchr(str[i], '='))

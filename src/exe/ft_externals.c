@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 14:09:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/17 15:37:23 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,11 @@ int	ft_handle_external(t_mini *mini, char **args)
 		}
 	}
 	else
+	{
+		g_skip = true;
 		ft_wait(mini, &cpid, 1);
+		g_skip = false;
+	}
 	free_matrix(envp);
 	free(temp);
 	return (0);
