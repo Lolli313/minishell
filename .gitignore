@@ -1,0 +1,11 @@
+.vscode
+obj/
+minishell
+libft.a
+test.txt
+also.txt
+*.supp
+minishell_tester
+removetests.sh
+todo.txt
+*.txt
