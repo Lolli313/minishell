@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/14 11:42:50 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/17 09:50:18 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 {
 	char	*line;
-	char	*read_line;
+	char	*tmp;
 	int		i;
 
 	ft_close(pipefd[0]);
@@ -28,16 +28,15 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 			break ;
 		}
 		i = 0;
-		read_line = line;
-		while (read_line && read_line[i])
+		tmp = line;
+		while (tmp && tmp[i])
 		{
-			if (read_line[i] == '$')
-				read_line = handle_dollar_sign(mini, read_line, &read_line[i],
-						&i);
+			if (tmp[i] == '$')
+				tmp = handle_dollar_sign(mini, tmp, &tmp[i], &i);
 			else
 				i++;
 		}
-		write(pipefd[1], read_line, ft_strlen(read_line));
+		write(pipefd[1], tmp, ft_strlen(tmp));
 		write(pipefd[1], "\n", 1);
 	}
 }
@@ -96,7 +95,6 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 
 void	ft_execute_heredoc(t_mini *mini)
 {
-	//mini->line->redirect->heredoc_fd = -1;
 	if (mini->line->redirect && mini->line->redirect->type == LIMITER)
 	{
 		ft_pipe_heredoc(mini, mini->line);
@@ -111,7 +109,7 @@ void	ft_execute_heredoc(t_mini *mini)
 			ft_close(mini->line->redirect->heredoc_fd);
 			mini->line->redirect->heredoc_fd = -1;
 		}
-    	ft_close(mini->line->redirect->heredoc_fd);
-    	mini->line->redirect->heredoc_fd = -1;
+		ft_close(mini->line->redirect->heredoc_fd);
+		mini->line->redirect->heredoc_fd = -1;
 	}
 }

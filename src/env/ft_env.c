@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/16 07:49:45 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 14:03:25 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ char	*ft_getenv(t_env *env, char *key)
 	return (ft_strdup(""));
 }
 
-
 void	ft_env_display(t_env *env)
 {
 	t_env	*lst;
@@ -45,7 +44,6 @@ void	ft_env_display(t_env *env)
 		}
 		lst = lst->next;
 	}
-//	lst->next = NULL;
 }
 
 char	**ft_split_env(char *str)
@@ -57,20 +55,15 @@ char	**ft_split_env(char *str)
 	equal_sign = ft_strchr(str, '=');
 	if (!equal_sign)
 		return (NULL);
-	
 	key_len = equal_sign - str;
-
-	result = malloc(sizeof(char *) * 3); // 2 strings + NULL
+	result = malloc(sizeof(char *) * 3);
 	if (!result)
 		return (NULL);
-
 	result[0] = ft_substr(str, 0, key_len);
 	result[1] = ft_strdup(equal_sign + 1);
 	result[2] = NULL;
-
 	return (result);
 }
-
 
 t_env	*ft_add_env_node(char *key, char *value)
 {
@@ -107,8 +100,6 @@ t_env	*ft_init_env(char **envp)
 	while (envp[i])
 	{
 		tmp = ft_split_env(envp[i]);
-		if (!tmp)
-			return (NULL);
 		if (env == NULL)
 			env = ft_add_env_node(tmp[0], tmp[1]);
 		else
@@ -121,5 +112,6 @@ t_env	*ft_init_env(char **envp)
 		i++;
 		free_matrix(tmp);
 	}
+	ft_shellvl(env);
 	return (env);
 }

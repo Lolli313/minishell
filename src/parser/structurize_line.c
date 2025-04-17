@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structurize_line.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:45:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/16 09:27:32 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 09:59:11 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	**make_command_into_array(t_token *token)
 		return (NULL);
 	current = find_command(token);
 	if (!current)
-    	return (NULL);
+		return (NULL);
 	array = ft_calloc(counter + 1, sizeof(char *));
 	if (current->str)
 		array[0] = ft_strdup(current->str);

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/16 07:06:06 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 14:13:50 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_execute_child(t_mini *mini, t_line *current)
+void	ft_piping(t_mini *mini, t_line *current)
 {
 	if (mini->pipe_in >= 0)
 	{
@@ -36,6 +36,11 @@ void	ft_execute_child(t_mini *mini, t_line *current)
 		ft_close(current->redirect->heredoc_fd);
 		current->redirect->heredoc_fd = -1;
 	}
+}
+
+void	ft_execute_child(t_mini *mini, t_line *current)
+{
+	ft_piping(mini, current);
 	mini->line = current;
 	ft_handle_redirections(mini);
 	if (mini->skibidi == 1)
@@ -49,13 +54,6 @@ void	ft_execute_child(t_mini *mini, t_line *current)
 	{
 		ft_handle_external(mini, current->command);
 		exit(mini->exit_status);
-	}
-		
-	if (mini->pipe_out >= 0)
-		ft_close(mini->pipe_out);
-	if (mini->pipe_in >= 0)
-	{
-		ft_close(mini->pipe_in);
 	}
 	exit(EXIT_SUCCESS);
 }
@@ -82,54 +80,35 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	}
 }
 
-static int ft_wait(t_mini *mini, pid_t *pids, int i)
+static void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
 {
+	int	pipefd[2];
 
-	int status;
-	int	j;
-
-	j = 0;
-
-	while (j < i)
-	{
-        waitpid(pids[j], &status, 0);
-        if (WIFEXITED(status))
-            mini->exit_status = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            mini->exit_status = 128 + WTERMSIG(status);
-		j++;
-	}
-	return (mini->exit_status);
+	if (pipe(pipefd) == -1)
+		exit(EXIT_FAILURE);
+	mini->pipe_out = pipefd[1];
+	mini->fd = pipefd[0];
+	ft_fork_and_exe(mini, current, pids, i++);
+	ft_close(pipefd[1]);
+	ft_supersafe_close(mini->pipe_in);
+	mini->pipe_in = pipefd[0];
 }
-
 
 void	ft_execute_pipeline(t_mini *mini)
 {
 	t_line	*current;
-	int		pipefd[2];
-	pid_t	pids[mini->nbr_of_pipes + 1];
-	int i = 0;
+	pid_t	*pids;
+	int		i;
 
+	i = 0;
+	pids = malloc(sizeof(pid_t) * mini->nbr_of_pipes + 1);
 	current = mini->line;
 	while (current)
 	{
 		if (current->redirect && current->redirect->type == LIMITER)
 			ft_pipe_heredoc(mini, current);
 		if (current->next)
-		{
-			if (pipe(pipefd) == -1)
-				exit(EXIT_FAILURE);
-			mini->pipe_out = pipefd[1];
-			mini->fd = pipefd[0];
-			ft_fork_and_exe(mini, current, pids, i++);
-			ft_close(pipefd[1]);
-			if (mini->pipe_in >= 0)
-			{
-				ft_close(mini->pipe_in);
-				mini->pipe_in = -1;
-			}
-			mini->pipe_in = pipefd[0];
-		}
+			ft_piped_cmd(mini, current, pids, i++);
 		else
 		{
 			mini->pipe_out = -1;
@@ -137,10 +116,7 @@ void	ft_execute_pipeline(t_mini *mini)
 		}
 		current = current->next;
 	}
-	if (mini->pipe_in >= 0)
-	{
-		ft_close(mini->pipe_in);
-		mini->pipe_in = -1;
-	}
+	ft_supersafe_close(mini->pipe_in);
 	ft_wait(mini, pids, i);
+	free(pids);
 }

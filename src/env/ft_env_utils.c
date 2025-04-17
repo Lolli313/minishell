@@ -3,30 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/10 18:31:20 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 11:54:13 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_find_key(t_env *env, char *key)
+void	ft_shellvl(t_env *env)
 {
-	t_env	*lst;
+	t_env	*lvl;
+	char	*value;
+	int		cur_lvl;
 
-	lst = env;
-	while (lst)
-	{
-		if (ft_strcmp(lst->key, key) == 0)
-			return (lst->value);
-		lst = lst->next;
-	}
-	return (NULL);
+	lvl = env;
+	value = ft_find_key(lvl, "SHLVL");
+	cur_lvl = ft_atoi(value);
+	cur_lvl++;
+	value = ft_itoa(cur_lvl);
+	ft_env_exists(env, "SHLVL", value);
+	free(value);
 }
 
-char	*ft_update_key(t_env *env, char *key, char *new_value)
+int	ft_env_exists(t_env *env, char *key, char *value)
 {
 	t_env	*lst;
 
@@ -35,61 +36,51 @@ char	*ft_update_key(t_env *env, char *key, char *new_value)
 	{
 		if (ft_strcmp(lst->key, key) == 0)
 		{
-			free(lst->value);
-			lst->value = ft_strdup(new_value);
-			return (NULL);
+			if (ft_strcmp(lst->value, value) != 0)
+			{
+				free(lst->value);
+				lst->value = ft_strdup(value);
+				return (1);
+			}
+			return (0);
 		}
 		lst = lst->next;
 	}
-	return (NULL);
+	return (0);
 }
 
-void	ft_unset_key(t_env *env, char *key)
+static int	ft_count_env(t_env *env)
 {
-	t_env	*lst;
-	t_env	*prev;
+	int	i;
 
-	lst = env;
-	prev = NULL;
-	while (lst)
+	i = 0;
+	while (env)
 	{
-		if (ft_strcmp(lst->key, key) == 0)
-		{
-			if (prev == NULL)
-				env = lst->next;
-			else
-				prev->next = lst->next;
-			free(lst->key);
-			free(lst->value);
-			free(lst);
-			return ;
-		}
-		prev = lst;
-		lst = lst->next;
+		i++;
+		env = env->next;
 	}
+	return (i);
+}
+
+static void	ft_join_keyvalue(t_env *env, char **env_array, int i)
+{
+	char	*temp;
+
+	env_array[i] = ft_strjoin(env->key, "=");
+	temp = env_array[i];
+	env_array[i] = ft_strjoin(temp, env->value);
+	free(temp);
 }
 
 char	**ft_env_to_array(t_env *env)
 {
 	char	**env_array;
-	char	*temp;
 	t_env	*cur;
-	int		count;
 	int		i;
 
-	count = 0;
 	cur = env;
-	while (cur)
-	{
-		count++;
-		cur = cur->next;
-	}
-	env_array = malloc(sizeof(char *) * (count + 1));
-	if (!env_array)
-	{
-		perror("malloc");
-		return (NULL);
-	}
+	i = ft_count_env(cur);
+	env_array = malloc(sizeof(char *) * (i + 1));
 	i = 0;
 	cur = env;
 	while (cur)
@@ -97,24 +88,9 @@ char	**ft_env_to_array(t_env *env)
 		if (cur->key)
 		{
 			if (cur->value)
-			{
-				env_array[i] = ft_strjoin(cur->key, "=");
-				temp = env_array[i];
-				env_array[i] = ft_strjoin(temp, cur->value);
-				free(temp);
-			}
+				ft_join_keyvalue(cur, env_array, i);
 			else
-			{
 				env_array[i] = ft_strjoin(cur->key, "=");
-			}
-			if (!env_array[i])
-			{
-				perror("malloc");
-				while (i > 0)
-					free(env_array[--i]);
-				free(env_array);
-				return (NULL);
-			}
 			i++;
 		}
 		cur = cur->next;

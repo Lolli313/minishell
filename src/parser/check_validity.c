@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_validity.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/16 11:34:00 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 10:19:54 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ bool	exit_validity(t_line *line)
 				&& char_flag == false)
 				char_flag = true;
 			else if (ft_isdigit(temp_cmd[1][i]) == 0)
-				return (ft_printf("Error: Numeric argument required\n")
-					, true);
+				return (ft_printf("Error: Numeric argument required\n"), true);
 			i++;
 		}
 		if (temp_cmd[2] != NULL)
@@ -70,18 +69,18 @@ bool	echo_validity(char *str)
 
 bool	export_validity(char *str)
 {
-    int	i;
+	int	i;
 
-    if (!str || !ft_isalpha(str[0]))
-        return (false);
-    i = 1;
-    while (str[i])
-    {
-        if (!ft_isalnum(str[i]) && str[i] != '_')
-            return (false);
-        i++;
-    }
-    return (true);
+	if (!str || !ft_isalpha(str[0]))
+		return (false);
+	i = 1;
+	while (str[i])
+	{
+		if (!ft_isalnum(str[i]) && str[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 bool	token_validity(t_mini *mini)
@@ -94,10 +93,10 @@ bool	token_validity(t_mini *mini)
 		if (current->next == NULL)
 		{
 			if (current->type == RE_INPUT || current->type == RE_OUTPUT
-                || current->type == RE_APPEND || current->type == HERE_DOC)
-                return (ft_error_syntax(mini, "newline"), false);
-            else if (current->type == PIPE)
-                return (ft_error_syntax(mini, current->str), false);
+				|| current->type == RE_APPEND || current->type == HERE_DOC)
+				return (ft_error_syntax(mini, "newline"), false);
+			else if (current->type == PIPE)
+				return (ft_error_syntax(mini, current->str), false);
 		}
 		else if ((current->type == PIPE && (current->next->type == PIPE
 					|| current->index == 0)) || (current->type == RE_INPUT

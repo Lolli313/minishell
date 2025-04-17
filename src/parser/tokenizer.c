@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:42:09 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/16 10:22:04 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 10:17:13 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 	return (token);
 }
 
-static void	remove_empty_tokens(t_mini *mini)
+void	remove_empty_tokens(t_mini *mini)
 {
-	t_token *curr = mini->token;
-	t_token *prev = NULL;
-	t_token *next;
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*next;
 
+	curr = mini->token;
+	prev = NULL;
 	while (curr)
 	{
 		next = curr->next;
@@ -65,7 +67,6 @@ static void	remove_empty_tokens(t_mini *mini)
 				prev->next = next;
 			else
 				mini->token = next;
-
 			if (next)
 				next->previous = prev;
 			free(curr->str);
@@ -75,13 +76,6 @@ static void	remove_empty_tokens(t_mini *mini)
 			prev = curr;
 		curr = next;
 	}
-	curr = mini->token;
-    int idx = 0;
-    while (curr)
-    {
-        curr->index = idx++;
-        curr = curr->next;
-    }
 }
 
 t_token	*tokenize_input(t_mini *mini, char *input)
@@ -108,7 +102,6 @@ t_token	*tokenize_input(t_mini *mini, char *input)
 		return (line_cleanup(mini), NULL);
 	token_relativity(mini->token);
 	expand_variables(mini);
-	remove_empty_tokens(mini);
 	if (token_validity(mini) == false)
 		return (line_cleanup(mini), NULL);
 	return (mini->token);

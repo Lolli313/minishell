@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/16 10:22:37 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 10:17:00 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	expand_variables(t_mini *mini)
 		}
 		current = current->next;
 	}
+	remove_empty_tokens(mini);
 }
 
 t_line	*structurize_line(t_mini *mini)
@@ -61,7 +62,6 @@ t_line	*structurize_line(t_mini *mini)
 	}
 	return (mini->line);
 }
-
 
 void	parse_string(t_mini *mini, char *line)
 {

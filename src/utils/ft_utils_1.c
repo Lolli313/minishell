@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/09 08:49:52 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 14:03:11 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,42 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-int	ft_contains_type(t_token *tokens, t_type type)
+char	*ft_find_key(t_env *env, char *key)
 {
-	while (tokens)
+	t_env	*lst;
+
+	lst = env;
+	while (lst)
 	{
-		if (tokens->type == type)
-			return (1);
-		tokens = tokens->next;
+		if (ft_strcmp(lst->key, key) == 0)
+			return (lst->value);
+		lst = lst->next;
 	}
+	return (NULL);
+}
+
+int	ft_has_equal(t_mini *mini, char *str)
+{
+	char	**temp;
+	char	*value;
+
+	temp = ft_split_env(str);
+	if (!temp[0] || !export_validity(temp[0]))
+	{
+		ft_putstr_fd("minishell: export: `", STDERR);
+		ft_putstr_fd(str, STDERR);
+		ft_putstr_fd("': not a valid identifier\n", STDERR);
+		free_matrix(temp);
+		return (1);
+	}
+	else
+	{
+		if (temp[1])
+			value = temp[1];
+		else
+			value = "";
+		ft_add_env_export(mini, temp[0], value);
+	}
+	free_matrix(temp);
 	return (0);
 }

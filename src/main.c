@@ -3,68 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/16 11:25:55 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/17 14:09:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*A command which exits with a zero exit status has succeeded.
-A non-zero exit status indicates failure. When a command
-terminates on a fatal signal whose number is N, Bash uses
-the value 128+N as the exit status. If a command is not found,
-the child process created to execute it returns a status of 127.
-If a command is found but is not executable, the return status
-is 126. In case of incorrect usagem the return status is 258.*/
-
-#include "minishell.h"
-
-
-void 	ft_error_syntax(t_mini *mini, char *token)
-{
-	ft_putstr_fd("minishell: ", STDERR);
-	ft_putstr_fd("syntax error near unexpected token ", STDERR);
-    ft_putstr_fd("`", STDERR);
-    ft_putstr_fd(token, STDERR);
-    ft_putstr_fd("'\n", STDERR);
-	mini->exit_status = 2;
-}
-
-static void	ft_print_error(t_mini *mini, char *line, char *message,
-		int exit_status)
-{
-	ft_putstr_fd("minishell: ", STDERR);
-	if (line)
-	{
-		ft_putstr_fd(line, STDERR);
-		ft_putstr_fd(": ", STDERR);
-	}
-	ft_putendl_fd(message, STDERR);
-	mini->exit_status = exit_status;
-}
-
-void	ft_error_msg(t_mini *mini)
-{
-	DIR	*dir;
-	char *cmd = mini->line->command[0];
-
-	if (!*cmd)
-		return;
-	if (!ft_strchr(cmd, '/'))
-		ft_print_error(mini, cmd, "command not found", 127);
-	else if ((dir = opendir(cmd)) != NULL)
-	{
-		closedir(dir);
-		ft_print_error(mini, cmd, "Is a directory", 126);
-	}
-	else if (access(cmd, F_OK) != 0)
-		ft_print_error(mini, cmd, "No such file or directory", 127);
-	else if (access(cmd, X_OK) != 0)
-		ft_print_error(mini, cmd, "Permission denied", 126);
-}
 
 void	ft_mini_init(t_mini *mini)
 {
@@ -80,31 +26,11 @@ void	ft_mini_init(t_mini *mini)
 	mini->skibidi = 0;
 }
 
-void	ft_single_command(t_mini *mini)
+static void	free_mini(t_mini *mini)
 {
-	ft_execute_heredoc(mini);
-	ft_handle_redirections(mini);
-	if (ft_is_builtin(mini->line->command))
-		ft_handle_builtin(mini);
-	else
-		ft_handle_external(mini, mini->line->command);
-	if (mini->skibidi == 1)
-		mini->exit_status = 1;
-}
-
-void	ft_execute_command(t_mini *mini)
-{
-	if (mini->nbr_of_pipes == 0)
-		ft_single_command(mini);
-	else
-		ft_execute_pipeline(mini);
-	ft_close(mini->fd_in);
-	ft_close(mini->fd_out);
-	ft_close(mini->pipe_in);
-	ft_close(mini->pipe_out);
-	mini->pipe_in = -1;
-	mini->pipe_out = -1;
-	ft_restore_std_fds(mini);
+	free_env(mini->env);
+	free_env(mini->export_env);
+	free(mini);
 }
 
 int	ft_parse_input(t_mini *mini)
@@ -112,7 +38,7 @@ int	ft_parse_input(t_mini *mini)
 	char	*input;
 
 	mini->interactive = 1;
-	// mini->interactive = isatty(STDIN);
+	//mini->interactive = isatty(STDIN);
 	if (mini->interactive)
 		input = readline(G "😭 minishell$ " RESET);
 	else
@@ -154,8 +80,6 @@ int	main(int ac, char **av, char **envp)
 	rl_clear_history();
 	ft_close(mini->stdin);
 	ft_close(mini->stdout);
-	free_env(mini->env);
-	free_env(mini->export_env);
-	free(mini);
+	free_mini(mini);
 	return (exit);
 }

@@ -5,54 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/06 11:26:39 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/14 14:14:41 by fmick            ###   ########.fr       */
+/*   Created: 2025/04/17 08:36:12 by fmick             #+#    #+#             */
+/*   Updated: 2025/04/17 11:23:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_redir_input(t_mini *mini, t_line *current, int prev_fd)
-{
-	if (prev_fd >= 0)
-	{
-		if (dup2(prev_fd, STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			exit(EXIT_FAILURE);
-		}
-		ft_close(prev_fd);
-	}
-	if (current->redirect && current->redirect->heredoc_fd != STDIN_FILENO)
-	{
-		if (current->redirect->type == LIMITER)
-		{
-			if (dup2(current->redirect->heredoc_fd, STDIN_FILENO) == -1)
-			{
-				perror("dup2 heredoc_fd");
-				exit(EXIT_FAILURE);
-			}
-		}
-		else
-			ft_handle_redirections(mini);
-		ft_close(current->redirect->heredoc_fd);
-		current->redirect->heredoc_fd = -1;
-	}
-}
-
-void	ft_redir_output(t_line *current, int pipe_fds[2])
-{
-	if (current->next)
-	{
-		ft_close(pipe_fds[0]);
-		if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2 pipe_fd -> STDOUT");
-			exit(EXIT_FAILURE);
-		}
-		ft_close(pipe_fds[1]);
-	}
-}
 
 void	ft_restore_std_fds(t_mini *mini)
 {
@@ -68,13 +26,40 @@ void	ft_close(int fd)
 	}
 }
 
+void	ft_supersafe_close(int fd)
+{
+	if (fd >= 0)
+	{
+		ft_close(fd);
+		fd = -1;
+	}
+}
+
 void	ft_safe_dup2(int oldfd, int newfd)
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
 		perror("dup2 failed");
-		 if (oldfd >= 0)
+		if (oldfd >= 0)
 			ft_close(oldfd);
 		exit(EXIT_FAILURE);
 	}
+}
+
+int	ft_wait(t_mini *mini, pid_t *pids, int i)
+{
+	int	status;
+	int	j;
+
+	j = 0;
+	while (j < i)
+	{
+		waitpid(pids[j], &status, 0);
+		if (WIFEXITED(status))
+			mini->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			mini->exit_status = 128 + WTERMSIG(status);
+		j++;
+	}
+	return (mini->exit_status);
 }

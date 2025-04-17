@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+         #
+#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/04/06 11:27:41 by Barmyh           ###   ########.fr        #
+#    Updated: 2025/04/17 14:02:27 by fmick            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,9 @@ SRC 		=	$(addprefix src/builtins/, ft_builtins.c \
 						ft_env_utils.c) \
 				$(addprefix src/exe/, ft_externals.c \
 						ft_heredoc.c \
-						ft_pipes_utils.c \
 						ft_pipes.c \
-						ft_redir.c) \
+						ft_redir.c \
+						ft_execute.c) \
 				$(addprefix src/parser/, check_operator.c \
 						check_validity.c \
 						cleanup.c \
@@ -34,13 +34,15 @@ SRC 		=	$(addprefix src/builtins/, ft_builtins.c \
 						extract_word.c \
 						find_functions.c \
 						ft_signals.c \
-						ft_utils_1.c \
 						handle_dollar.c \
 						handle_quotes.c \
 						parse.c \
 						structurize_line.c \
 						token_relativity.c \
 						tokenizer.c) \
+				$(addprefix src/utils/, ft_errors.c \
+						ft_pipes_utils.c \
+						ft_utils_1.c) \
 				$(addprefix src/, main.c) \
 
 
