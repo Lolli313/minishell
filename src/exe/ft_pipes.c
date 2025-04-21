@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 14:57:46 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/21 16:06:16 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_piping(t_mini *mini, t_line *current)
 {
+
+	(void)current;
 	if (mini->pipe_in >= 0)
 	{
 		ft_safe_dup2(mini->pipe_in, STDIN);
@@ -26,15 +28,6 @@ void	ft_piping(t_mini *mini, t_line *current)
 		ft_safe_dup2(mini->pipe_out, STDOUT);
 		ft_close(mini->pipe_out);
 		mini->pipe_out = -1;
-	}
-	if (current->redirect && current->redirect->heredoc_fd != STDIN)
-	{
-		if (current->redirect->type == LIMITER)
-			ft_safe_dup2(current->redirect->heredoc_fd, STDIN);
-		else
-			ft_handle_redirections(mini);
-		ft_close(current->redirect->heredoc_fd);
-		current->redirect->heredoc_fd = -1;
 	}
 }
 
@@ -104,9 +97,14 @@ void	ft_execute_pipeline(t_mini *mini)
 	pids = malloc(sizeof(pid_t) * mini->nbr_of_pipes + 1);
 	current = mini->line;
 	while (current)
+    {
+        if (current->redirect)
+            ft_pipe_heredoc(mini, current);
+        current = current->next;
+    }
+	current = mini->line;
+	while (current)
 	{
-		if (current->redirect && current->redirect->type == LIMITER)
-			ft_pipe_heredoc(mini, current);
 		if (current->next)
 			ft_piped_cmd(mini, current, pids, i++);
 		else

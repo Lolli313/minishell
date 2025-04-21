@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/17 09:50:18 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/21 14:47:55 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,13 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 	int		pipefd[2];
 	pid_t	pid;
 
-	(void)mini;
-	if (pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
+	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
 	{
-		close(pipefd[0]);
+		ft_close(pipefd[0]);
 		ft_heredoc_child(mini, redir, pipefd);
-		close(pipefd[1]);
+		ft_close(pipefd[1]);
 		exit(EXIT_SUCCESS);
 	}
 	else
@@ -80,13 +75,7 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 			if (redir->type == LIMITER)
 			{
 				ft_handle_heredoc(mini, redir);
-				if (redir->heredoc_fd == -1)
-				{
-					perror("Heredoc FD error");
-					exit(EXIT_FAILURE);
-				}
-				if (current->redirect->heredoc_fd == -1)
-					current->redirect->heredoc_fd = redir->heredoc_fd;
+				current->redirect->heredoc_fd = redir->heredoc_fd;
 			}
 			redir = redir->next;
 		}
@@ -95,21 +84,32 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 
 void	ft_execute_heredoc(t_mini *mini)
 {
-	if (mini->line->redirect && mini->line->redirect->type == LIMITER)
+	t_re *redir = mini->line->redirect;
+
+	while (redir)
 	{
-		ft_pipe_heredoc(mini, mini->line);
-		if (mini->line->redirect->heredoc_fd != -1)
+		if (redir->type == LIMITER)
 		{
-			if (dup2(mini->line->redirect->heredoc_fd, STDIN_FILENO) == -1)
-			{
-				perror("dup2 heredoc_fd -> STDIN");
-				close(mini->line->redirect->heredoc_fd);
-				exit(EXIT_FAILURE);
-			}
-			ft_close(mini->line->redirect->heredoc_fd);
-			mini->line->redirect->heredoc_fd = -1;
+			ft_handle_heredoc(mini, redir);
 		}
-		ft_close(mini->line->redirect->heredoc_fd);
-		mini->line->redirect->heredoc_fd = -1;
+		redir = redir->next;
 	}
 }
+
+/*
+void	ft_execute_heredoc(t_mini *mini)
+{
+	t_re *redir;
+
+	redir = mini->line->redirect;
+	if (redir && redir->type == LIMITER)
+	{
+		ft_pipe_heredoc(mini, mini->line);
+		if (redir->heredoc_fd != -1)
+		{
+			ft_safe_dup2(redir->heredoc_fd, STDIN);
+			ft_close(redir->heredoc_fd);
+			redir->heredoc_fd = -1;
+		}
+	}
+}*/

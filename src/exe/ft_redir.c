@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/17 08:43:18 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/21 15:33:23 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,12 @@ void	ft_handle_redirections(t_mini *mini)
 	{
 		if (mini->skibidi == 1)
 			break ;
-		if (redir->type == INFILE)
+		if (redir->type == LIMITER)
+		{
+			ft_safe_dup2(redir->heredoc_fd, STDIN);
+			ft_close(redir->heredoc_fd);
+		}
+		else if (redir->type == INFILE)
 			ft_handle_input_redir(mini, redir);
 		else if ((redir->type == OUTFILE || redir->type == APPEND_OUTFILE))
 			ft_handle_output_redir(mini, redir);
@@ -47,11 +52,12 @@ void	ft_handle_input_redir(t_mini *mini, t_re *redir)
 			ft_putstr_fd(redir->str, STDERR);
 			ft_putendl_fd(": Permission denied", STDERR);
 		}
-		mini->exit_status = 1;
 		mini->skibidi = 1;
-		return ;
+		mini->exit_status = 1;
+		//return ;
 	}
-	ft_safe_dup2(mini->fd_in, STDIN);
+	else
+		ft_safe_dup2(mini->fd_in, STDIN);
 }
 
 void	ft_handle_output_redir(t_mini *mini, t_re *redir)
