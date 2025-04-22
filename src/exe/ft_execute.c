@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 16:19:49 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:18:40 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_execute_pipeline(t_mini *mini)
 void	ft_single_command(t_mini *mini)
 {
 	ft_execute_heredoc(mini);
-	ft_handle_redirections(mini);
+	ft_handle_redirections(mini, mini->line);
 	if (ft_is_builtin(mini->line->command))
 		ft_handle_builtin(mini, mini->line);
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 16:20:13 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/22 18:35:09 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ int					ft_cd(char **av, t_env *env);
 int					ft_echo(char **av);
 void				ft_exit(t_mini *mini, char **cmd);
 t_env				*ft_init_export_env_(char **envp);
+void				ft_append_env_node(t_env **head, t_env *new_node);
 int					ft_export_env(t_mini *mini, char **str);
 void				ft_add_env_export(t_mini *mini, char *key, char *value);
 int					ft_export(t_mini *mini, char **str);
@@ -174,7 +175,7 @@ void				ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids,
 						int i);
 
 // redirections
-void				ft_handle_redirections(t_mini *mini);
+void				ft_handle_redirections(t_mini *mini, t_line *current);
 void				ft_handle_input_redir(t_mini *mini, t_re *redir);
 void				ft_handle_output_redir(t_mini *mini, t_re *redir);
 

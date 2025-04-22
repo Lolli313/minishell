@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/22 08:51:25 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 16:18:38 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_handle_redirections(t_mini *mini)
+void	ft_handle_redirections(t_mini *mini, t_line *current)
 {
 	t_re	*redir;
 
-	redir = mini->line->redirect;
+	redir = current->redirect;
 	while (redir)
 	{
 		if (mini->skibidi == 1)
