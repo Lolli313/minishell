@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/22 11:26:31 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 12:05:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ bool	echo_validity(char *str)
 	i = 0;
 	first = true;
 	if (str[1] == 0)
-		return false;
+		return (false);
 	while (str[i])
 	{
 		if (first == true)

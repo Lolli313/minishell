@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:34:19 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 12:18:50 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,23 @@ char	*check_external(t_mini *mini, t_env *env, char *command)
 	return (NULL);
 }
 
+static int	ft_exec_child(t_mini *mini, char *temp, char **args, char **envp)
+{
+	if (execve(temp, args, envp) == -1)
+	{
+		ft_error_msg(mini);
+	}
+	return (0);
+}
+
+static int	ft_exec_parent(t_mini *mini, pid_t cpid)
+{
+	g_skip = true;
+	ft_wait(mini, &cpid, 1);
+	g_skip = false;
+	return (0);
+}
+
 int	ft_handle_external(t_mini *mini, char **args)
 {
 	pid_t	cpid;
@@ -51,7 +68,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 	if (!temp)
 	{
 		ft_error_msg(mini);
-		return 0;
+		return (0);
 	}
 	envp = ft_env_to_array(mini->env);
 	if (mini->skibidi == 1)
@@ -60,16 +77,9 @@ int	ft_handle_external(t_mini *mini, char **args)
 	if (cpid < 0)
 		exit(1);
 	if (cpid == 0)
-	{
-		if (execve(temp, args, envp) == -1)
-			ft_error_msg(mini);
-	}
+		ft_exec_child(mini, temp, args, envp);
 	else
-	{
-		g_skip = true;
-		ft_wait(mini, &cpid, 1);
-		g_skip = false;
-	}
+		ft_exec_parent(mini, cpid);
 	free_matrix(envp);
 	free(temp);
 	return (0);

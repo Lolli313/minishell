@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 14:38:47 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 15:30:40 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_export_env(t_mini *mini, char **str)
 		cur = mini->export_env;
 		while (cur)
 		{
-			if (cur->value == NULL || cur->value[0] == '\0')
+			if (cur->value == NULL)
 				printf("export %s\n", cur->key);
 			else
 				printf("export %s=\"%s\"\n", cur->key, cur->value);
@@ -79,25 +79,41 @@ static void	ft_export_no_value(t_mini *mini, char *key)
 
 void	ft_add_env_export(t_mini *mini, char *key, char *value)
 {
+	t_env	*export_node;
 	t_env	*last;
 
+	// Update or add in the main env
 	if (ft_env_exists(mini->env, key, value) == 0)
 	{
 		last = mini->env;
-		while (last->next)
-			last = last->next;
-		last->next = ft_add_env_node(key, value);
-	}
-	if (!ft_find_key(mini->export_env, key))
-	{
-		last = mini->export_env;
 		while (last && last->next)
 			last = last->next;
 		if (last)
 			last->next = ft_add_env_node(key, value);
 		else
-			mini->export_env = ft_add_env_node(key, value);
+			mini->env = ft_add_env_node(key, value);
 	}
+	// Now check if the key exists in export_env and update it
+	export_node = mini->export_env;
+	while (export_node)
+	{
+		if (ft_strcmp(export_node->key, key) == 0)
+		{
+			// Key found, update value
+			free(export_node->value);
+			export_node->value = ft_strdup(value);
+			return ;
+		}
+		export_node = export_node->next;
+	}
+	// If not found, add it
+	last = mini->export_env;
+	while (last && last->next)
+		last = last->next;
+	if (last)
+		last->next = ft_add_env_node(key, value);
+	else
+		mini->export_env = ft_add_env_node(key, value);
 }
 
 int	ft_export(t_mini *mini, char **str)
