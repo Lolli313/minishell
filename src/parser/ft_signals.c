@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 10:27:55 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 12:05:34 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_handle_sigint(int signal)
 		rl_replace_line("", 0);
 		if (!g_skip)
 		{
-		rl_redisplay();
+			rl_redisplay();
 		}
 	}
 	else if (signal == SIGINT && g_skip)

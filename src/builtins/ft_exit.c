@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:48:03 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:18:28 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 12:05:41 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,28 @@ static int	ft_strisnum(char *str)
 	return (1);
 }
 
-void	ft_exit(t_mini *mini, char **cmd)
+static void	ft_exit_util(t_mini *mini, char **cmd)
 {
 	int	exit;
 
+	if (ft_strisnum(cmd[1]) == 0)
+	{
+		ft_putstr_fd("minishell: exit: ", STDERR);
+		ft_putstr_fd(cmd[1], STDERR);
+		ft_putstr_fd(": numeric argument required\n", STDERR);
+		mini->exit_status = 2;
+		mini->exit_flag = 0;
+	}
+	else
+	{
+		exit = ft_atoi(cmd[1]);
+		mini->exit_status = (unsigned char)(exit % 256);
+		mini->exit_flag = 0;
+	}
+}
+
+void	ft_exit(t_mini *mini, char **cmd)
+{
 	printf("exit\n");
 	if (cmd[1] && cmd[2])
 	{
@@ -50,20 +68,7 @@ void	ft_exit(t_mini *mini, char **cmd)
 	}
 	else if (cmd[1])
 	{
-		if (ft_strisnum(cmd[1]) == 0)
-		{
-			ft_putstr_fd("minishell: exit: ", STDERR);
-			ft_putstr_fd(cmd[1], STDERR);
-			ft_putstr_fd(": numeric argument required\n", STDERR);
-			mini->exit_status = 2;
-			mini->exit_flag = 0;
-		}
-		else
-		{
-			exit = ft_atoi(cmd[1]);
-			mini->exit_status = (unsigned char)(exit % 256);
-			mini->exit_flag = 0;
-		}
+		ft_exit_util(mini, cmd);
 	}
 	else
 	{

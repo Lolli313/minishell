@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 14:03:25 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:15:12 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,21 @@ char	**ft_split_env(char *str)
 	char	*equal_sign;
 	size_t	key_len;
 
-	equal_sign = ft_strchr(str, '=');
-	if (!equal_sign)
-		return (NULL);
-	key_len = equal_sign - str;
 	result = malloc(sizeof(char *) * 3);
 	if (!result)
 		return (NULL);
-	result[0] = ft_substr(str, 0, key_len);
-	result[1] = ft_strdup(equal_sign + 1);
+	equal_sign = ft_strchr(str, '=');
+	if (!equal_sign)
+	{
+		result[0] = ft_strdup(str);
+		result[1] = NULL;
+	}
+	else
+	{
+		key_len = equal_sign - str;
+		result[0] = ft_substr(str, 0, key_len);
+		result[1] = ft_strdup(equal_sign + 1);
+	}
 	result[2] = NULL;
 	return (result);
 }
@@ -76,7 +82,7 @@ t_env	*ft_add_env_node(char *key, char *value)
 	if (value != NULL)
 		env->value = ft_strdup(value);
 	else
-		env->value = ft_strdup("");
+		env->value = NULL;
 	env->next = NULL;
 	if (!env->key || !env->value)
 	{
