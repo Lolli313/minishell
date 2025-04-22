@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/21 16:06:16 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:37:08 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	ft_piping(t_mini *mini, t_line *current)
 {
-
 	(void)current;
 	if (mini->pipe_in >= 0)
 	{
@@ -73,7 +72,7 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	}
 }
 
-static void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
+void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
 {
 	int	pipefd[2];
 
@@ -85,36 +84,4 @@ static void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
 	ft_close(pipefd[1]);
 	ft_supersafe_close(mini->pipe_in);
 	mini->pipe_in = pipefd[0];
-}
-
-void	ft_execute_pipeline(t_mini *mini)
-{
-	t_line	*current;
-	pid_t	*pids;
-	int		i;
-
-	i = 0;
-	pids = malloc(sizeof(pid_t) * mini->nbr_of_pipes + 1);
-	current = mini->line;
-	while (current)
-    {
-        if (current->redirect)
-            ft_pipe_heredoc(mini, current);
-        current = current->next;
-    }
-	current = mini->line;
-	while (current)
-	{
-		if (current->next)
-			ft_piped_cmd(mini, current, pids, i++);
-		else
-		{
-			mini->pipe_out = -1;
-			ft_fork_and_exe(mini, current, pids, i++);
-		}
-		current = current->next;
-	}
-	ft_supersafe_close(mini->pipe_in);
-	ft_wait(mini, pids, i);
-	free(pids);
 }

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 13:40:47 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 08:50:57 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,6 @@ int	ft_update_value(t_env *env, char *key, char *value)
 	else
 		env = new_var;
 	return (0);
-}
-
-static void	ft_update_pwd(t_env *env, char *newpath)
-{
-	char	*oldpwd;
-
-	oldpwd = ft_find_key(env, "PWD");
-	if (oldpwd)
-		ft_update_value(env, "OLDPWD", oldpwd);
-	ft_update_value(env, "PWD", newpath);
 }
 
 static char	*ft_handle_relative(char *pwd, char *path)
@@ -94,18 +84,21 @@ static char	*ft_get_newpwd(t_env *env, char *path)
 static int	ft_change_dir(t_env *env, char *path, int print_dir)
 {
 	char	*newpwd;
+	char	*oldpwd;
 
-	if (chdir(path) == 0)
-	{
-		newpwd = ft_get_newpwd(env, path);
-		if (print_dir)
-			ft_printf("%s\n", newpwd);
-		ft_update_pwd(env, newpwd);
-		free(newpwd);
-		return (0);
-	}
-	else
+	if (chdir(path) != 0)
 		return (ft_cd_error(path, 3));
+	newpwd = ft_get_newpwd(env, path);
+	if (!newpwd)
+		return (ft_cd_error(path, 3));
+	if (print_dir)
+		ft_printf("%s\n", newpwd);
+	oldpwd = ft_find_key(env, "PWD");
+	if (oldpwd)
+		ft_update_value(env, "OLDPWD", oldpwd);
+	ft_update_value(env, "PWD", newpwd);
+	free(newpwd);
+	return (0);
 }
 
 int	ft_cd(char **av, t_env *env)

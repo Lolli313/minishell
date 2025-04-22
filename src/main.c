@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/17 14:09:05 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 11:18:35 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ void	ft_mini_init(t_mini *mini)
 	mini->skibidi = 0;
 }
 
-static void	free_mini(t_mini *mini)
-{
-	free_env(mini->env);
-	free_env(mini->export_env);
-	free(mini);
-}
-
 int	ft_parse_input(t_mini *mini)
 {
 	char	*input;
@@ -40,9 +33,13 @@ int	ft_parse_input(t_mini *mini)
 	mini->interactive = 1;
 	//mini->interactive = isatty(STDIN);
 	if (mini->interactive)
+	{
 		input = readline(G "😭 minishell$ " RESET);
+	}
 	else
+	{
 		input = get_next_line(STDIN);
+	}
 	if (!input)
 	{
 		if (mini->interactive)
@@ -72,8 +69,10 @@ int	main(int ac, char **av, char **envp)
 		handle_signals();
 		if (!ft_parse_input(mini))
 			break ;
+		g_skip = true;
 		if (mini->line)
 			ft_execute_command(mini);
+		g_skip = false;
 		line_cleanup(mini);
 	}
 	exit = mini->exit_status;

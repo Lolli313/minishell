@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/17 10:19:54 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 11:26:31 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ bool	echo_validity(char *str)
 
 	i = 0;
 	first = true;
+	if (str[1] == 0)
+		return false;
 	while (str[i])
 	{
 		if (first == true)
@@ -105,12 +107,7 @@ bool	token_validity(t_mini *mini)
 			|| (current->type == RE_APPEND
 				&& current->next->type != APPEND_OUTFILE)
 			|| (current->type == HERE_DOC && current->next->type != LIMITER))
-		{
-			if (current->type == PIPE && current->index == 0)
-				return (ft_error_syntax(mini, current->str), false);
-			else
-				return (ft_error_syntax(mini, current->next->str), false);
-		}
+			return (ft_handle_token_error(mini, current));
 		current = current->next;
 	}
 	return (true);

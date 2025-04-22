@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:48:03 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 09:17:09 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 11:18:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,34 @@ void	ft_exit(t_mini *mini, char **cmd)
 {
 	int	exit;
 
+	printf("exit\n");
 	if (cmd[1] && cmd[2])
 	{
-		mini->exit_status = 1;
+		if (ft_strisnum(cmd[1]) == 0)
+		{
+			mini->exit_status = 2;
+			mini->exit_flag = 0;
+		}
+		else
+			mini->exit_status = 1;
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR);
-	}
-	else if (cmd[1] && ft_strisnum(cmd[1]) == 0)
-	{
-		mini->exit_status = 2;
-		ft_putstr_fd("minishell: exit: ", STDERR);
-		ft_putstr_fd(cmd[1], STDERR);
-		ft_putstr_fd(": numeric argument required\n", STDERR);
 	}
 	else if (cmd[1])
 	{
-		exit = ft_atoi(cmd[1]);
-		mini->exit_status = (unsigned char)(exit % 256);
-		mini->exit_flag = 0;
+		if (ft_strisnum(cmd[1]) == 0)
+		{
+			ft_putstr_fd("minishell: exit: ", STDERR);
+			ft_putstr_fd(cmd[1], STDERR);
+			ft_putstr_fd(": numeric argument required\n", STDERR);
+			mini->exit_status = 2;
+			mini->exit_flag = 0;
+		}
+		else
+		{
+			exit = ft_atoi(cmd[1]);
+			mini->exit_status = (unsigned char)(exit % 256);
+			mini->exit_flag = 0;
+		}
 	}
 	else
 	{

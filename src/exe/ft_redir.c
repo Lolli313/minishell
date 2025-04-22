@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 12:26:21 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/21 15:33:23 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 08:51:25 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	ft_handle_input_redir(t_mini *mini, t_re *redir)
 		}
 		mini->skibidi = 1;
 		mini->exit_status = 1;
-		//return ;
 	}
 	else
 		ft_safe_dup2(mini->fd_in, STDIN);

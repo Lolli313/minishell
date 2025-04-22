@@ -3,14 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/21 14:41:14 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:44:54 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_hd(t_mini *mini)
+{
+	t_line	*current;
+
+	current = mini->line;
+	while (current)
+	{
+		if (current->redirect)
+			ft_pipe_heredoc(mini, current);
+		current = current->next;
+	}
+}
+
+void	ft_execute_pipeline(t_mini *mini)
+{
+	t_line	*current;
+	pid_t	*pids;
+	int		i;
+
+	i = 0;
+	pids = malloc(sizeof(pid_t) * (mini->nbr_of_pipes + 1));
+	ft_hd(mini);
+	current = mini->line;
+	while (current)
+	{
+		if (current->next)
+			ft_piped_cmd(mini, current, pids, i++);
+		else
+		{
+			mini->pipe_out = -1;
+			ft_fork_and_exe(mini, current, pids, i++);
+		}
+		current = current->next;
+	}
+	ft_supersafe_close(mini->pipe_in);
+	ft_wait(mini, pids, i);
+	free(pids);
+}
 
 void	ft_single_command(t_mini *mini)
 {

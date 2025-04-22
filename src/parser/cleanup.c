@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/22 11:55:53 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/03/22 11:55:53 by aakerblo         ###   ########.fr       */
+/*   Created: 2025/04/22 10:24:03 by fmick             #+#    #+#             */
+/*   Updated: 2025/04/22 10:24:03 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,11 @@ void	line_cleanup(t_mini *mini)
 		free(temp_line);
 	}
 	mini->line = NULL;
+}
+
+void	free_mini(t_mini *mini)
+{
+	free_env(mini->env);
+	free_env(mini->export_env);
+	free(mini);
 }

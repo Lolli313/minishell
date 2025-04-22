@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 15:37:23 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:34:19 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,13 @@ int	ft_handle_external(t_mini *mini, char **args)
 	char	*temp;
 	char	**envp;
 
-	envp = ft_env_to_array(mini->env);
 	temp = check_external(mini, mini->env, mini->line->command[0]);
+	if (!temp)
+	{
+		ft_error_msg(mini);
+		return 0;
+	}
+	envp = ft_env_to_array(mini->env);
 	if (mini->skibidi == 1)
 		return (mini->exit_status);
 	cpid = fork();
@@ -57,10 +62,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 	if (cpid == 0)
 	{
 		if (execve(temp, args, envp) == -1)
-		{
 			ft_error_msg(mini);
-			exit(mini->exit_status);
-		}
 	}
 	else
 	{

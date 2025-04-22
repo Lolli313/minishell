@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 14:03:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 09:15:29 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,12 @@ int	ft_has_equal(t_mini *mini, char *str)
 	}
 	free_matrix(temp);
 	return (0);
+}
+
+bool	ft_handle_token_error(t_mini *mini, t_token *current)
+{
+	if (current->type == PIPE && current->index == 0)
+		return (ft_error_syntax(mini, current->str), false);
+	else
+		return (ft_error_syntax(mini, current->next->str), false);
 }

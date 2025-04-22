@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/16 11:20:20 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 09:22:08 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// handle builtin commands (boolean expression, return true1 or false0)
 int	ft_is_builtin(char **av)
 {
 	if (!av || !av[0])
@@ -34,7 +33,6 @@ int	ft_is_builtin(char **av)
 	return (0);
 }
 
-// builtins execution
 void	ft_handle_builtin(t_mini *mini)
 {
 	t_env	*env;

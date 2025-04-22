@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/21 14:47:55 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:52:58 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,9 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 
 void	ft_execute_heredoc(t_mini *mini)
 {
-	t_re *redir = mini->line->redirect;
+	t_re	*redir;
 
+	redir = mini->line->redirect;
 	while (redir)
 	{
 		if (redir->type == LIMITER)
@@ -95,21 +96,3 @@ void	ft_execute_heredoc(t_mini *mini)
 		redir = redir->next;
 	}
 }
-
-/*
-void	ft_execute_heredoc(t_mini *mini)
-{
-	t_re *redir;
-
-	redir = mini->line->redirect;
-	if (redir && redir->type == LIMITER)
-	{
-		ft_pipe_heredoc(mini, mini->line);
-		if (redir->heredoc_fd != -1)
-		{
-			ft_safe_dup2(redir->heredoc_fd, STDIN);
-			ft_close(redir->heredoc_fd);
-			redir->heredoc_fd = -1;
-		}
-	}
-}*/
