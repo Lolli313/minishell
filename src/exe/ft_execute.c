@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:44:54 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:23:32 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	ft_single_command(t_mini *mini)
 	ft_execute_heredoc(mini);
 	ft_handle_redirections(mini);
 	if (ft_is_builtin(mini->line->command))
-		ft_handle_builtin(mini);
+		ft_handle_builtin(mini, mini->line);
 	else
 		ft_handle_external(mini, mini->line->command);
 	if (mini->skibidi == 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_builtins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:05:17 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/22 09:22:08 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:21:30 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ int	ft_is_builtin(char **av)
 	return (0);
 }
 
-void	ft_handle_builtin(t_mini *mini)
+void	ft_handle_builtin(t_mini *mini, t_line *current)
 {
 	t_env	*env;
 	char	**cmd;
 
-	cmd = mini->line->command;
+	cmd = current->command;
 	env = mini->env;
 	if (ft_strncmp(cmd[0], "pwd", 3) == 0)
 		mini->exit_status = ft_pwd(env);

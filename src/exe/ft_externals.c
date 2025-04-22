@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:34:19 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:04:34 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 	char	*temp;
 	char	**envp;
 
-	temp = check_external(mini, mini->env, mini->line->command[0]);
+	temp = check_external(mini, mini->env, args[0]);
 	if (!temp)
 	{
 		ft_error_msg(mini);

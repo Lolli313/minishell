@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:42:09 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/17 10:17:13 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 14:26:21 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_token	*add_node_token(t_token *token, char *str, t_type type)
 	new_node = malloc(sizeof(t_token));
 	if (!new_node)
 		return (0);
-	new_node->str = str;
+	new_node->str = ft_strdup(str);
 	new_node->type = type;
 	new_node->next = NULL;
 	if (token == NULL)
@@ -96,6 +96,7 @@ t_token	*tokenize_input(t_mini *mini, char *input)
 			if (word == NULL)
 				return (line_cleanup(mini), NULL);
 			mini->token = add_node_token(mini->token, word, COMMAND);
+			free(word);
 		}
 	}
 	if (mini->token == NULL)

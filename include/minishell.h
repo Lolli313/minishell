@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:37:07 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:22:19 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ extern bool			g_skip;
 
 // builtins
 int					ft_is_builtin(char **av);
-void				ft_handle_builtin(t_mini *mini);
+void				ft_handle_builtin(t_mini *mini, t_line *current);
 int					ft_update_value(t_env *env, char *key, char *value);
 int					ft_cd(char **av, t_env *env);
 int					ft_echo(char **av);
@@ -167,7 +167,7 @@ void				ft_execute_heredoc(t_mini *mini);
 
 // pipes
 void				ft_piping(t_mini *mini, t_line *current);
-void				ft_execute_child(t_mini *mini, t_line *current);
+int					ft_execute_child(t_mini *mini, t_line *current, pid_t *pids);
 void				ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids,
 						int i);
 void				ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids,

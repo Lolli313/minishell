@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:37:08 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:22:46 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,30 @@ void	ft_piping(t_mini *mini, t_line *current)
 	}
 }
 
-void	ft_execute_child(t_mini *mini, t_line *current)
+int	ft_execute_child(t_mini *mini, t_line *current, pid_t *pids)
 {
+	int	exit_status;
 	ft_piping(mini, current);
-	mini->line = current;
 	ft_handle_redirections(mini);
 	if (mini->skibidi == 1)
 		exit(mini->exit_status);
 	if (ft_is_builtin(current->command))
 	{
-		ft_handle_builtin(mini);
-		exit(mini->exit_status);
+		ft_handle_builtin(mini, current);
+		line_cleanup(mini);
+		free(pids);
+		exit_status = mini->exit_status;
+		free_mini(mini);
+		exit(exit_status);
 	}
 	else
 	{
 		ft_handle_external(mini, current->command);
-		exit(mini->exit_status);
+		line_cleanup(mini);
+		free(pids);
+		exit_status = mini->exit_status;
+		free_mini(mini);
+		exit(exit_status);
 	}
 	exit(EXIT_SUCCESS);
 }
@@ -64,7 +72,8 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	{
 		ft_close(mini->stdin);
 		ft_close(mini->stdout);
-		ft_execute_child(mini, current);
+		mini->exit_status = ft_execute_child(mini, current, pids);
+		free(pids);
 	}
 	else
 	{

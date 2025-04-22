@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_operator.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:39:17 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/01 11:24:34 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/22 14:28:52 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,6 @@ t_token	*if_operator(t_token *token, char *input, int *i)
 		op_len = 2;
 		op[2] = '\0';
 	}
-	token = add_node_token(token, ft_strdup(op), get_operator_type(op, op_len));
+	token = add_node_token(token, op, get_operator_type(op, op_len));
 	return (token);
 }
