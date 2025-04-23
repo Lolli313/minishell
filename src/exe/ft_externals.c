@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 14:57:41 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 16:48:29 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ char	*check_external(t_mini *mini, t_env *env, char *command)
 
 static int	ft_exec_child(t_mini *mini, char *temp, char **args, char **envp)
 {
+	handle_function_signals();
 	if (execve(temp, args, envp) == -1)
 	{
 		ft_error_msg(mini);
@@ -50,11 +51,39 @@ static int	ft_exec_child(t_mini *mini, char *temp, char **args, char **envp)
 	return (0);
 }
 
+int	ft_wait2(t_mini *mini, pid_t *pids, int i)
+{
+	int	status;
+	int	j;
+
+	j = 0;
+	while (j < i)
+	{
+		waitpid(pids[j], &status, 0);
+		if (WIFEXITED(status))
+			mini->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+		{
+			if (WTERMSIG(status) == SIGQUIT)
+			{
+				ft_putstr_fd("Quit (core dumped)\n", 2);
+				mini->exit_status = 131;
+			}
+			else if (WTERMSIG(status) == SIGINT)
+				mini->exit_status = 130;
+			else
+				mini->exit_status = 128 + WTERMSIG(status);
+		}
+		j++;
+	}
+	return (mini->exit_status);
+}
+
 static int	ft_exec_parent(t_mini *mini, pid_t cpid)
 {
-	g_skip = true;
-	ft_wait(mini, &cpid, 1);
-	g_skip = false;
+	if (g_skip == false)
+		printf("Quit (core dumped\n)");
+	ft_wait2(mini, &cpid, 1);
 	return (0);
 }
 
@@ -82,6 +111,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 		ft_exec_child(mini, temp, args, envp);
 	else
 		ft_exec_parent(mini, cpid);
+	handle_signals();
 	free_matrix(envp);
 	free(temp);
 	return (0);

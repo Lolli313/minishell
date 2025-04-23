@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/23 13:55:12 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 16:50:29 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 	int		line_count;
 
 	line_count = 1;
+	handle_heredoc_sig();
+	g_skip = true;
 	ft_close(pipefd[0]);
 	while (1)
 	{
@@ -73,6 +75,7 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 		redir->heredoc_fd = pipefd[0];
 		ft_close(pipefd[1]);
 		waitpid(pid, NULL, 0);
+		handle_signals();
 	}
 }
 

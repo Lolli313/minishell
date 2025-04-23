@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 12:24:00 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 16:53:34 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,8 @@ void				ft_handle_output_redir(t_mini *mini, t_re *redir);
 void				ft_handle_sigint(int signal);
 void				ft_handle_sigquit(int signals);
 void				handle_signals(void);
+void				handle_heredoc_sig(void);
+void				handle_function_signals(void);
 
 // utils
 int					ft_strcmp(const char *s1, const char *s2);
