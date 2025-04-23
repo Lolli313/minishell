@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 12:05:34 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 12:31:44 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 bool	g_skip = false;
 
-void	ft_handle_sigint(int signal)
+void	ft_handle_sigint(int signals)
 {
-	if (signal == SIGINT)
+	if (signals == SIGINT)
 	{
 		printf("\n");
 		rl_on_new_line();
@@ -26,14 +26,29 @@ void	ft_handle_sigint(int signal)
 			rl_redisplay();
 		}
 	}
-	else if (signal == SIGINT && g_skip)
+	else if (signals == SIGINT && g_skip == true)
 	{
+		g_skip = false;
 		printf("\n");
+	}
+}
+
+void	ft_handle_sigquit(int signals)
+{
+	if (signals == SIGQUIT && g_skip)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		printf("Quit (core dumped)\n");
+		return ;
+	}
+	else if (signals == SIGQUIT)
+	{
+		signal(SIGQUIT, SIG_IGN);
 	}
 }
 
 void	handle_signals(void)
 {
 	signal(SIGINT, &ft_handle_sigint);
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, &ft_handle_sigquit);
 }

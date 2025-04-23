@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:42:09 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/22 14:26:21 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:55:42 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,12 @@ void	remove_empty_tokens(t_mini *mini)
 	}
 }
 
+void	skibidi_function(t_mini *mini)
+{
+	token_relativity(mini->token);
+	expand_variables(mini);
+}
+
 t_token	*tokenize_input(t_mini *mini, char *input)
 {
 	int		i;
@@ -101,8 +107,7 @@ t_token	*tokenize_input(t_mini *mini, char *input)
 	}
 	if (mini->token == NULL)
 		return (line_cleanup(mini), NULL);
-	token_relativity(mini->token);
-	expand_variables(mini);
+	skibidi_function(mini);
 	if (token_validity(mini) == false)
 		return (line_cleanup(mini), NULL);
 	return (mini->token);

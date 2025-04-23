@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:00:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/14 08:48:26 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 12:34:39 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,12 @@ char	*handle_exit_code(t_mini *mini, char *before, char *org, int *pos)
 	result = ft_itoa(mini->exit_status);
 	len = ft_strlen(result);
 	temp = ft_strjoin(before, result);
+	free(before);
 	free(result);
 	result = ft_strjoin(temp, org + *pos + 2);
 	*pos += len;
 	free(temp);
+	free(org);
 	return (result);
 }
 

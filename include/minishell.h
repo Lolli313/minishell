@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 09:06:18 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 12:24:00 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void				ft_handle_output_redir(t_mini *mini, t_re *redir);
 
 // signal
 void				ft_handle_sigint(int signal);
+void				ft_handle_sigquit(int signals);
 void				handle_signals(void);
 
 // utils
@@ -252,6 +253,7 @@ t_token				*find_last_token(t_token *token);
 t_token				*add_node_token(t_token *token, char *str, t_type type);
 void				remove_empty_tokens(t_mini *mini);
 t_token				*tokenize_input(t_mini *mini, char *input);
+void				skibidi_function(t_mini *mini);
 
 // main
 void				ft_mini_init(t_mini *mini);
