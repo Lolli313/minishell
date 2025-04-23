@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 19:25:32 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/23 08:55:43 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,31 +46,6 @@ void	ft_env_display(t_env *env)
 	}
 }
 
-char	**ft_split_env(char *str)
-{
-	char	**result;
-	char	*equal_sign;
-	size_t	key_len;
-
-	result = malloc(sizeof(char *) * 3);
-	if (!result)
-		return (NULL);
-	equal_sign = ft_strchr(str, '=');
-	if (!equal_sign)
-	{
-		result[0] = ft_strdup(str);
-		result[1] = NULL;
-	}
-	else
-	{
-		key_len = equal_sign - str;
-		result[0] = ft_substr(str, 0, key_len);
-		result[1] = ft_strdup(equal_sign + 1);
-	}
-	result[2] = NULL;
-	return (result);
-}
-
 t_env	*ft_add_env_node(char *key, char *value)
 {
 	t_env	*env;
@@ -84,7 +59,7 @@ t_env	*ft_add_env_node(char *key, char *value)
 	else
 		env->value = NULL;
 	env->next = NULL;
-	if (!env->key || !env->value)
+	if (!env->key)
 	{
 		free(env->key);
 		free(env->value);

@@ -1,1 +1,11 @@
-wrvioj
+include
+libft
+Makefile
+minishell
+minishell_tester
+obj
+pipe_in
+readline.supp
+src
+test_files
+test.txt

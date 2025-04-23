@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 15:24:44 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 09:10:44 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,34 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
+void	update_or_add_env(t_env **list, char *key, char *value)
+{
+	t_env	*curr;
+	t_env	*new_node;
+
+	curr = *list;
+	while (curr)
+	{
+		if (ft_strcmp(curr->key, key) == 0)
+		{
+			free(curr->value);
+			curr->value = ft_strdup(value);
+			return ;
+		}
+		curr = curr->next;
+	}
+	new_node = ft_add_env_node(key, value);
+	if (*list == NULL)
+		*list = new_node;
+	else
+	{
+		curr = *list;
+		while (curr->next)
+			curr = curr->next;
+		curr->next = new_node;
+	}
+}
+
 char	*ft_find_key(t_env *env, char *key)
 {
 	t_env	*lst;
@@ -40,36 +68,35 @@ char	*ft_find_key(t_env *env, char *key)
 	return (NULL);
 }
 
-int	ft_has_equal(t_mini *mini, char *str)
+char	**ft_split_env(char *str)
 {
-	char	**temp;
-	char	*value;
+	char	**result;
+	char	*equal_sign;
+	size_t	key_len;
 
-	temp = ft_split_env(str);
-	if (!temp[0] || !export_validity(temp[0]))
+	result = malloc(sizeof(char *) * 3);
+	if (!result)
+		return (NULL);
+	equal_sign = ft_strchr(str, '=');
+	if (!equal_sign)
 	{
-		ft_putstr_fd("minishell: export: `", STDERR);
-		ft_putstr_fd(str, STDERR);
-		ft_putstr_fd("': not a valid identifier\n", STDERR);
-		free_matrix(temp);
-		return (1);
+		result[0] = ft_strdup(str);
+		result[1] = NULL;
 	}
 	else
 	{
-		if (temp[1])
-			value = temp[1];
-		else
-			value = "";
-		ft_add_env_export(mini, temp[0], value);
+		key_len = equal_sign - str;
+		result[0] = ft_substr(str, 0, key_len);
+		result[1] = ft_strdup(equal_sign + 1);
 	}
-	free_matrix(temp);
-	return (0);
+	result[2] = NULL;
+	return (result);
 }
 
 bool	ft_handle_token_error(t_mini *mini, t_token *current)
 {
-    if (current->type == PIPE && current->index == 0)
-        return (ft_error_syntax(mini, current->str), false);
-    else
-        return (ft_error_syntax(mini, current->next->str), false);
+	if (current->type == PIPE && current->index == 0)
+		return (ft_error_syntax(mini, current->str), false);
+	else
+		return (ft_error_syntax(mini, current->next->str), false);
 }

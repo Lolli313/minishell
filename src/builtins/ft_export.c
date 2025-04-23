@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 18:40:10 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/23 09:44:26 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ t_env	*ft_init_export_env_(char **envp)
 	t_env	*last;
 	t_env	*export_env;
 
-	i = 0;
+	i = -1;
 	export_env = NULL;
-	while (envp[i])
+	while (envp[++i])
 	{
 		tmp = ft_split_env(envp[i]);
 		if (!tmp)
@@ -36,8 +36,8 @@ t_env	*ft_init_export_env_(char **envp)
 			last->next = ft_add_env_node(tmp[0], tmp[1]);
 		}
 		free_matrix(tmp);
-		i++;
 	}
+	ft_shellvl(export_env);
 	return (export_env);
 }
 
@@ -61,59 +61,54 @@ int	ft_export_env(t_mini *mini, char **str)
 	return (1);
 }
 
-static void	ft_export_no_value(t_mini *mini, char *key)
+int	ft_has_equal(t_mini *mini, char *str)
 {
-	t_env	*last;
+	char	**temp;
+	char	*value;
 
-	if (!ft_find_key(mini->export_env, key))
+	temp = ft_split_env(str);
+	if (!temp[0] || !export_validity(temp[0]))
 	{
-		last = mini->export_env;
-		while (last && last->next)
-			last = last->next;
-		if (last)
-			last->next = ft_add_env_node(key, NULL);
-		else
-			mini->export_env = ft_add_env_node(key, NULL);
+		ft_putstr_fd("minishell: export: `", STDERR);
+		ft_putstr_fd(str, STDERR);
+		ft_putstr_fd("': not a valid identifier\n", STDERR);
+		free_matrix(temp);
+		return (1);
 	}
+	else
+	{
+		if (temp[1])
+			value = temp[1];
+		else
+			value = "";
+		update_or_add_env(&(mini->env), temp[0], value);
+		update_or_add_env(&(mini->export_env), temp[0], value);
+	}
+	free_matrix(temp);
+	return (0);
 }
 
-void	ft_add_env_export(t_mini *mini, char *key, char *value)
+static void	ft_export_no_value(t_mini *mini, char *key)
 {
-	t_env	*export_node;
+	t_env	*curr;
 	t_env	*last;
 
-	// Update or add in the main env
-	if (ft_env_exists(mini->env, key, value) == 0)
+	curr = mini->export_env;
+	while (curr)
 	{
-		last = mini->env;
-		while (last && last->next)
-			last = last->next;
-		if (last)
-			last->next = ft_add_env_node(key, value);
-		else
-			mini->env = ft_add_env_node(key, value);
-	}
-	// Now check if the key exists in export_env and update it
-	export_node = mini->export_env;
-	while (export_node)
-	{
-		if (ft_strcmp(export_node->key, key) == 0)
-		{
-			// Key found, update value
-			free(export_node->value);
-			export_node->value = ft_strdup(value);
+		if (ft_strcmp(curr->key, key) == 0)
 			return ;
-		}
-		export_node = export_node->next;
+		curr = curr->next;
 	}
-	// If not found, add it
-	last = mini->export_env;
-	while (last && last->next)
-		last = last->next;
-	if (last)
-		last->next = ft_add_env_node(key, value);
+	if (mini->export_env)
+	{
+		last = mini->export_env;
+		while (last->next)
+			last = last->next;
+		last->next = ft_add_env_node(key, NULL);
+	}
 	else
-		mini->export_env = ft_add_env_node(key, value);
+		mini->export_env = ft_add_env_node(key, NULL);
 }
 
 int	ft_export(t_mini *mini, char **str)

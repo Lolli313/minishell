@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 13:15:32 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 09:33:37 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static char	*ft_get_newpwd(t_env *env, char *path)
 	if (!pwd)
 		pwd = "";
 	if (ft_strcmp(path, ".") == 0)
-    	newpwd = ft_strdup(pwd);
+		newpwd = ft_strdup(pwd);
 	else if (path[0] == '/')
 		newpwd = ft_strdup(path);
 	else if (ft_strcmp(path, "..") == 0)

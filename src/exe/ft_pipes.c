@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 16:19:44 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/23 09:33:49 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	ft_piping(t_mini *mini, t_line *current)
 int	ft_execute_child(t_mini *mini, t_line *current, pid_t *pids)
 {
 	int	exit_status;
-	
+
 	ft_piping(mini, current);
 	ft_handle_redirections(mini, current);
 	if (mini->skibidi == 1)

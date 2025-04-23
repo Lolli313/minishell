@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 18:35:09 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/23 09:06:18 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,9 @@ int					ft_cd(char **av, t_env *env);
 int					ft_echo(char **av);
 void				ft_exit(t_mini *mini, char **cmd);
 t_env				*ft_init_export_env_(char **envp);
+void				update_or_add_env(t_env **list, char *key, char *value);
 void				ft_append_env_node(t_env **head, t_env *new_node);
 int					ft_export_env(t_mini *mini, char **str);
-void				ft_add_env_export(t_mini *mini, char *key, char *value);
 int					ft_export(t_mini *mini, char **str);
 int					ft_pwd(t_env *env);
 int					ft_env(t_env *env);
@@ -168,7 +168,8 @@ void				ft_execute_heredoc(t_mini *mini);
 
 // pipes
 void				ft_piping(t_mini *mini, t_line *current);
-int					ft_execute_child(t_mini *mini, t_line *current, pid_t *pids);
+int					ft_execute_child(t_mini *mini, t_line *current,
+						pid_t *pids);
 void				ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids,
 						int i);
 void				ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids,
