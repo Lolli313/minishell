@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 12:31:44 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 14:45:23 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,19 @@ void	ft_handle_sigint(int signals)
 	}
 	else if (signals == SIGINT && g_skip == true)
 	{
-		g_skip = false;
 		printf("\n");
 	}
 }
 
 void	ft_handle_sigquit(int signals)
 {
-	if (signals == SIGQUIT && g_skip)
+	if (signals == SIGQUIT)
 	{
 		signal(SIGQUIT, SIG_IGN);
-		printf("Quit (core dumped)\n");
-		return ;
-	}
-	else if (signals == SIGQUIT)
-	{
-		signal(SIGQUIT, SIG_IGN);
+		if (g_skip == true)
+		{
+			printf("Quit (core dumped)\n");
+		}
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/23 12:34:00 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 13:55:12 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,28 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 	char	*line;
 	char	*tmp;
 	int		i;
+	int		line_count;
 
+	line_count = 1;
 	ft_close(pipefd[0]);
 	while (1)
 	{
-		if (g_skip == false)
-			break ;
 		line = readline("> ");
-		if (!line || strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
+		if (!line)
 		{
 			printf("minishell: warning: here-document at line");
-			printf(" 69-420");
+			printf(" %d", line_count);
 			printf(" delimited by end-of-file");
 			printf(" (wanted `%s')\n", redir->str);
 			free(line);
 			break ;
 		}
+		else if (strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
+		{
+			free(line);
+			break ;
+		}
+		line_count++;
 		i = 0;
 		tmp = line;
 		while (tmp && tmp[i])

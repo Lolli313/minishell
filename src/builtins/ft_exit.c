@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:48:03 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 12:05:41 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/23 14:57:11 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,5 @@ void	ft_exit(t_mini *mini, char **cmd)
 		ft_exit_util(mini, cmd);
 	}
 	else
-	{
-		mini->exit_status = 0;
 		mini->exit_flag = 0;
-	}
 }
