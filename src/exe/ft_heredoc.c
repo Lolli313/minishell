@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/23 16:50:29 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/24 08:09:57 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
+int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 {
 	char	*line;
 	char	*tmp;
 	int		i;
-	int		line_count;
+	int		count;
 
-	line_count = 1;
+	count = 0;
 	handle_heredoc_sig();
 	g_skip = true;
 	ft_close(pipefd[0]);
@@ -29,7 +29,7 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		if (!line)
 		{
 			printf("minishell: warning: here-document at line");
-			printf(" %d", line_count);
+			printf(" %d", mini->hd_count + count + 1);
 			printf(" delimited by end-of-file");
 			printf(" (wanted `%s')\n", redir->str);
 			free(line);
@@ -40,7 +40,7 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 			free(line);
 			break ;
 		}
-		line_count++;
+		count++;
 		i = 0;
 		tmp = line;
 		while (tmp && tmp[i])
@@ -54,27 +54,33 @@ void	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}
+	return (count + 1);
 }
 
 void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 {
 	int		pipefd[2];
 	pid_t	pid;
+	int		count;
+	int 	status;
 
+	count = 0;
 	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
 	{
 		ft_close(pipefd[0]);
-		ft_heredoc_child(mini, redir, pipefd);
+		count = ft_heredoc_child(mini, redir, pipefd);
 		ft_close(pipefd[1]);
-		exit(EXIT_SUCCESS);
+		exit(count);
 	}
 	else
 	{
 		redir->heredoc_fd = pipefd[0];
 		ft_close(pipefd[1]);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			mini->hd_count += WEXITSTATUS(status);	
 		handle_signals();
 	}
 }

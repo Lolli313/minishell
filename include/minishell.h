@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/24 07:09:15 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/24 08:00:31 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ typedef struct s_mini
 	int				exit_status;
 	bool			interactive;
 
+	int				hd_count;
 	int				nbr_of_pipes;
 	int				fd_in;
 	int				fd_out;
@@ -161,7 +162,7 @@ char				*check_external(t_mini *mini, t_env *env, char *command);
 int					ft_handle_external(t_mini *mini, char **args);
 
 // heredocs
-void				ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd);
+int					ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd);
 void				ft_handle_heredoc(t_mini *mini, t_re *redir);
 void				ft_pipe_heredoc(t_mini *mini, t_line *current);
 void				ft_execute_heredoc(t_mini *mini);
