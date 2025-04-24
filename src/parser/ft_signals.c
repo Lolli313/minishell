@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 16:52:13 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/24 10:32:23 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	ft_handle_function_signals(int signals)
 	if (signals == SIGQUIT)
 	{
 		g_skip = false;
-		printf("Quit (core dumped)\n");
-		ft_putendl_fd("Quit (core dumped)", 2);
+//		printf("Quit (core dumped)\n");
+//		ft_putendl_fd("Quit (core dumped)", 2);
 		ft_close(STDIN);
 		exit(1);
 	}

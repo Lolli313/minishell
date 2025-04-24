@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/24 07:21:24 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/24 11:32:25 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ int	ft_wait2(t_mini *mini, pid_t *pids, int i)
 		{
 			if (WTERMSIG(status) == SIGQUIT)
 			{
-				ft_putstr_fd("Quit (core dumped)\n", 2);
+				if (mini->nbr_of_pipes == 0)
+					ft_putstr_fd("Quit (core dumped)\n", 2);
 				mini->exit_status = 131;
 			}
 			else if (WTERMSIG(status) == SIGINT)
@@ -82,8 +83,8 @@ int	ft_wait2(t_mini *mini, pid_t *pids, int i)
 
 static int	ft_exec_parent(t_mini *mini, pid_t cpid)
 {
-	if (g_skip == false)
-		printf("Quit (core dumped\n)");
+//	if (g_skip == false)
+//		printf("Quit (core dumped\n)");
 	ft_wait2(mini, &cpid, 1);
 	return (0);
 }
