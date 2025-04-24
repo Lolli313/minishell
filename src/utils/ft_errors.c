@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_errors.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:31:21 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/24 07:16:14 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/24 12:15:55 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	ft_error_msg(t_mini *mini, char *cmd)
 {
 	DIR		*dir;
 
-	if (!*cmd)
-		return ;
+//	if (!*cmd)
+//		return ;
 	dir = opendir(cmd);
 	if (!ft_strchr(cmd, '/'))
 		ft_print_error(mini, cmd, "command not found", 127);

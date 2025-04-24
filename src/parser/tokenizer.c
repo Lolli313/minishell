@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:42:09 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/23 10:55:42 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/24 12:17:06 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	remove_empty_tokens(t_mini *mini)
 	t_token	*next;
 
 	curr = mini->token;
+	if (curr->next == NULL && ft_strlen(curr->str) == 0)
+		return ;
 	prev = NULL;
 	while (curr)
 	{
