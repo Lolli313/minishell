@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 09:33:49 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/24 10:34:44 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,15 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	{
 		ft_close(mini->stdin);
 		ft_close(mini->stdout);
+		ft_piping(mini, current); //added
 		mini->exit_status = ft_execute_child(mini, current, pids);
 		free(pids);
+		exit(mini->exit_status); //added
 	}
 	else
 	{
 		pids[i] = pid;
+		ft_supersafe_close(mini->pipe_out); //added
 	}
 }
 
