@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/24 11:32:25 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/24 09:51:50 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ static int	ft_exec_child(t_mini *mini, char *temp, char **args, char **envp)
 	if (execve(temp, args, envp) == -1)
 	{
 		ft_error_msg(mini, args[0]);
-		free(temp);
 	}
 	return (mini->exit_status);
 }

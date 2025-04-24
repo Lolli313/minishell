@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/24 08:09:57 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/24 09:59:11 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		while (tmp && tmp[i])
 		{
 			if (tmp[i] == '$')
-			tmp = handle_dollar_sign(mini, tmp, &tmp[i], &i);
+				tmp = handle_dollar_sign(mini, tmp, &tmp[i], &i);
 			else
-			i++;
+				i++;
 		}
 		write(pipefd[1], tmp, ft_strlen(tmp));
 		write(pipefd[1], "\n", 1);
-		free(line);
+		free (tmp);
 	}
 	return (count + 1);
 }
