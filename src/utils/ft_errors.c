@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_errors.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:31:21 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/22 11:15:30 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/24 07:14:44 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,10 @@ void	ft_print_error(t_mini *mini, char *line, char *msg, int exit)
 	mini->exit_status = exit;
 }
 
-void	ft_error_msg(t_mini *mini)
+void	ft_error_msg(t_mini *mini, char *cmd)
 {
 	DIR		*dir;
-	char	*cmd;
 
-	cmd = mini->line->command[0];
 	if (!*cmd)
 		return ;
 	dir = opendir(cmd);

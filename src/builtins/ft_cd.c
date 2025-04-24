@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 09:33:37 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/24 06:44:34 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,51 +56,51 @@ static char	*ft_handle_relative(char *pwd, char *path)
 	return (newpwd);
 }
 
-static char	*ft_get_newpwd(t_env *env, char *path)
+static char	*ft_get_newpwd(char *oldpwd, char *path)
 {
-	char	*pwd;
-	char	*newpwd;
-	char	*last_slash;
+    char	*newpwd;
+    char	*last_slash;
 
-	pwd = ft_find_key(env, "PWD");
-	newpwd = NULL;
-	if (!pwd)
-		pwd = "";
-	if (ft_strcmp(path, ".") == 0)
-		newpwd = ft_strdup(pwd);
-	else if (path[0] == '/')
-		newpwd = ft_strdup(path);
-	else if (ft_strcmp(path, "..") == 0)
-	{
-		last_slash = ft_strrchr(pwd, '/');
-		if (last_slash && last_slash != pwd)
-			newpwd = ft_substr(pwd, 0, last_slash - pwd);
-		else
-			newpwd = ft_strdup("/");
-	}
-	else
-		newpwd = ft_handle_relative(pwd, path);
-	return (newpwd);
+    if (ft_strcmp(path, ".") == 0)
+        return (ft_strdup(oldpwd));
+    else if (path[0] == '/')
+        return (ft_strdup(path));
+    else if (ft_strcmp(path, "..") == 0)
+    {
+        last_slash = ft_strrchr(oldpwd, '/');
+        if (last_slash && last_slash != oldpwd)
+            return (ft_substr(oldpwd, 0, last_slash - oldpwd));
+        return (ft_strdup("/"));
+    }
+    else
+        newpwd = ft_handle_relative(oldpwd, path);
+    return (newpwd);
 }
 
 static int	ft_change_dir(t_env *env, char *path, int print_dir)
 {
-	char	*newpwd;
-	char	*oldpwd;
+    char	*newpwd;
+    char	*oldpwd;
 
-	if (chdir(path) != 0)
-		return (ft_cd_error(path, 3));
-	newpwd = ft_get_newpwd(env, path);
-	if (!newpwd)
-		return (ft_cd_error(path, 3));
-	if (print_dir)
-		ft_printf("%s\n", newpwd);
-	oldpwd = ft_find_key(env, "PWD");
-	if (oldpwd)
-		ft_update_value(env, "OLDPWD", oldpwd);
-	ft_update_value(env, "PWD", newpwd);
-	free(newpwd);
-	return (0);
+    oldpwd = getcwd(NULL, 0);
+    if (chdir(path) != 0)
+    {
+        free(oldpwd);
+        return (ft_cd_error(path, 3));
+    }
+    newpwd = ft_get_newpwd(oldpwd, path);
+    if (!newpwd)
+    {
+        free(oldpwd);
+        return (ft_cd_error(path, 3));
+    }
+    if (print_dir)
+        ft_printf("%s\n", newpwd);
+    ft_update_value(env, "OLDPWD", oldpwd);
+    ft_update_value(env, "PWD", newpwd);
+    free(oldpwd);
+    free(newpwd);
+    return (0);
 }
 
 int	ft_cd(char **av, t_env *env)

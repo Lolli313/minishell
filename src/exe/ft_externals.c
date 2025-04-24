@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 16:48:29 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/24 07:09:31 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,10 @@ static int	ft_exec_child(t_mini *mini, char *temp, char **args, char **envp)
 	handle_function_signals();
 	if (execve(temp, args, envp) == -1)
 	{
-		ft_error_msg(mini);
+		ft_error_msg(mini, args[0]);
+		free(temp);
 	}
-	return (0);
+	return (mini->exit_status);
 }
 
 int	ft_wait2(t_mini *mini, pid_t *pids, int i)
@@ -98,7 +99,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 	temp = check_external(mini, mini->env, args[0]);
 	if (!temp)
 	{
-		ft_error_msg(mini);
+		ft_error_msg(mini, args[0]);
 		return (0);
 	}
 	envp = ft_env_to_array(mini->env);

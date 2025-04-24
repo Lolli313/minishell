@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 16:53:34 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/24 07:09:15 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ int					ft_cd_error(char *path, int error);
 void				ft_error_syntax(t_mini *mini, char *token);
 void				ft_print_error(t_mini *mini, char *line, char *msg,
 						int exit);
-void				ft_error_msg(t_mini *mini);
+void				ft_error_msg(t_mini *mini, char *cmd);
 bool				ft_handle_token_error(t_mini *mini, t_token *current);
 
 // utils pipes
