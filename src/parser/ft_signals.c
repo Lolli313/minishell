@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/28 12:44:23 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/28 13:31:26 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void	ft_handle_sigint(int signals)
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		if (!g_skip || g_skip == 130)
+		if (!g_skip || g_skip == 130 || g_skip == 2)
 		{
 			rl_redisplay();
 		}
 	}
-	else if (signals == SIGINT && (g_skip == 1 || g_skip == 130))
+	else if (signals == SIGINT && g_skip)
 	{
 		g_skip = 0;
 		printf("\n");

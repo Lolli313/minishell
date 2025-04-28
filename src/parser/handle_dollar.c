@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:00:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/23 12:34:39 by fmick            ###   ########.fr       */
+/*   Updated: 2025/04/28 14:47:13 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ char	*handle_exit_code(t_mini *mini, char *before, char *org, int *pos)
 	char	*temp;
 	int		len;
 
+	g_skip = 1;
 	result = ft_itoa(mini->exit_status);
 	len = ft_strlen(result);
 	temp = ft_strjoin(before, result);
@@ -69,6 +70,7 @@ char	*handle_exit_code(t_mini *mini, char *before, char *org, int *pos)
 
 char	*handle_invalid_char(t_env *env, char *temp, char *org, int *pos)
 {
+	g_skip = 1;
 	if (org[*pos + 1] == '\'' || org[*pos + 1] == '$' || org[*pos + 1] == '\"')
 		return (handle_dollar_sign_single(env, temp, org, pos));
 	return (free(temp), (void)(*(pos))++, org);
@@ -91,6 +93,8 @@ char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos)
 		len++;
 	temp3 = ft_substr(org, *pos + 1, len - 1);
 	temp2 = ft_getenv(mini->env, temp3);
+	if (ft_strlen(temp2) > 0)
+		g_skip = 1;
 	free(temp3);
 	temp3 = ft_strjoin(temp1, temp2);
 	len += handle_dollar_get_end(temp1 + ft_strlen(temp1));
