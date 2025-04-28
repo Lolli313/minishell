@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/24 09:59:11 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/28 12:37:03 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 
 	count = 0;
 	handle_heredoc_sig();
-	g_skip = true;
+	g_skip = 1;
 	ft_close(pipefd[0]);
 	while (1)
 	{

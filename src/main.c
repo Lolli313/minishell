@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/24 07:20:58 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/28 12:51:25 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	ft_parse_input(t_mini *mini)
 			ft_printf("exit\n");
 		return (0);
 	}
+	if (g_skip == 130)
+			mini->exit_status = 130;
 	parse_string(mini, input);
 	if (*input)
 		add_history(input);
@@ -78,10 +80,10 @@ int	main(int ac, char **av, char **envp)
 		handle_signals();
 		if (!ft_parse_input(mini))
 			break ;
-		g_skip = true;
+		g_skip = 1;
 		if (mini->line)
 			ft_execute_command(mini);
-		g_skip = false;
+		g_skip = 0;
 		line_cleanup(mini);
 	}
 	exit = mini->exit_status;

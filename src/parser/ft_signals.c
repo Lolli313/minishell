@@ -6,13 +6,13 @@
 /*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 14:44:57 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/24 10:32:23 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/28 12:44:23 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	g_skip = false;
+int	g_skip = 0;
 
 void	ft_handle_sigint(int signals)
 {
@@ -21,23 +21,24 @@ void	ft_handle_sigint(int signals)
 		printf("\n");
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		if (!g_skip)
+		if (!g_skip || g_skip == 130)
 		{
 			rl_redisplay();
 		}
 	}
-	else if (signals == SIGINT && g_skip == true)
+	else if (signals == SIGINT && (g_skip == 1 || g_skip == 130))
 	{
-		g_skip = false;
+		g_skip = 0;
 		printf("\n");
 	}
+	g_skip = 130;
 }
 
 void	ft_handle_heredoc_sig(int signals)
 {
 	if (signals == SIGINT)
 	{
-		g_skip = false;
+		g_skip = 0;
 		printf("\n");
 		close(STDIN_FILENO);
 		exit(130);
@@ -48,7 +49,7 @@ void	ft_handle_function_signals(int signals)
 {
 	if (signals == SIGQUIT)
 	{
-		g_skip = false;
+		g_skip = 0;
 //		printf("Quit (core dumped)\n");
 //		ft_putendl_fd("Quit (core dumped)", 2);
 		ft_close(STDIN);
