@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/24 15:49:37 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/28 11:45:06 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	expand_variables(t_mini *mini)
 			else if (current->str[i] == '\"')
 				current->str = handle_double_quote(mini, current->str,
 						current->str + i, &i);
-			else if (current->str[i] == '$' && current->previous && current->previous->type != HERE_DOC)
+			else if (current->str[i] == '$' && current->type != LIMITER)
 				current->str = handle_dollar_sign(mini, current->str,
 						current->str + i, &i);
 			else
