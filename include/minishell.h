@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/28 12:39:46 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/30 07:39:12 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
+#define PROMPT "\001😭 \033[1;32m\002minishell$ \001\033[0m\002"
 
 typedef enum e_type
 {
