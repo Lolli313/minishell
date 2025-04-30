@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fmick <fmick@student.42.fr>                +#+  +:+       +#+         #
+#    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/04/17 14:02:27 by fmick            ###   ########.fr        #
+#    Updated: 2025/04/30 11:57:35 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,13 +34,15 @@ SRC 		=	$(addprefix src/builtins/, ft_builtins.c \
 						extract_word.c \
 						find_functions.c \
 						ft_signals.c \
+						ft_signals2.c \
 						handle_dollar.c \
 						handle_quotes.c \
 						parse.c \
 						structurize_line.c \
 						token_relativity.c \
 						tokenizer.c) \
-				$(addprefix src/utils/, ft_errors.c \
+				$(addprefix src/utils/, ft_close.c \
+						ft_errors.c \
 						ft_pipes_utils.c \
 						ft_utils_1.c) \
 				$(addprefix src/, main.c) \

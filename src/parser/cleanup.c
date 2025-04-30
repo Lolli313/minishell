@@ -12,7 +12,7 @@
 
 #include <minishell.h>
 
-void	free_many(char *str1, char *str2, char *str3, char *str4)
+void	free_many(char *str1, void *str2, char *str3, char *str4)
 {
 	if (str1)
 		free(str1);

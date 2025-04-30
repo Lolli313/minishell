@@ -34,13 +34,9 @@ int	ft_parse_input(t_mini *mini)
 	mini->interactive = 1;
 	//mini->interactive = isatty(STDIN);
 	if (mini->interactive)
-	{
 		input = readline(PROMPT);
-	}
 	else
-	{
 		input = get_next_line(STDIN);
-	}
 	if (!input)
 	{
 		if (mini->interactive)
@@ -48,7 +44,7 @@ int	ft_parse_input(t_mini *mini)
 		return (0);
 	}
 	if (g_skip == 130)
-			mini->exit_status = 130;
+		mini->exit_status = 130;
 	g_skip = 1;
 	parse_string(mini, input);
 	if (*input)

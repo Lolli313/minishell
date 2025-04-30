@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:42:09 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/24 12:17:06 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:13:13 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ void	remove_empty_tokens(t_mini *mini)
 				mini->token = next;
 			if (next)
 				next->previous = prev;
-			free(curr->str);
-			free(curr);
+			free_many(curr->str, curr, NULL, NULL);
 		}
 		else
 			prev = curr;

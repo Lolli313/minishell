@@ -183,8 +183,9 @@ void				ft_handle_input_redir(t_mini *mini, t_re *redir);
 void				ft_handle_output_redir(t_mini *mini, t_re *redir);
 
 // signal
-void				ft_handle_sigint(int signal);
-void				ft_handle_sigquit(int signals);
+void				ft_handle_sigint(int signals);
+void				ft_handle_heredoc_sig(int signals);
+void				ft_handle_function_signals(int signals);
 void				handle_signals(void);
 void				handle_heredoc_sig(void);
 void				handle_function_signals(void);
@@ -258,6 +259,7 @@ t_token				*add_node_token(t_token *token, char *str, t_type type);
 void				remove_empty_tokens(t_mini *mini);
 t_token				*tokenize_input(t_mini *mini, char *input);
 void				skibidi_function(t_mini *mini);
+void				check_env_length(char *str);
 
 // main
 void				ft_mini_init(t_mini *mini);
@@ -265,7 +267,7 @@ int					ft_parse_input(t_mini *mini);
 int					main(int ac, char **av, char **envp);
 
 // clean up
-void				free_many(char *str1, char *str2, char *str3, char *str4);
+void				free_many(char *str1, void *str2, char *str3, char *str4);
 void				free_env(t_env *env);
 void				free_redirect(t_re *redirect);
 void				line_cleanup(t_mini *mini);

@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/28 12:37:03 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:44:14 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	print_heredoc_warning(t_mini *mini, t_re *redir, int count, char *line)
+{
+	printf("minishell: warning: here-document at line");
+	printf(" %d", mini->hd_count + count + 1);
+	printf(" delimited by end-of-file");
+	printf(" (wanted `%s')\n", redir->str);
+	free(line);
+}
 
 int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 {
@@ -28,11 +37,7 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		line = readline("> ");
 		if (!line)
 		{
-			printf("minishell: warning: here-document at line");
-			printf(" %d", mini->hd_count + count + 1);
-			printf(" delimited by end-of-file");
-			printf(" (wanted `%s')\n", redir->str);
-			free(line);
+			print_heredoc_warning(mini, redir, count, line);
 			break ;
 		}
 		else if (strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
@@ -52,7 +57,7 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		}
 		write(pipefd[1], tmp, ft_strlen(tmp));
 		write(pipefd[1], "\n", 1);
-		free (tmp);
+		free(tmp);
 	}
 	return (count + 1);
 }
@@ -62,7 +67,7 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 	int		pipefd[2];
 	pid_t	pid;
 	int		count;
-	int 	status;
+	int		status;
 
 	count = 0;
 	pipe(pipefd);
@@ -80,7 +85,7 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 		ft_close(pipefd[1]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-			mini->hd_count += WEXITSTATUS(status);	
+			mini->hd_count += WEXITSTATUS(status);
 		handle_signals();
 	}
 }

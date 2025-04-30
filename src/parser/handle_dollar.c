@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:00:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/28 14:47:13 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:27:39 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,7 @@ char	*handle_dollar_sign(t_mini *mini, char *org, char *sub, int *pos)
 		len++;
 	temp3 = ft_substr(org, *pos + 1, len - 1);
 	temp2 = ft_getenv(mini->env, temp3);
-	if (ft_strlen(temp2) > 0)
-		g_skip = 1;
+	check_env_length(temp2);
 	free(temp3);
 	temp3 = ft_strjoin(temp1, temp2);
 	len += handle_dollar_get_end(temp1 + ft_strlen(temp1));

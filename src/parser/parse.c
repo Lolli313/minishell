@@ -3,14 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 14:00:31 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/28 13:25:16 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:27:49 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+void	check_env_length(char *str)
+{
+	if (ft_strlen(str) > 0)
+		g_skip = 1;
+}
+
+static char	*expand_variables_util(t_mini *mini, t_token *current, int *i)
+{
+	if (current->index == 0)
+		g_skip = 2;
+	current->str = handle_dollar_sign(mini, current->str,
+			current->str + *i, i);
+	return (current->str);
+}
 
 void	expand_variables(t_mini *mini)
 {
@@ -30,12 +45,7 @@ void	expand_variables(t_mini *mini)
 				current->str = handle_double_quote(mini, current->str,
 						current->str + i, &i);
 			else if (current->str[i] == '$' && current->type != LIMITER)
-			{
-				if (current->index == 0)
-					g_skip = 2;
-				current->str = handle_dollar_sign(mini, current->str,
-						current->str + i, &i);
-			}
+				current->str = expand_variables_util(mini, current, &i);
 			else
 				i++;
 		}
