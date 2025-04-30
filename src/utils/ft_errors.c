@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_errors.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:31:21 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/28 14:37:35 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/04/30 07:01:47 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_error(t_mini *mini, char **cmd, int i, int error)
 		ft_putstr_fd("minishell: export: `", STDERR);
 		ft_putstr_fd(cmd[i], STDERR);
 		ft_putstr_fd("': not a valid identifier\n", STDERR);
+		mini->skibidi = 0;
 		mini->exit_status = 1;
 	}
 }
@@ -68,8 +69,6 @@ void	ft_error_msg(t_mini *mini, char *cmd)
 {
 	DIR		*dir;
 
-//	if (!*cmd)
-//		return ;
 	if (g_skip == 2 && ft_strlen(cmd) == 0)
 	{
 		g_skip = 1;

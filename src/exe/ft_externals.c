@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/24 11:10:21 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/04/30 07:08:56 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ int	ft_wait2(t_mini *mini, pid_t *pids, int i)
 
 static int	ft_exec_parent(t_mini *mini, pid_t cpid)
 {
-//	if (g_skip == false)
-//		printf("Quit (core dumped\n)");
 	ft_wait2(mini, &cpid, 1);
 	return (0);
 }
@@ -103,8 +101,6 @@ int	ft_handle_external(t_mini *mini, char **args)
 		return (0);
 	}
 	envp = ft_env_to_array(mini->env);
-	if (mini->skibidi == 1)
-		return (mini->exit_status);
 	cpid = fork();
 	if (cpid < 0)
 		exit(1);
