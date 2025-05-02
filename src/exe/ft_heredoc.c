@@ -6,58 +6,36 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/30 12:44:14 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/02 11:09:16 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	print_heredoc_warning(t_mini *mini, t_re *redir, int count, char *line)
-{
-	printf("minishell: warning: here-document at line");
-	printf(" %d", mini->hd_count + count + 1);
-	printf(" delimited by end-of-file");
-	printf(" (wanted `%s')\n", redir->str);
-	free(line);
-}
-
 int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 {
 	char	*line;
-	char	*tmp;
 	int		i;
 	int		count;
 
-	count = 0;
-	handle_heredoc_sig();
-	g_skip = 1;
-	ft_close(pipefd[0]);
+	prepare_heredoc(&count, &i, pipefd);
 	while (1)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			print_heredoc_warning(mini, redir, count, line);
+		line = handle_heredoc_line(mini, redir, count);
+		if (line == NULL)
 			break ;
-		}
-		else if (strncmp(line, redir->str, ft_strlen(redir->str)) == 0)
-		{
-			free(line);
-			break ;
-		}
 		count++;
 		i = 0;
-		tmp = line;
-		while (tmp && tmp[i])
+		while (line && line[i])
 		{
-			if (tmp[i] == '$')
-				tmp = handle_dollar_sign(mini, tmp, &tmp[i], &i);
+			if (line[i] == '$')
+				line = handle_dollar_sign(mini, line, &line[i], &i);
 			else
 				i++;
 		}
-		write(pipefd[1], tmp, ft_strlen(tmp));
+		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
-		free(tmp);
+		free(line);
 	}
 	return (count + 1);
 }

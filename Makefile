@@ -6,7 +6,7 @@
 #    By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/28 08:55:32 by fmick             #+#    #+#              #
-#    Updated: 2025/04/30 11:57:35 by aakerblo         ###   ########.fr        #
+#    Updated: 2025/05/02 11:08:28 by aakerblo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC 		=	$(addprefix src/builtins/, ft_builtins.c \
 						ft_env_utils.c) \
 				$(addprefix src/exe/, ft_externals.c \
 						ft_heredoc.c \
+						ft_heredoc2.c \
 						ft_pipes.c \
 						ft_redir.c \
 						ft_execute.c) \

@@ -56,10 +56,10 @@ void	ft_single_command(t_mini *mini)
 	ft_execute_heredoc(mini);
 	ft_handle_redirections(mini, mini->line);
 	if (mini->skibidi == 1)
-    {
-        mini->exit_status = 1;
-        return;
-    }
+	{
+		mini->exit_status = 1;
+		return ;
+	}
 	if (ft_is_builtin(mini->line->command))
 		ft_handle_builtin(mini, mini->line);
 	else

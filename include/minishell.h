@@ -38,7 +38,7 @@
 # define STDIN 0
 # define STDOUT 1
 # define STDERR 2
-#define PROMPT "\001😭 \033[1;32m\002minishell$ \001\033[0m\002"
+# define PROMPT "\001😭 \033[1;32m\002minishell$ \001\033[0m\002"
 
 typedef enum e_type
 {
@@ -167,6 +167,8 @@ int					ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd);
 void				ft_handle_heredoc(t_mini *mini, t_re *redir);
 void				ft_pipe_heredoc(t_mini *mini, t_line *current);
 void				ft_execute_heredoc(t_mini *mini);
+char				*handle_heredoc_line(t_mini *mini, t_re *redir, int count);
+void				prepare_heredoc(int *count, int *i, int *pipefd);
 
 // pipes
 void				ft_piping(t_mini *mini, t_line *current);
