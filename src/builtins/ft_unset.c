@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/17 09:41:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/05 13:08:18 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,8 @@ int	ft_unset(t_mini *mini, char **av)
 		return (0);
 	while (av[i])
 	{
-		if (!export_validity(av[i]))
-		{
-			ft_putstr_fd("minishell: unset: ", STDERR);
-			ft_putstr_fd(av[i], STDERR);
-			ft_putendl_fd("': not a valid identifier", STDERR);
-			error = 1;
-		}
-		else
-		{
-			ft_unset_key(mini->env, av[i]);
-			ft_unset_key(mini->export_env, av[i]);
-		}
+		ft_unset_key(mini->env, av[i]);
+		ft_unset_key(mini->export_env, av[i]);
 		i++;
 	}
 	mini->exit_status = error;

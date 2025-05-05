@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/05 09:00:47 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/05 12:36:38 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,14 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 		ft_close(pipefd[1]);
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
+		{
 			mini->hd_count += WEXITSTATUS(status);
+			if (WEXITSTATUS(status) == 130)
+			{
+				mini->skibidi = 3;
+				mini->exit_status = 130;
+			}
+		}
 		handle_signals();
 	}
 }

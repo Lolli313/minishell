@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/30 07:08:56 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/05 13:04:43 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_wait2(t_mini *mini, pid_t *pids, int i)
 	while (j < i)
 	{
 		waitpid(pids[j], &status, 0);
-		if (WIFEXITED(status))
+		if (WIFEXITED(status) && mini->skibidi != 3)
 			mini->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{
@@ -98,6 +98,7 @@ int	ft_handle_external(t_mini *mini, char **args)
 	if (!temp || ft_strlen(args[0]) == 0)
 	{
 		ft_error_msg(mini, args[0]);
+		free(temp);
 		return (0);
 	}
 	envp = ft_env_to_array(mini->env);
