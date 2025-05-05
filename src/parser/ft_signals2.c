@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 11:55:22 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/30 11:55:22 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/05 13:23:12 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	ft_handle_heredoc_sig(int signals)
 	if (signals == SIGINT)
 	{
 		g_skip = 0;
-		printf("\n");
 		close(STDIN_FILENO);
 		exit(130);
 	}

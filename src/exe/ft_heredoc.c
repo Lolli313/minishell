@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/05 13:12:49 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/05 13:20:21 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 		ft_close(pipefd[0]);
 		count = ft_heredoc_child(mini, redir, pipefd);
 		ft_close(pipefd[1]);
+		line_cleanup(mini);
+		free_mini(mini);
 		exit(count);
 	}
 	else
