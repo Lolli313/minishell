@@ -6,7 +6,7 @@
 /*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/05 13:20:21 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/05 13:34:09 by aakerblo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 
 static void	manage_hd_exit(t_mini *mini, int status)
 {
-	mini->hd_count += WEXITSTATUS(status);
+	mini->hd_count += 1;
 	if (WEXITSTATUS(status) == 130)
 	{
 		mini->skibidi = 3;
@@ -76,7 +76,6 @@ void	ft_handle_heredoc(t_mini *mini, t_re *redir)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			manage_hd_exit(mini, status);
-		handle_signals();
 	}
 }
 
