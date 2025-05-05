@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:06 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/02 11:13:41 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/05 10:17:11 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ static char	*ft_handle_relative(char *pwd, char *path)
 	if (!(newpwd))
 		return (NULL);
 	ft_strlcpy(newpwd, pwd, len);
-	ft_strlcat(newpwd, "/", len);
+	if(pwd[ft_strlen(pwd) - 1] != '/')
+		ft_strlcat(newpwd, "/", len);
 	ft_strlcat(newpwd, path, len);
 	return (newpwd);
 }
