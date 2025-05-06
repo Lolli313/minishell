@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_validity.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/23 10:41:53 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/06 11:15:40 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool	is_valid_char(char c, bool first)
 bool	exit_validity(t_line *line)
 {
 	char	**temp_cmd;
+	long	num;
 	int		i;
 	bool	char_flag;
 
@@ -39,6 +40,10 @@ bool	exit_validity(t_line *line)
 				return (ft_printf("Error: Numeric argument required\n"), true);
 			i++;
 		}
+		num = ft_atol(temp_cmd[1]);
+		printf("%ld\n", num);
+        if (num > LONG_MAX || num < LONG_MIN)
+            return (ft_printf("Error: Numeric argument required\n"), true);
 		if (temp_cmd[2] != NULL)
 			return (ft_printf("Error: Too many arguments\n"), false);
 	}

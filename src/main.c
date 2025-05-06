@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/05/06 09:34:46 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 11:03:58 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int	ft_parse_input(t_mini *mini)
 {
 	char	*input;
 
-	mini->interactive = isatty(STDIN);
+	mini->interactive = 1;
+	//mini->interactive = isatty(STDIN);
 	if (mini->interactive)
 		input = readline(PROMPT);
 	else

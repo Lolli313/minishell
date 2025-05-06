@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 09:50:11 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 10:27:01 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 {
 	pid_t	pid;
 
+	if (mini->skibidi == 1)
+		return;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -101,7 +103,8 @@ void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
     }
 	mini->pipe_out = pipefd[1];
 	mini->fd = pipefd[0];
-	ft_fork_and_exe(mini, current, pids, i++);
+	if (mini->skibidi == 0)
+		ft_fork_and_exe(mini, current, pids, i++);
 	ft_close(pipefd[1]);
 	ft_supersafe_close(mini->pipe_in);
 	mini->pipe_in = pipefd[0];

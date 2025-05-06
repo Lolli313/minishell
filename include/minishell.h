@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 06:47:51 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 11:11:58 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,7 @@ void				handle_function_signals(void);
 int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_find_key(t_env *env, char *key);
 int					ft_has_equal(t_mini *mini, char *str);
+long				ft_atol(const char *str);
 
 // utils erros
 void				ft_error(t_mini *mini, char **cmd, int i, int error);
