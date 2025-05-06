@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/23 11:06:46 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/06 06:07:35 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ t_env	*ft_init_export_env_(char **envp)
 		}
 		free_matrix(tmp);
 	}
-	ft_shellvl(export_env);
 	return (export_env);
 }
 
