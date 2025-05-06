@@ -6,11 +6,41 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 09:48:03 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 11:17:20 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 11:57:39 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+long	ft_atol(const char *str)
+{
+    long	result;
+    int		sign;
+
+    result = 0;
+    sign = 1;
+    while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
+        str++;
+    if (*str == '-' || *str == '+')
+    {
+        if (*str == '-')
+            sign = -1;
+        str++;
+    }
+    while (*str >= '0' && *str <= '9')
+    {
+        if (result > (LONG_MAX - (*str - '0')) / 10)
+        {
+            if (sign == 1)
+                return LONG_MAX;
+            else
+                return LONG_MIN;
+        }
+        result = result * 10 + (*str - '0');
+        str++;
+    }
+    return result * sign;
+}
 
 static int	ft_strisnum(char *str)
 {
@@ -46,7 +76,7 @@ static void	ft_exit_util(t_mini *mini, char **cmd)
     }
     else
     {
-        exit = ft_atol(cmd[1]); // Use ft_atol to handle large numbers
+        exit = ft_atol(cmd[1]);
         if ((exit == LONG_MAX && ft_strcmp(cmd[1], "9223372036854775807") != 0)
             || (exit == LONG_MIN && ft_strcmp(cmd[1], "-9223372036854775808") != 0))
         {

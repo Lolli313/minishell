@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 09:40:10 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 11:12:03 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 11:57:25 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,34 +99,4 @@ bool	ft_handle_token_error(t_mini *mini, t_token *current)
 		return (ft_error_syntax(mini, current->str), false);
 	else
 		return (ft_error_syntax(mini, current->next->str), false);
-}
-
-long	ft_atol(const char *str)
-{
-    long	result;
-    int		sign;
-
-    result = 0;
-    sign = 1;
-    while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
-        str++;
-    if (*str == '-' || *str == '+')
-    {
-        if (*str == '-')
-            sign = -1;
-        str++;
-    }
-    while (*str >= '0' && *str <= '9')
-    {
-        if (result > (LONG_MAX - (*str - '0')) / 10)
-        {
-            if (sign == 1)
-                return LONG_MAX;
-            else
-                return LONG_MIN;
-        }
-        result = result * 10 + (*str - '0');
-        str++;
-    }
-    return result * sign;
 }
