@@ -3,30 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/04/23 08:56:27 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/06 06:04:43 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_shellvl(t_env *env)
-{
-	t_env	*lvl;
-	char	*value;
-	int		cur_lvl;
-
-	lvl = env;
-	value = ft_find_key(lvl, "SHLVL");
-	cur_lvl = ft_atoi(value);
-	cur_lvl++;
-	value = ft_itoa(cur_lvl);
-	ft_env_exists(env, "SHLVL", value);
-	free(value);
-}
-
+ 
 int	ft_env_exists(t_env *env, char *key, char *value)
 {
 	t_env	*lst;
