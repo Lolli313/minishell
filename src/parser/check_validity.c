@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/05/06 11:50:21 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 12:19:23 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,3 +117,38 @@ bool	token_validity(t_mini *mini)
 	}
 	return (true);
 }
+
+/*bool	ft_handle_token_error(t_mini *mini, t_token *current)
+{
+    if (current->type == PIPE && current->index == 0)
+        return (ft_error_syntax(mini, "|"), false);
+    else if (current->next && ft_strlen(current->next->str) == 0) // Empty string after token
+    {
+        ft_putstr_fd("minishell: : No such file or directory\n", STDERR);
+        mini->exit_status = 1;
+        return (false);
+    }
+    else if (ft_strlen(current->str) == 0) // Empty string as a command
+    {
+        ft_putstr_fd("minishell: : command not found\n", STDERR);
+        mini->exit_status = 127;
+        return (false);
+    }
+    else
+        return (ft_error_syntax(mini, current->next->str), false);
+}
+void	ft_error_syntax(t_mini *mini, char *token)
+{
+    ft_putstr_fd("minishell: ", STDERR);
+    ft_putstr_fd("syntax error near unexpected token ", STDERR);
+    if (ft_strlen(token) == 0) // Handle empty token
+        ft_putstr_fd("`newline'", STDERR);
+    else
+    {
+        ft_putstr_fd("`", STDERR);
+        ft_putstr_fd(token, STDERR);
+        ft_putstr_fd("'", STDERR);
+    }
+    ft_putstr_fd("\n", STDERR);
+    mini->exit_status = 2;
+}*/
