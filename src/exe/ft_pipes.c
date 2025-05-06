@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 06:59:23 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 09:50:11 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	ft_execute_child(t_mini *mini, t_line *current, pid_t *pids)
 		free(pids);
 		exit_status = mini->exit_status;
 		free_mini(mini);
+		rl_clear_history();
 		exit(exit_status);
 	}
 	else
@@ -54,6 +55,7 @@ int	ft_execute_child(t_mini *mini, t_line *current, pid_t *pids)
 		free(pids);
 		exit_status = mini->exit_status;
 		free_mini(mini);
+		rl_clear_history();
 		exit(exit_status);
 	}
 	exit(EXIT_SUCCESS);
@@ -91,6 +93,12 @@ void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
 
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
+	if (mini->skibidi == 1)
+    {
+        ft_close(pipefd[0]);
+        ft_close(pipefd[1]);
+        return;
+    }
 	mini->pipe_out = pipefd[1];
 	mini->fd = pipefd[0];
 	ft_fork_and_exe(mini, current, pids, i++);

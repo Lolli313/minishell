@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/05/05 08:41:17 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/06 09:34:46 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	ft_mini_init(t_mini *mini)
 	mini->exit_flag = 1;
 	mini->skibidi = 0;
 	mini->hd_count = 0;
+	mini->line = NULL;
 }
 
 int	ft_parse_input(t_mini *mini)
@@ -42,12 +43,12 @@ int	ft_parse_input(t_mini *mini)
 			ft_printf("exit\n");
 		return (0);
 	}
+	if (*input)
+		add_history(input);
 	if (g_skip == 130)
 		mini->exit_status = 130;
 	g_skip = 1;
 	parse_string(mini, input);
-	if (*input)
-		add_history(input);
 	free(input);
 	return (1);
 }

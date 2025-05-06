@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structurize_line.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 18:45:08 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/04/17 09:59:11 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/06 09:01:32 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,11 @@ t_line	*add_node_line(t_token *token)
 {
 	t_line	*new_node;
 
-	new_node = malloc(sizeof(t_line));
+	new_node = ft_calloc(1, sizeof(t_line));
 	if (!new_node)
 		return (NULL);
 	new_node->command = make_command_into_array(token);
 	new_node->redirect = structurize_redirect(token);
-	new_node->next = NULL;
+//	new_node->next = NULL;
 	return (new_node);
 }
