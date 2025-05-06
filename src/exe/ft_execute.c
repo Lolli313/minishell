@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 09:54:00 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 10:10:19 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,4 +87,5 @@ void	ft_execute_command(t_mini *mini)
 	mini->pipe_out = -1;
 	ft_restore_std_fds(mini);
 	mini->skibidi = 0;
+	line_cleanup(mini);
 }

@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:31:21 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/30 07:01:47 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 10:18:56 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	ft_error_msg(t_mini *mini, char *cmd)
 	{
 		closedir(dir);
 		ft_print_error(mini, cmd, "Is a directory", 126);
+		mini->exit_flag = 0;
 	}
 	else if (access(cmd, F_OK) != 0)
 		ft_print_error(mini, cmd, "No such file or directory", 127);
