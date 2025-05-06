@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/05 13:34:09 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/06 07:07:04 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,16 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 	int		i;
 	int		count;
 
-	prepare_heredoc(&count, &i, pipefd);
+	prepare_heredoc(&count);
 	while (1)
 	{
 		line = handle_heredoc_line(mini, redir, count);
+		if (g_skip == 130)
+		{
+			mini->hd_count++;
+			mini->exit_status = 130;
+			break ;
+		}
 		if (line == NULL)
 			break ;
 		count++;
@@ -37,47 +43,23 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}
+	handle_signals();
 	return (count + 1);
 }
 
-static void	manage_hd_exit(t_mini *mini, int status)
-{
-	mini->hd_count += 1;
-	if (WEXITSTATUS(status) == 130)
-	{
-		mini->skibidi = 3;
-		mini->exit_status = 130;
-	}
-}
-
-void	ft_handle_heredoc(t_mini *mini, t_re *redir)
+int	ft_handle_heredoc(t_mini *mini, t_re *redir)
 {
 	int		pipefd[2];
-	pid_t	pid;
 	int		count;
-	int		status;
 
 	count = 0;
 	pipe(pipefd);
-	pid = fork();
-	if (pid == 0)
-	{
-		ft_close(pipefd[0]);
-		count = ft_heredoc_child(mini, redir, pipefd);
-		ft_close(pipefd[1]);
-		line_cleanup(mini);
-		free_mini(mini);
-		exit(count);
-	}
-	else
-	{
-		redir->heredoc_fd = pipefd[0];
-		ft_close(pipefd[1]);
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			manage_hd_exit(mini, status);
-	}
+	count = ft_heredoc_child(mini, redir, pipefd);
+	ft_close(pipefd[1]);
+	redir->heredoc_fd = pipefd[0];
+	return (count);
 }
+
 
 void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 {
@@ -91,6 +73,11 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 			if (redir->type == LIMITER)
 			{
 				ft_handle_heredoc(mini, redir);
+				if (g_skip == 130)
+				{
+					mini->skibidi = 1;
+					break;
+				}
 				current->redirect->heredoc_fd = redir->heredoc_fd;
 			}
 			redir = redir->next;
@@ -108,6 +95,8 @@ void	ft_execute_heredoc(t_mini *mini)
 		if (redir->type == LIMITER)
 		{
 			ft_handle_heredoc(mini, redir);
+			if (g_skip == 130)
+				break;
 		}
 		redir = redir->next;
 	}

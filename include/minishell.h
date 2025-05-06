@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/30 07:39:12 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 06:47:51 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ void				ft_unset_key(t_env *env, char *key);
 int					ft_unset(t_mini *mini, char **av);
 
 // env
-void				ft_shellvl(t_env *env);
 int					ft_env_exists(t_env *env, char *key, char *value);
 char				**ft_env_to_array(t_env *env);
 char				*ft_getenv(t_env *env, char *key);
@@ -164,11 +163,11 @@ int					ft_handle_external(t_mini *mini, char **args);
 
 // heredocs
 int					ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd);
-void				ft_handle_heredoc(t_mini *mini, t_re *redir);
+int				ft_handle_heredoc(t_mini *mini, t_re *redir);
 void				ft_pipe_heredoc(t_mini *mini, t_line *current);
 void				ft_execute_heredoc(t_mini *mini);
 char				*handle_heredoc_line(t_mini *mini, t_re *redir, int count);
-void				prepare_heredoc(int *count, int *i, int *pipefd);
+void				prepare_heredoc(int *count);
 
 // pipes
 void				ft_piping(t_mini *mini, t_line *current);

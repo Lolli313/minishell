@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/05 13:04:43 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/06 07:17:05 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	ft_wait2(t_mini *mini, pid_t *pids, int i)
 	while (j < i)
 	{
 		waitpid(pids[j], &status, 0);
-		if (WIFEXITED(status) && mini->skibidi != 3)
+		if (WIFEXITED(status) && mini->skibidi == 1)
 			mini->exit_status = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
 		{

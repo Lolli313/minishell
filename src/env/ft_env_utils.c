@@ -6,12 +6,12 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/06 06:04:43 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 06:08:21 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
- 
+
 int	ft_env_exists(t_env *env, char *key, char *value)
 {
 	t_env	*lst;

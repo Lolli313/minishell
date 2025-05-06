@@ -6,7 +6,7 @@
 /*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/04/30 07:07:48 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/06 07:15:16 by Barmyh           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ static void	ft_hd(t_mini *mini)
 	{
 		if (current->redirect)
 			ft_pipe_heredoc(mini, current);
+		if (mini->skibidi == 1)
+			return ;
 		current = current->next;
 	}
 }
@@ -34,6 +36,11 @@ void	ft_execute_pipeline(t_mini *mini)
 	i = 0;
 	pids = malloc(sizeof(pid_t) * (mini->nbr_of_pipes + 1));
 	ft_hd(mini);
+	if (mini->skibidi == 1)
+    {
+        free(pids);
+        return;
+    }
 	current = mini->line;
 	while (current)
 	{
