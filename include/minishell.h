@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 10:58:55 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 11:01:32 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int					ft_handle_external(t_mini *mini, char **args);
 
 // heredocs
 int					ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd);
-int				ft_handle_heredoc(t_mini *mini, t_re *redir);
+int					ft_handle_heredoc(t_mini *mini, t_re *redir);
 void				ft_pipe_heredoc(t_mini *mini, t_line *current);
 void				ft_execute_heredoc(t_mini *mini);
 char				*handle_heredoc_line(t_mini *mini, t_re *redir, int count);
