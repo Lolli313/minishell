@@ -6,13 +6,13 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 08:40:46 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 09:22:38 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_hd(t_mini *mini)
+static int	ft_hd(t_mini *mini, pid_t **pids)
 {
 	t_line	*current;
 
@@ -22,9 +22,14 @@ static void	ft_hd(t_mini *mini)
 		if (current->redirect)
 			ft_pipe_heredoc(mini, current);
 		if (mini->skibidi == 1)
-			return ;
+		{
+			free(*pids);
+			*pids = NULL;
+			return (1);
+		}
 		current = current->next;
 	}
+	return (0);
 }
 
 void	ft_execute_pipeline(t_mini *mini)
@@ -35,12 +40,8 @@ void	ft_execute_pipeline(t_mini *mini)
 
 	i = 0;
 	pids = malloc(sizeof(pid_t) * (mini->nbr_of_pipes + 1));
-	ft_hd(mini);
-	if (mini->skibidi == 1)
-	{
-		free(pids);
+	if (ft_hd(mini, &pids))
 		return ;
-	}
 	current = mini->line;
 	while (current)
 	{
