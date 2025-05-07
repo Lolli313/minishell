@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipes.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 11:55:56 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 08:40:10 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	pid_t	pid;
 
 	if (mini->skibidi == 1)
-		return;
+		return ;
 	pid = fork();
 	if (pid == -1)
 	{
@@ -96,11 +96,11 @@ void	ft_piped_cmd(t_mini *mini, t_line *current, pid_t *pids, int i)
 	if (pipe(pipefd) == -1)
 		exit(EXIT_FAILURE);
 	if (mini->skibidi == 1)
-    {
-        ft_close(pipefd[0]);
-        ft_close(pipefd[1]);
-        return;
-    }
+	{
+		ft_close(pipefd[0]);
+		ft_close(pipefd[1]);
+		return ;
+	}
 	mini->pipe_out = pipefd[1];
 	mini->fd = pipefd[0];
 	if (mini->skibidi == 0)

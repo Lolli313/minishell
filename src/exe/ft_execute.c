@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 10:10:19 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 08:40:46 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ void	ft_execute_pipeline(t_mini *mini)
 	pids = malloc(sizeof(pid_t) * (mini->nbr_of_pipes + 1));
 	ft_hd(mini);
 	if (mini->skibidi == 1)
-    {
-        free(pids);
-        return;
-    }
+	{
+		free(pids);
+		return ;
+	}
 	current = mini->line;
 	while (current)
 	{

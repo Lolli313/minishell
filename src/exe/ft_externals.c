@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_externals.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 14:36:43 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 12:02:27 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 08:40:42 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,24 +60,24 @@ int	ft_wait2(t_mini *mini, pid_t *pids, int i)
 	while (j < i)
 	{
 		waitpid(pids[j], &status, 0);
-        if (j == i - 1)
+		if (j == i - 1)
 		{
-            if (WIFEXITED(status))
-                mini->exit_status = WEXITSTATUS(status);
-            else if (WIFSIGNALED(status))
-            {
-                if (WTERMSIG(status) == SIGQUIT)
-                {
-                    if (mini->nbr_of_pipes == 0)
-                        ft_putstr_fd("Quit (core dumped)\n", 2);
-                    mini->exit_status = 131;
-                }
-                else if (WTERMSIG(status) == SIGINT)
-                    mini->exit_status = 130;
-                else
-                    mini->exit_status = 128 + WTERMSIG(status);
-            }
-        }
+			if (WIFEXITED(status))
+				mini->exit_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+			{
+				if (WTERMSIG(status) == SIGQUIT)
+				{
+					if (mini->nbr_of_pipes == 0)
+						ft_putstr_fd("Quit (core dumped)\n", 2);
+					mini->exit_status = 131;
+				}
+				else if (WTERMSIG(status) == SIGINT)
+					mini->exit_status = 130;
+				else
+					mini->exit_status = 128 + WTERMSIG(status);
+			}
+		}
 		j++;
 	}
 	return (mini->exit_status);

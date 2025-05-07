@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/06 07:07:04 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 08:40:28 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 
 int	ft_handle_heredoc(t_mini *mini, t_re *redir)
 {
-	int		pipefd[2];
-	int		count;
+	int	pipefd[2];
+	int	count;
 
 	count = 0;
 	pipe(pipefd);
@@ -59,7 +59,6 @@ int	ft_handle_heredoc(t_mini *mini, t_re *redir)
 	redir->heredoc_fd = pipefd[0];
 	return (count);
 }
-
 
 void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 {
@@ -76,7 +75,7 @@ void	ft_pipe_heredoc(t_mini *mini, t_line *current)
 				if (g_skip == 130)
 				{
 					mini->skibidi = 1;
-					break;
+					break ;
 				}
 				current->redirect->heredoc_fd = redir->heredoc_fd;
 			}
@@ -96,7 +95,7 @@ void	ft_execute_heredoc(t_mini *mini)
 		{
 			ft_handle_heredoc(mini, redir);
 			if (g_skip == 130)
-				break;
+				break ;
 		}
 		redir = redir->next;
 	}

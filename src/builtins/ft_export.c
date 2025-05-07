@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 11:06:24 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 08:42:37 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,34 +62,32 @@ int	ft_export_env(t_mini *mini, char **str)
 
 static void	ft_sort_env(t_env **env)
 {
-    t_env	*current;
-    t_env	*next;
-    char	*temp_key;
-    char	*temp_value;
+	t_env	*current;
+	t_env	*next;
+	char	*temp_key;
+	char	*temp_value;
 
-    if (!env || !*env)
-        return ;
-    current = *env;
-    while (current)
-    {
-        next = current->next;
-        while (next)
-        {
-            if (ft_strcmp(current->key, next->key) > 0)
-            {
-                // Swap keys
-                temp_key = current->key;
-                current->key = next->key;
-                next->key = temp_key;
-                // Swap values
-                temp_value = current->value;
-                current->value = next->value;
-                next->value = temp_value;
-            }
-            next = next->next;
-        }
-        current = current->next;
-    }
+	if (!env || !*env)
+		return ;
+	current = *env;
+	while (current)
+	{
+		next = current->next;
+		while (next)
+		{
+			if (ft_strcmp(current->key, next->key) > 0)
+			{
+				temp_key = current->key;
+				current->key = next->key;
+				next->key = temp_key;
+				temp_value = current->value;
+				current->value = next->value;
+				next->value = temp_value;
+			}
+			next = next->next;
+		}
+		current = current->next;
+	}
 }
 
 int	ft_has_equal(t_mini *mini, char *str)
