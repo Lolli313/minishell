@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/07 09:49:19 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 10:58:44 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,41 @@ char	**ft_env_to_array(t_env *env)
 	}
 	env_array[i] = NULL;
 	return (env_array);
+}
+
+void	ft_swap(t_env *a, t_env *b)
+{
+	char	*tmp_key;
+	char	*tmp_value;
+
+	tmp_key = a->key;
+	a->key = b->key;
+	b->key = tmp_key;
+	tmp_value = a->value;
+	a->value = b->value;
+	b->value = tmp_value;
+}
+
+void	ft_sort_env(t_env *head)
+{
+	t_env	*cur;
+	int		sorted;
+
+	if (!head)
+		return ;
+	sorted = 0;
+	while (!sorted)
+	{
+		sorted = 1;
+		cur = head;
+		while (cur->next)
+		{
+			if (ft_strcmp(cur->key, cur->next->key) > 0)
+			{
+				ft_swap(cur, cur->next);
+				sorted = 0;
+			}
+			cur = cur->next;
+		}
+	}
 }

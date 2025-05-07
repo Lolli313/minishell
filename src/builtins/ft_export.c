@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 10:00:05 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 10:58:24 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int	ft_export_env(t_mini *mini, char **str)
 
 	if (!str[1])
 	{
+		ft_sort_env(mini->export_env);
 		cur = mini->export_env;
 		while (cur)
 		{
