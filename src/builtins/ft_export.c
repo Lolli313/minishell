@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:16 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 08:42:37 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 10:00:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,36 +60,6 @@ int	ft_export_env(t_mini *mini, char **str)
 	return (1);
 }
 
-static void	ft_sort_env(t_env **env)
-{
-	t_env	*current;
-	t_env	*next;
-	char	*temp_key;
-	char	*temp_value;
-
-	if (!env || !*env)
-		return ;
-	current = *env;
-	while (current)
-	{
-		next = current->next;
-		while (next)
-		{
-			if (ft_strcmp(current->key, next->key) > 0)
-			{
-				temp_key = current->key;
-				current->key = next->key;
-				next->key = temp_key;
-				temp_value = current->value;
-				current->value = next->value;
-				next->value = temp_value;
-			}
-			next = next->next;
-		}
-		current = current->next;
-	}
-}
-
 int	ft_has_equal(t_mini *mini, char *str)
 {
 	char	**temp;
@@ -111,7 +81,6 @@ int	ft_has_equal(t_mini *mini, char *str)
 		else
 			value = "";
 		update_or_add_env(&(mini->env), temp[0], value);
-		ft_sort_env(&(mini->env));
 		update_or_add_env(&(mini->export_env), temp[0], value);
 	}
 	free_matrix(temp);

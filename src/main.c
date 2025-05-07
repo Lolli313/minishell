@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 18:03:56 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/05/06 11:03:58 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 10:18:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	ft_mini_init(t_mini *mini)
 	mini->skibidi = 0;
 	mini->hd_count = 0;
 	mini->line = NULL;
+	mini->token = NULL;
 }
 
 int	ft_parse_input(t_mini *mini)
@@ -33,7 +34,7 @@ int	ft_parse_input(t_mini *mini)
 	char	*input;
 
 	mini->interactive = 1;
-	//mini->interactive = isatty(STDIN);
+	// mini->interactive = isatty(STDIN);
 	if (mini->interactive)
 		input = readline(PROMPT);
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 10:36:50 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 06:08:18 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 09:47:56 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,6 @@ char	*ft_getenv(t_env *env, char *key)
 		current = current->next;
 	}
 	return (ft_strdup(""));
-}
-
-void	ft_env_display(t_env *env)
-{
-	t_env	*lst;
-	char	*tmp;
-	char	*joined;
-
-	lst = env;
-	while (lst)
-	{
-		if (lst->key && lst->value)
-		{
-			tmp = ft_strjoin(lst->key, "=");
-			joined = ft_strjoin(tmp, lst->value);
-			free(tmp);
-			free(joined);
-		}
-		lst = lst->next;
-	}
 }
 
 t_env	*ft_add_env_node(char *key, char *value)

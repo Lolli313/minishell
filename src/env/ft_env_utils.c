@@ -3,36 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 06:37:20 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/06 07:42:38 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 09:49:19 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_env_exists(t_env *env, char *key, char *value)
-{
-	t_env	*lst;
-
-	lst = env;
-	while (lst)
-	{
-		if (ft_strcmp(lst->key, key) == 0)
-		{
-			if (ft_strcmp(lst->value, value) != 0)
-			{
-				free(lst->value);
-				lst->value = ft_strdup(value);
-				return (1);
-			}
-			return (0);
-		}
-		lst = lst->next;
-	}
-	return (0);
-}
 
 static int	ft_count_env(t_env *env)
 {

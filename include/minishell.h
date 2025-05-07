@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Barmyh <Barmyh@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/06 11:11:58 by Barmyh           ###   ########.fr       */
+/*   Updated: 2025/05/07 09:49:09 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,10 +144,8 @@ void				ft_unset_key(t_env *env, char *key);
 int					ft_unset(t_mini *mini, char **av);
 
 // env
-int					ft_env_exists(t_env *env, char *key, char *value);
 char				**ft_env_to_array(t_env *env);
 char				*ft_getenv(t_env *env, char *key);
-void				ft_env_display(t_env *env);
 char				**ft_split_env(char *str);
 t_env				*ft_add_env_node(char *key, char *value);
 t_env				*ft_init_env(char **envp);
