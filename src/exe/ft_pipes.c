@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 08:40:10 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 09:40:29 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,17 @@ void	ft_piping(t_mini *mini, t_line *current)
 	}
 }
 
+static void	ft_cleaning(t_mini *mini, pid_t *pids, int exit_status)
+{
+	line_cleanup(mini);
+	free(pids);
+	free_mini(mini);
+	rl_clear_history();
+	exit(exit_status);
+}
+
 int	ft_execute_child(t_mini *mini, t_line *current, pid_t *pids)
 {
-	int	exit_status;
-
 	ft_piping(mini, current);
 	ft_handle_redirections(mini, current);
 	if (mini->skibidi == 1)
@@ -41,22 +48,12 @@ int	ft_execute_child(t_mini *mini, t_line *current, pid_t *pids)
 	if (ft_is_builtin(current->command))
 	{
 		ft_handle_builtin(mini, current);
-		line_cleanup(mini);
-		free(pids);
-		exit_status = mini->exit_status;
-		free_mini(mini);
-		rl_clear_history();
-		exit(exit_status);
+		ft_cleaning(mini, pids, mini->exit_status);
 	}
 	else
 	{
 		ft_handle_external(mini, current->command);
-		line_cleanup(mini);
-		free(pids);
-		exit_status = mini->exit_status;
-		free_mini(mini);
-		rl_clear_history();
-		exit(exit_status);
+		ft_cleaning(mini, pids, mini->exit_status);
 	}
 	exit(EXIT_SUCCESS);
 }
