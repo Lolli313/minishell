@@ -6,11 +6,24 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 09:00:33 by Barmyh            #+#    #+#             */
-/*   Updated: 2025/05/07 08:40:28 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/07 09:34:13 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	ft_check_term(t_mini *mini, char *line)
+{
+	if (g_skip == 130)
+	{
+		mini->hd_count++;
+		mini->exit_status = 130;
+		return (1);
+	}
+	if (line == NULL)
+		return (1);
+	return (0);
+}
 
 int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 {
@@ -22,13 +35,7 @@ int	ft_heredoc_child(t_mini *mini, t_re *redir, int *pipefd)
 	while (1)
 	{
 		line = handle_heredoc_line(mini, redir, count);
-		if (g_skip == 130)
-		{
-			mini->hd_count++;
-			mini->exit_status = 130;
-			break ;
-		}
-		if (line == NULL)
+		if (ft_check_term(mini, line))
 			break ;
 		count++;
 		i = 0;
