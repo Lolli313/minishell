@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 11:01:32 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/12 13:03:56 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int					ft_export_env(t_mini *mini, char **str);
 int					ft_export(t_mini *mini, char **str);
 int					ft_pwd(t_env *env);
 int					ft_env(t_env *env);
-void				ft_unset_key(t_env *env, char *key);
+void				ft_unset_key(t_env **env, char *key);
 int					ft_unset(t_mini *mini, char **av);
 
 // env

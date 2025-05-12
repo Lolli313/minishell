@@ -3,28 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aakerblo <aakerblo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 09:25:22 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/05 13:08:18 by aakerblo         ###   ########.fr       */
+/*   Updated: 2025/05/12 13:03:47 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_unset_key(t_env *env, char *key)
+void	ft_unset_key(t_env **env, char *key)
 {
 	t_env	*lst;
 	t_env	*prev;
 
-	lst = env;
+	lst = *env;
 	prev = NULL;
 	while (lst)
 	{
 		if (ft_strcmp(lst->key, key) == 0)
 		{
 			if (prev == NULL)
-				env = lst->next;
+				*env = lst->next;
 			else
 				prev->next = lst->next;
 			free(lst->key);
@@ -48,8 +48,8 @@ int	ft_unset(t_mini *mini, char **av)
 		return (0);
 	while (av[i])
 	{
-		ft_unset_key(mini->env, av[i]);
-		ft_unset_key(mini->export_env, av[i]);
+		ft_unset_key(&(mini->env), av[i]);
+		ft_unset_key(&(mini->export_env), av[i]);
 		i++;
 	}
 	mini->exit_status = error;
