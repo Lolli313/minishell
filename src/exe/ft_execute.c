@@ -6,11 +6,32 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/07 09:22:38 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/14 10:46:17 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_close_hd(t_mini *mini)
+{
+	t_line *line = mini->line;
+	t_re *redir;
+
+	while (line)
+	{
+		redir = line->redirect;
+		while (redir)
+		{
+			if (redir->type == LIMITER && redir->heredoc_fd >= 0)
+			{
+				ft_close(redir->heredoc_fd);
+				redir->heredoc_fd = -1;
+			}
+			redir = redir->next;
+		}
+		line = line->next;
+	}
+}
 
 static int	ft_hd(t_mini *mini, pid_t **pids)
 {
@@ -44,7 +65,7 @@ void	ft_execute_pipeline(t_mini *mini)
 		return ;
 	current = mini->line;
 	while (current)
-	{
+	{	
 		if (current->next)
 			ft_piped_cmd(mini, current, pids, i++);
 		else
@@ -84,6 +105,7 @@ void	ft_execute_command(t_mini *mini)
 	ft_close(mini->fd_out);
 	ft_close(mini->pipe_in);
 	ft_close(mini->pipe_out);
+	ft_close_hd(mini);
 	mini->pipe_in = -1;
 	mini->pipe_out = -1;
 	ft_restore_std_fds(mini);

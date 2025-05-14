@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 08:47:27 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/12 13:03:56 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/14 10:23:05 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ int					is_operator_char(char c);
 t_type				get_operator_type(char *op, int len);
 t_token				*if_operator(t_token *token, char *input, int *i);
 bool				is_valid_char(char c, bool first);
-bool				exit_validity(t_line *line);
+//bool				exit_validity(t_line *line);
 bool				echo_validity(char *str);
 bool				export_validity(char *str);
 bool				token_validity(t_mini *mini);
@@ -274,5 +274,6 @@ void				free_env(t_env *env);
 void				free_redirect(t_re *redirect);
 void				line_cleanup(t_mini *mini);
 void				free_mini(t_mini *mini);
+void				ft_close_hd(t_mini *mini);
 
 #endif

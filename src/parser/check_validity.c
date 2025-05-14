@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 17:49:29 by aakerblo          #+#    #+#             */
-/*   Updated: 2025/05/07 11:19:29 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/14 10:23:13 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool	is_valid_char(char c, bool first)
 		return (ft_isalpha(c) || c == '_');
 	return (ft_isalnum(c) || c == '_');
 }
-
+/*
 bool	exit_validity(t_line *line)
 {
 	char	**temp_cmd;
@@ -48,7 +48,7 @@ bool	exit_validity(t_line *line)
 			return (ft_printf("Error: Too many arguments\n"), false);
 	}
 	return (true);
-}
+}*/
 
 bool	echo_validity(char *str)
 {
