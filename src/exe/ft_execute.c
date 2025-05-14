@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 08:53:53 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/14 10:46:17 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/14 11:35:17 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 void	ft_close_hd(t_mini *mini)
 {
-	t_line *line = mini->line;
-	t_re *redir;
+	t_line	*line;
+	t_re	*redir;
 
+	line = mini->line;
 	while (line)
 	{
 		redir = line->redirect;
@@ -65,7 +66,7 @@ void	ft_execute_pipeline(t_mini *mini)
 		return ;
 	current = mini->line;
 	while (current)
-	{	
+	{
 		if (current->next)
 			ft_piped_cmd(mini, current, pids, i++);
 		else

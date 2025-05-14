@@ -6,7 +6,7 @@
 /*   By: fmick <fmick@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:35:11 by fmick             #+#    #+#             */
-/*   Updated: 2025/05/12 13:54:33 by fmick            ###   ########.fr       */
+/*   Updated: 2025/05/14 11:41:35 by fmick            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ void	ft_fork_and_exe(t_mini *mini, t_line *current, pid_t *pids, int i)
 	}
 	else
 	{
+		ft_close(current->redirect->heredoc_fd);
 		pids[i] = pid;
 		ft_supersafe_close(mini->pipe_out);
 	}
